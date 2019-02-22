@@ -9,7 +9,7 @@ def IsInCollision(x,obc):
     for i in range(0,7):
         cf=True
         for j in range(0,2):
-            if abs(obc[idx][i][j] - s[j]) > (shape[i][j]-padding)/2.0 and s[j] < 20.0 and s[j] > -20.0:
+            if abs(obc[i][j] - s[j]) > (shape[i][j]-padding)/2.0 and s[j] < 20.0 and s[j] > -20.0:
                 cf=False
                 break
 
