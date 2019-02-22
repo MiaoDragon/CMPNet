@@ -14,6 +14,10 @@ here for simplicity, we just use single-process to simulate this scenario
 from __future__ import print_function
 from Model.GEM_end2end_model import End2EndMPNet
 #from GEM_end2end_model_rand import End2EndMPNet as End2EndMPNet_rand
+import Model.model as model
+import Model.model_c2d as model_c2d
+import Model.AE.CAE_r3d as CAE_r3d
+import Model.AE.CAE as CAE
 import numpy as np
 import argparse
 import os
@@ -24,8 +28,7 @@ import copy
 import os
 import random
 from utility import *
-from utility_s2d import *
-from utility_c2d import *
+import utility_s2d, utility_c2d, utility_r3d
 def main(args):
     # set seed
     torch_seed = np.random.randint(low=0, high=1000)
@@ -44,6 +47,26 @@ def main(args):
         #mpNet = End2EndMPNet_rand(args.mlp_input_size, args.output_size, 'deep', \
         #            args.n_tasks, args.n_memories, args.memory_strength, args.grad_step)
         pass
+    # decide dataloader, MLP, AE based on env_type
+    if args.env_type == 's2d':
+        load_dataset = data_loader_2d.load_dataset
+        normalize = utility_s2d.normalize
+        unnormalize = utility_s2d.unnormalize
+        mpNet.encoder = CAE()
+        mpNet.mlp = model(args.mlp_input_size, args.output_size)
+    elif args.env_type == 'c2d':
+        load_dataset = data_loader_2d.load_dataset
+        normalize = utility_c2d.normalize
+        unnormalize = utility_c2d.unnormalize
+        mpNet.encoder = CAE()
+        mpNet.mlp = model_c2d(args.mlp_input_size, args.output_size)
+    elif args.env_type == 'r3d':
+        load_dataset = data_loader_r3d.load_dataset
+        normalize = utility_r3d.normalize
+        unnormalize = utility_r3d.unnormalize
+        mpNet.encoder = CAE_r3d()
+        mpNet.mlp = model(args.mlp_input_size, args.output_size)
+
     # load previously trained model if start epoch > 0
     model_path='cmpnet_epoch_%d.pkl' %(args.start_epoch)
     if args.start_epoch > 0:
@@ -61,11 +84,7 @@ def main(args):
         mpNet.set_opt(torch.optim.Adagrad, lr=1e-2)
     if args.start_epoch > 0:
         load_opt_state(mpNet, os.path.join(args.model_path, model_path))
-    # decide dataloader based on env_type
-    if args.env_type in ['s2d', 'c2d']:
-        load_dataset = data_loader_2d.load_dataset
-    elif args.env_type == 'r3d':
-        load_dataset = data_loader_r3d.load_dataset
+
     # load train and test data
     print('loading...')
     obs, path_data = load_dataset(N=args.no_env, NP=args.no_motion_paths, folder=args.data_path)
