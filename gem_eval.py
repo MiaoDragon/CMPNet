@@ -4,7 +4,6 @@ import torch.nn as nn
 import numpy as np
 import os
 import pickle
-#from model import MLP
 from torch.autograd import Variable
 import math
 import time
@@ -12,6 +11,7 @@ from plan_general import *
 
 def eval_tasks(mpNet, test_data, filename, IsInCollision, unnormalize_func=lambda x: x):
     obc, obs, paths, path_lengths = test_data
+    obs = torch.from_numpy()
     fes_env = []   # list of list
     valid_env = []
     #for i in range(0,1):

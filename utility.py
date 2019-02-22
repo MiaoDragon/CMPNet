@@ -30,3 +30,9 @@ def load_seed(fname):
     # load both torch random seed, and numpy random seed
     checkpoint = torch.load(fname)
     return checkpoint['torch_seed'], checkpoint['np_seed'], checkpoint['py_seed']
+    
+def normalize(x, bound):
+    # normalize to -1 ~ 1
+    return x / bound
+def unnormalize(x, bound):
+    return x * bound

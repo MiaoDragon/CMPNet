@@ -1,5 +1,6 @@
 import torch
 import numpy as np
+from utility import *
 DEFAULT_STEP = 0.05
 def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
     # test if there is a collision free path from start to end, with step size
@@ -130,7 +131,6 @@ def complete_replan_global(mpNet, path, true_path, true_path_length, obc, obs, o
     demo_path = true_path[:true_path_length]
     #demo_path = [torch.from_numpy(p).type(torch.FloatTensor) for p in demo_path]
     dataset, targets, env_indices = transformToTrain(demo_path, len(demo_path), obs, obs_i)
-    num_trained_samples += len(targets)
     added_data = list(zip(dataset,targets,env_indices))
     bi = np.concatenate( (obs.numpy().reshape(1,-1).repeat(len(dataset),axis=0), dataset), axis=1).astype(np.float32)
     bi = torch.FloatTensor(bi)

@@ -12,18 +12,13 @@ and call the network to train if a new data is available
 here for simplicity, we just use single-process to simulate this scenario
 '''
 from __future__ import print_function
-from GEM_end2end_model import End2EndMPNet
-from GEM_end2end_model_rand import End2EndMPNet as End2EndMPNet_rand
-#from gem_observer import Observer
+from Model.GEM_end2end_model import End2EndMPNet
+#from GEM_end2end_model_rand import End2EndMPNet as End2EndMPNet_rand
 import numpy as np
 import argparse
 import os
 import torch
-from gem_eval import eval_tasks
-# collision checker
-import plan_s2d
-
-from data_loader import load_test_dataset
+from data_loader import load_dataset
 from torch.autograd import Variable
 import copy
 import os
@@ -45,10 +40,11 @@ def main(args):
         mpNet = End2EndMPNet(args.mlp_input_size, args.output_size, 'deep', \
                     args.n_tasks, args.n_memories, args.memory_strength, args.grad_step)
     elif args.memory_type == 'rand':
-        mpNet = End2EndMPNet_rand(args.mlp_input_size, args.output_size, 'deep', \
-                    args.n_tasks, args.n_memories, args.memory_strength, args.grad_step)
+        #mpNet = End2EndMPNet_rand(args.mlp_input_size, args.output_size, 'deep', \
+        #            args.n_tasks, args.n_memories, args.memory_strength, args.grad_step)
+        pass
     # load previously trained model if start epoch > 0
-    model_path='mpNet_cont_train_epoch_%d.pkl' %(args.start_epoch)
+    model_path='cmpnet_epoch_%d.pkl' %(args.start_epoch)
     if args.start_epoch > 0:
         load_net_state(mpNet, os.path.join(args.model_path, model_path))
         torch_seed, np_seed, py_seed = load_seed(os.path.join(args.model_path, model_path))
@@ -61,48 +57,57 @@ def main(args):
         mpNet.cuda()
         mpNet.mlp.cuda()
         mpNet.encoder.cuda()
-        mpNet.set_opt(torch.optim.Adagrad, lr=args.learning_rate)
+        mpNet.set_opt(torch.optim.Adagrad, lr=1e-2)
     if args.start_epoch > 0:
         load_opt_state(mpNet, os.path.join(args.model_path, model_path))
     # load train and test data
     print('loading...')
-    seen_test_data = load_test_dataset(N=100, NP=200, s=0, sp=4000, folder=args.data_path)
-    unseen_test_data = load_test_dataset(N=10, NP=2000,s=100, sp=0, folder=args.data_path)
-    # test
-    # setup evaluation function
-    if args.env_type == 's2d':
-        IsInCollision = plan_s2d.IsInCollision
-    elif args.env_type == 'c2d':
-        pass
-    # testing
-    print('testing...')
-    seen_test_suc_rate = 0.
-    unseen_test_suc_rate = 0.
-    T = 1
-    for _ in range(T):
-        # unnormalize function
-        unnormalize_func=lambda x: x / args.world_size
-        # seen
-        time_file = os.path.join(args.model_path,'time_seen_epoch_%d_mlp.p' % (args.start_epoch))
-        fes_path_, valid_path_ = eval_tasks(mpNet, seen_test_data, time_file, IsInCollision, unnormalize_func)
-        valid_path = valid_path_.flatten()
-        fes_path = fes_path_.flatten()   # notice different environments are involved
-        seen_test_suc_rate += fes_path.sum() / valid_path.sum()
-        # unseen
-        time_file = os.path.join(args.model_path,'time_unseen_epoch_%d_mlp.p' % (args.start_epoch))
-        fes_path_, valid_path_ = eval_tasks(mpNet, unseen_test_data, time_file, IsInCollision, unnormalize_func)
-        valid_path = valid_path_.flatten()
-        fes_path = fes_path_.flatten()   # notice different environments are involved
-        unseen_test_suc_rate += fes_path.sum() / valid_path.sum()
-    seen_test_suc_rate = seen_test_suc_rate / T
-    unseen_test_suc_rate = unseen_test_suc_rate / T    # Save the models
-    f = open(os.path.join(args.model_path,'seen_accuracy_epoch_%d.txt' % (args.start_epoch)), 'w')
-    f.write(str(seen_test_suc_rate))
-    f.close()
-    f = open(os.path.join(args.model_path,'unseen_accuracy_epoch_%d.txt' % (args.start_epoch)), 'w')
-    f.write(str(unseen_test_suc_rate))
-    f.close()
+    obs, path_data = load_dataset(N=args.no_env, NP=args.no_motion_paths, folder=args.data_path)
+    # Train the Models
+    print('training...')
+    for epoch in range(args.start_epoch+1,args.num_epochs+1):
+        data_all = []
+        num_path_trained = 0
+        print('epoch' + str(epoch))
+        for i in range(0,len(path_data)):
+            print('epoch: %d, training... path: %d' % (epoch, i+1))
+            dataset, targets, env_indices = path_data[i]
+            if len(dataset) == 0:
+                # empty path
+                continue
+            # record
+            data_all += list(zip(dataset,targets,env_indices))
+            bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
+            bt = targets
+            bi = torch.FloatTensor(bi)
+            bt = torch.FloatTensor(bt)
+            bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
+            mpNet.zero_grad()
+            bi=to_var(bi)
+            bt=to_var(bt)
+            mpNet.observe(bi, 0, bt)
+            num_path_trained += 1
+            # perform rehersal when certain number of batches have passed
+            if args.freq_rehersal and num_path_trained % args.freq_rehersal == 0:
+                print('rehersal...')
+                sample = random.sample(data_all, args.batch_rehersal)
+                dataset, targets, env_indices = list(zip(*sample))
+                dataset, targets, env_indices = list(dataset), list(targets), list(env_indices)
+                bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
+                bt = targets
+                bi = torch.FloatTensor(bi)
+                bt = torch.FloatTensor(bt)
+                bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
+                mpNet.zero_grad()
+                bi=to_var(bi)
+                bt=to_var(bt)
+                mpNet.observe(bi, 0, bt, False)  # train but don't remember
 
+        # Save the models
+        if epoch > 0:
+            model_path='cmpnet_epoch_%d.pkl' %(epoch)
+            save_state(mpNet, os.path.join(args.model_path,model_path))
+            # test
 
 parser = argparse.ArgumentParser()
 # for training
@@ -117,8 +122,14 @@ parser.add_argument('--memory_strength', type=float, default=0.5, help='memory s
 # Model parameters
 parser.add_argument('--mlp_input_size', type=int , default=28+4, help='dimension of the input vector')
 parser.add_argument('--output_size', type=int , default=2, help='dimension of the input vector')
+
 parser.add_argument('--learning_rate', type=float, default=0.01)
+parser.add_argument('--seen', type=int, default=0, help='seen or unseen? 0 for seen, 1 for unseen')
 parser.add_argument('--device', type=int, default=0, help='cuda device')
+
+parser.add_argument('--num_epochs', type=int, default=500)
+parser.add_argument('--freq_rehersal', type=int, default=20, help='after how many paths perform rehersal')
+parser.add_argument('--batch_rehersal', type=int, default=100, help='rehersal on how many data (not path)')
 parser.add_argument('--data_path', type=str, default='../data/simple/')
 parser.add_argument('--start_epoch', type=int, default=0)
 parser.add_argument('--memory_type', type=str, default='res', help='res for reservoid, rand for random sampling')
