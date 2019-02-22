@@ -18,7 +18,7 @@ import numpy as np
 import argparse
 import os
 import torch
-from data_loader import load_dataset
+import data_loader_2d, data_loader_r3d
 from torch.autograd import Variable
 import copy
 import os
@@ -60,6 +60,11 @@ def main(args):
         mpNet.set_opt(torch.optim.Adagrad, lr=1e-2)
     if args.start_epoch > 0:
         load_opt_state(mpNet, os.path.join(args.model_path, model_path))
+    # decide dataloader based on env_type
+    if args.env_type in ['s2d', 'c2d]':
+        load_dataset = data_loader_2d.load_dataset
+    elif args.env_type == 'r3d':
+        load_dataset = data_loader_r3d.load_dataset
     # load train and test data
     print('loading...')
     obs, path_data = load_dataset(N=args.no_env, NP=args.no_motion_paths, folder=args.data_path)

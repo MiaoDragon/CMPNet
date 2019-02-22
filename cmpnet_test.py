@@ -21,7 +21,7 @@ import os
 import torch
 from gem_eval import eval_tasks
 import plan_s2d, plan_c2d
-from data_loader import load_dataset, load_test_dataset
+import data_loader_2d, data_loader_r3d
 from torch.autograd import Variable
 import copy
 import os
@@ -64,16 +64,18 @@ def main(args):
         mpNet.set_opt(torch.optim.Adagrad, lr=args.learning_rate)
     if args.start_epoch > 0:
         load_opt_state(mpNet, os.path.join(args.model_path, model_path))
+    # setup evaluation function and load function
+    if args.env_type == 's2d':
+        IsInCollision = plan_s2d.IsInCollision
+        load_test_dataset = data_loader_2d.load_test_dataset
+    elif args.env_type == 'c2d':
+        IsInCollision = plan_c2d.IsInCollision
+        load_test_dataset = data_loader_r3d.load_test_dataset
     # load train and test data
     print('loading...')
     seen_test_data = load_test_dataset(N=100, NP=200, s=0, sp=4000, folder=args.data_path)
     unseen_test_data = load_test_dataset(N=10, NP=2000,s=100, sp=0, folder=args.data_path)
     # test
-    # setup evaluation function
-    if args.env_type == 's2d':
-        IsInCollision = plan_s2d.IsInCollision
-    elif args.env_type == 'c2d':
-        IsInCollision = plan_c2d.IsInCollision
     # testing
     print('testing...')
     seen_test_suc_rate = 0.

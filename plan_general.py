@@ -14,6 +14,9 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
     # obtain the number of segments (start to end-1)
     # the number of nodes including start and end is actually num_segs+1
     num_segs = int(total_dist / DISCRETIZATION_STEP)
+    if num_segs == 0:
+        # distance smaller than threshold, just return 1
+        return 1
     # obtain the change for each segment
     delta_seg = delta / num_segs
     # initialize segment
@@ -83,7 +86,7 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, unnormalize, step_sz=DEF
 
 def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, unnormalize, step_sz=DEFAULT_STEP):
     # plan a mini path from start to goal
-    MAX_LENGTH = 80
+    MAX_LENGTH = 50
     itr=0
     pA=[]
     pA.append(start)
