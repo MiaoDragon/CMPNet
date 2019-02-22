@@ -111,7 +111,7 @@ def main(args):
         # Save the models
         if epoch > 0:
             model_path='cmpnet_epoch_%d.pkl' %(epoch)
-            save_state(mpNet, os.path.join(args.model_path,model_path))
+            save_state(mpNet, torch_seed, np_seed, py_seed, os.path.join(args.model_path,model_path))
             # test
 
 parser = argparse.ArgumentParser()
