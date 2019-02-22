@@ -8,7 +8,7 @@ import numpy as np
 import copy
 # Auxiliary functions useful for GEM's inner optimization.
 class End2EndMPNet(nn.Module):
-    def __init__(self, mlp_input_size, output_size, AEtype, \
+    def __init__(self, total_input_size, AE_input_size, mlp_input_size, output_size, AEtype, \
                  n_tasks, n_memories, memory_strength, grad_step):
         super(End2EndMPNet, self).__init__()
         if AEtype == 'deep':
@@ -27,7 +27,7 @@ class End2EndMPNet(nn.Module):
         self.n_memories = n_memories
         # allocate episodic memory
         self.memory_data = torch.FloatTensor(
-            n_tasks, self.n_memories, 2800+4)
+            n_tasks, self.n_memories, total_input_size)
         #self.memory_labs = torch.LongTensor(n_tasks, self.n_memories, output_size)
         self.memory_labs = torch.FloatTensor(n_tasks, self.n_memories, output_size)
         if torch.cuda.is_available():
@@ -49,6 +49,8 @@ class End2EndMPNet(nn.Module):
         self.num_seen = np.zeros(n_tasks).astype(int)
         #self.mem_cnt = 0
         self.grad_step = grad_step
+        self.total_input_size = total_input_size
+        self.AE_input_size = AE_input_size
     def clear_memory(self):
         # set the counter to 0
         self.mem_cnt[:] = 0
@@ -62,8 +64,8 @@ class End2EndMPNet(nn.Module):
     def forward(self, x):
         # xobs is the input to encoder
         # x is the input to mlp
-        z = self.encoder(x[:,:2800])
-        mlp_in = torch.cat((z,x[:,2800:]), 1)    # keep the first dim the same (# samples)
+        z = self.encoder(x[:,:self.AE_input_size])
+        mlp_in = torch.cat((z,x[:,self.AE_input_size:]), 1)    # keep the first dim the same (# samples)
         return self.mlp(mlp_in)
     def loss(self, pred, truth):
         return self.mse(pred, truth)
