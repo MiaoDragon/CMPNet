@@ -61,7 +61,7 @@ def main(args):
     if args.start_epoch > 0:
         load_opt_state(mpNet, os.path.join(args.model_path, model_path))
     # decide dataloader based on env_type
-    if args.env_type in ['s2d', 'c2d]':
+    if args.env_type in ['s2d', 'c2d']:
         load_dataset = data_loader_2d.load_dataset
     elif args.env_type == 'r3d':
         load_dataset = data_loader_r3d.load_dataset
