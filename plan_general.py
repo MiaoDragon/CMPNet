@@ -54,7 +54,18 @@ def lvc(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
                 return lvc(pc,obc,IsInCollision,step_sz=step_sz)
     return path
 
-def neural_replan(mpNet, path, obc, obs, IsInCollision, unnormalize, step_sz=DEFAULT_STEP):
+def neural_replan(mpNet, path, obc, obs, IsInCollision, unnormalize, init_plan_flag, step_sz=DEFAULT_STEP):
+    if init_plan_flag:
+        # if it is the initial plan, then we just do neural_replan
+        MAX_LENGTH = 80
+        mini_path = neural_replanner(mpNet, path[0], path[-1], obc, obs, IsInCollision, \
+                                     unnormalize, MAX_LENGTH, step_sz=step_sz)
+        if mini_path:
+            return mini_path
+        else:
+            # can't find a path
+            return path
+    MAX_LENGTH = 50
     # replan segments of paths
     new_path = []
     new_path.append(path[0])
@@ -75,7 +86,8 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, unnormalize, step_sz=DEF
             new_path.append(goal)
         else:
             # plan mini path
-            mini_path = neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, unnormalize, step_sz=step_sz)
+            mini_path = neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, \
+                                         unnormalize, MAX_LENGTH, step_sz=step_sz)
             if mini_path:
                 new_path += mini_path[1:]  # take out start point
             else:
@@ -84,9 +96,9 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, unnormalize, step_sz=DEF
     return new_path
 
 
-def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, unnormalize, step_sz=DEFAULT_STEP):
+def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, unnormalize, MAX_LENGTH, step_sz=DEFAULT_STEP):
     # plan a mini path from start to goal
-    MAX_LENGTH = 50
+    # obs: tensor
     itr=0
     pA=[]
     pA.append(start)
