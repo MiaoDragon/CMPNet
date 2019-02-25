@@ -15,20 +15,28 @@ from __future__ import print_function
 from Model.GEM_end2end_model import End2EndMPNet
 #from GEM_end2end_model_rand import End2EndMPNet as End2EndMPNet_rand
 import Model.model as model
+import Model.model_baxter as model_baxter 
 import Model.model_c2d as model_c2d
 import Model.AE.CAE_r3d as CAE_r3d
 import Model.AE.CAE as CAE_2d
+import Model.AE.CAE_baxter as CAE_baxter
+
 import numpy as np
 import argparse
 import os
+
 import torch
-import data_loader_2d, data_loader_r3d
+import data_loader_2d, data_loader_r3d, data_loader_baxter
 from torch.autograd import Variable
 import copy
 import os
 import random
+
 from utility import *
 import utility_s2d, utility_c2d, utility_r3d
+
+from mpnet_lib.import_tool import fileImport
+
 def main(args):
     # set seed
     torch_seed = np.random.randint(low=0, high=1000)
@@ -37,9 +45,19 @@ def main(args):
     torch.manual_seed(torch_seed)
     np.random.seed(np_seed)
     random.seed(py_seed)
+
+
+    # Create model directory
+    if not os.path.exists(args.model_path):
+            os.makedirs(args.model_path)
+
+    if not os.path.exists(args.data_path):
+            os.makedirs(args.data_path)
+
     # Build the models
     if torch.cuda.is_available():
         torch.cuda.set_device(args.device)
+
     # decide dataloader, MLP, AE based on env_type
     if args.env_type == 's2d':
         load_dataset = data_loader_2d.load_dataset
@@ -59,6 +77,13 @@ def main(args):
         unnormalize = utility_r3d.unnormalize
         CAE = CAE_r3d
         MLP = model.MLP
+    elif args.env_type == 'baxter':
+
+
+        load_dataset = data_loader_baxter.load_dataset
+        CAE = CAE_baxter
+        MLP = model_baxter.MLP
+
     if args.memory_type == 'res':
         mpNet = End2EndMPNet(args.total_input_size, args.AE_input_size, args.mlp_input_size, \
                     args.output_size, 'deep', args.n_tasks, args.n_memories, args.memory_strength, args.grad_step, \
@@ -83,12 +108,26 @@ def main(args):
         mpNet.mlp.cuda()
         mpNet.encoder.cuda()
         mpNet.set_opt(torch.optim.Adagrad, lr=1e-2)
+
     if args.start_epoch > 0:
         load_opt_state(mpNet, os.path.join(args.model_path, model_path))
 
     # load train and test data
     print('loading...')
-    obs, path_data = load_dataset(N=args.no_env, NP=args.no_motion_paths, folder=args.data_path)
+    if args.env_type != 'baxter':
+        obs, path_data = load_dataset(N=args.no_env, NP=args.no_motion_paths, folder=args.data_path)
+    else:
+        importer = fileImport()
+        env_data_path = '/baxter_mpnet_docker/data/full_dataset_sample/'
+        pcd_data_path = env_data_path+'pcd/'
+        envs_file = 'trainEnvironments_GazeboPatch.pkl'
+
+        envs = importer.environments_import(env_data_path + envs_file)
+        envs_load = envs
+
+        obs, path_data = load_dataset(env_names=envs_load, data_path=env_data_path, pcd_path=pcd_data_path,
+                     importer=importer)
+
     # Train the Models
     print('training...')
     for epoch in range(args.start_epoch+1,args.num_epochs+1):
@@ -107,7 +146,8 @@ def main(args):
             bt = targets
             bi = torch.FloatTensor(bi)
             bt = torch.FloatTensor(bt)
-            bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
+            if args.env_type != 'baxter':
+               bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
             mpNet.zero_grad()
             bi=to_var(bi)
             bt=to_var(bt)
@@ -123,7 +163,8 @@ def main(args):
                 bt = targets
                 bi = torch.FloatTensor(bi)
                 bt = torch.FloatTensor(bt)
-                bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
+                if args.env_type != 'baxter':
+                    bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
                 mpNet.zero_grad()
                 bi=to_var(bi)
                 bt=to_var(bt)

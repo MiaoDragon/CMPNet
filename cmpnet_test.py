@@ -16,8 +16,10 @@ from Model.GEM_end2end_model import End2EndMPNet
 #from GEM_end2end_model_rand import End2EndMPNet as End2EndMPNet_rand
 import Model.model as model
 import Model.model_c2d as model_c2d
+import Model.model_baxter as model baxter
 import Model.AE.CAE_r3d as CAE_r3d
 import Model.AE.CAE as CAE_2d
+import Model.AE.CAE_baxter as CAE_baxter
 import numpy as np
 import argparse
 import os
@@ -31,7 +33,9 @@ import os
 import gc
 import random
 from utility import *
+from baxter_util import *
 import utility_s2d, utility_c2d
+
 def main(args):
     # set seed
     torch_seed = np.random.randint(low=0, high=1000)
@@ -66,6 +70,12 @@ def main(args):
         unnormalize = utility_r3d.unnormalize
         CAE = CAE_r3d
         MLP = model.MLP
+    elif args.env_type == 'baxter':
+        load_test_dataset = data_loader_baxter.load_test_dataset
+        CAE = CAE_baxter
+        MLP = model_baxter.MLP
+        IsInCollision = baxter_util.IsInCollision 
+
     if args.memory_type == 'res':
         mpNet = End2EndMPNet(args.total_input_size, args.AE_input_size, args.mlp_input_size, \
                     args.output_size, 'deep', args.n_tasks, args.n_memories, args.memory_strength, args.grad_step, \
