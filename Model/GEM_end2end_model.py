@@ -1,5 +1,3 @@
-import Model.AE.CAE as CAE
-from Model.model import MLP
 import torch.nn as nn
 import torch
 from Model.gem_utility import *
@@ -8,7 +6,7 @@ import copy
 # Auxiliary functions useful for GEM's inner optimization.
 class End2EndMPNet(nn.Module):
     def __init__(self, total_input_size, AE_input_size, mlp_input_size, output_size, AEtype, \
-                 n_tasks, n_memories, memory_strength, grad_step):
+                 n_tasks, n_memories, memory_strength, grad_step, CAE, MLP):
         super(End2EndMPNet, self).__init__()
         self.encoder = CAE.Encoder()
         self.mlp = MLP(mlp_input_size, output_size)
