@@ -23,15 +23,15 @@ import argparse
 import os
 import torch
 from gem_eval import eval_tasks
-import plan_s2d, plan_c2d, plan_r3d
-import data_loader_2d, data_loader_r3d
+import plan_s2d, plan_c2d, plan_r3d, plan_r2d
+import data_loader_2d, data_loader_r3d, data_loader_r2d
 from torch.autograd import Variable
 import copy
 import os
 import gc
 import random
 from utility import *
-import utility_s2d, utility_c2d
+import utility_s2d, utility_c2d, utility_r3d, utility_r2d
 def main(args):
     # set seed
     torch_seed = np.random.randint(low=0, high=1000)
@@ -66,6 +66,15 @@ def main(args):
         unnormalize = utility_r3d.unnormalize
         CAE = CAE_r3d
         MLP = model.MLP
+    elif args.env_type == 'r2d':
+        IsInCollision = plan_r2d.IsInCollision
+        load_test_dataset = data_loader_r2d.load_test_dataset
+        normalize = utility_r2d.normalize
+        unnormalize = utility_r2d.unnormalize
+        CAE = CAE_2d
+        MLP = model.MLP
+        args.world_size = [20., 20., np.pi]
+        
     if args.memory_type == 'res':
         mpNet = End2EndMPNet(args.total_input_size, args.AE_input_size, args.mlp_input_size, \
                     args.output_size, 'deep', args.n_tasks, args.n_memories, args.memory_strength, args.grad_step, \
@@ -155,7 +164,7 @@ parser.add_argument('--data_path', type=str, default='../data/simple/')
 parser.add_argument('--start_epoch', type=int, default=0)
 parser.add_argument('--memory_type', type=str, default='res', help='res for reservoid, rand for random sampling')
 parser.add_argument('--env_type', type=str, default='s2d', help='s2d for simple 2d, c2d for complex 2d')
-parser.add_argument('--world_size', type=int, default=50, help='boundary of world')
+parser.add_argument('--world_size', nargs='+', type=float, default=20., help='boundary of world')
 args = parser.parse_args()
 print(args)
 main(args)
