@@ -13,6 +13,10 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
     total_dist = np.linalg.norm(delta)
     # obtain the number of segments (start to end-1)
     # the number of nodes including start and end is actually num_segs+1
+    print('start:')
+    print(start)
+    print('end:')
+    print(end)
     num_segs = int(total_dist / DISCRETIZATION_STEP)
     print(num_segs)
     if num_segs == 0:
