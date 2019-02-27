@@ -14,6 +14,7 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
     # obtain the number of segments (start to end-1)
     # the number of nodes including start and end is actually num_segs+1
     num_segs = int(total_dist / DISCRETIZATION_STEP)
+    print(num_segs)
     if num_segs == 0:
         # distance smaller than threshold, just return 1
         return 1

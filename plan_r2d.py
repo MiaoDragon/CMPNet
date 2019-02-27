@@ -1,6 +1,5 @@
 import numpy as np
 import math
-import time
 def in_between(p, a0, a1):
     # check whether p is in between a0 and a1
     # by solving p = a0 + alpha * (a1 - a0)
@@ -52,7 +51,7 @@ def line_intersect(a0,a1,b0,b1):
     return False
 
 def IsInCollision(stateIn,obc):
-    start_t = time.time()
+
     size = 5.
     robot_corner=np.zeros((4,2),dtype=np.float32)
     robot_axis=np.zeros((2,2),dtype=np.float32)
@@ -124,7 +123,5 @@ def IsInCollision(stateIn,obc):
             for j in range(-1,len(obs_corner)-1):
                 if line_intersect(robot_corner[i], robot_corner[i+1], obs_corner[j], obs_corner[j+1]):
                     # if any two lines intersect, then collision
-                    print('collision check time: %f' % (time.time()-start_t))
                     return True
-    print('collision check time: %f' % (time.time()-start_t))
     return False
