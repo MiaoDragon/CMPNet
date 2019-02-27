@@ -51,7 +51,9 @@ def line_intersect(a0,a1,b0,b1):
     return False
 
 def IsInCollision(stateIn,obc):
-
+    # if origin is out of world, return True
+    if abs(stateIn[0]) > 20. or abs(stateIn[1]) > 20.:
+        return True
     size = 5.
     robot_corner=np.zeros((4,2),dtype=np.float32)
     robot_axis=np.zeros((2,2),dtype=np.float32)
