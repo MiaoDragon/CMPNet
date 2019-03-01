@@ -74,7 +74,7 @@ def main(args):
         CAE = CAE_2d
         MLP = model.MLP
         args.world_size = [20., 20., np.pi]
-        
+
     if args.memory_type == 'res':
         mpNet = End2EndMPNet(args.total_input_size, args.AE_input_size, args.mlp_input_size, \
                     args.output_size, 'deep', args.n_tasks, args.n_memories, args.memory_strength, args.grad_step, \
@@ -92,7 +92,7 @@ def main(args):
         torch.manual_seed(torch_seed)
         np.random.seed(np_seed)
         random.seed(py_seed)
-
+    print('after loading net')
     if torch.cuda.is_available():
         mpNet.cuda()
         mpNet.mlp.cuda()
