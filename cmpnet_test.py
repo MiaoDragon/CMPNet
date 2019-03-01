@@ -83,6 +83,7 @@ def main(args):
         #mpNet = End2EndMPNet_rand(args.mlp_input_size, args.output_size, 'deep', \
         #            args.n_tasks, args.n_memories, args.memory_strength, args.grad_step)
         pass
+    print('before loading net')
     # load previously trained model if start epoch > 0
     model_path='cmpnet_epoch_%d.pkl' %(args.start_epoch)
     if args.start_epoch > 0:
@@ -92,7 +93,6 @@ def main(args):
         torch.manual_seed(torch_seed)
         np.random.seed(np_seed)
         random.seed(py_seed)
-    print('after loading net')
     if torch.cuda.is_available():
         mpNet.cuda()
         mpNet.mlp.cuda()
