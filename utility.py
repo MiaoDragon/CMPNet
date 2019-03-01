@@ -20,11 +20,11 @@ def save_state(net, torch_seed, np_seed, py_seed, fname):
 
 def load_net_state(net, fname):
     checkpoint = torch.load(fname)
-    net.load_state_dict(checkpoint['state_dict'])
+    net.load_state_dict(checkpoint['state_dict'], map_location=torch.cuda.current_device())
 
 def load_opt_state(net, fname):
     checkpoint = torch.load(fname)
-    net.opt.load_state_dict(checkpoint['optimizer'])
+    net.opt.load_state_dict(checkpoint['optimizer'], map_location=torch.cuda.current_device())
 
 def load_seed(fname):
     # load both torch random seed, and numpy random seed
