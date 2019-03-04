@@ -3,6 +3,7 @@ from torch.autograd import Variable
 import copy
 import numpy as np
 def normalize(x, bound):
+    """
     # normalize to -1 ~ 1  (bound can be a tensor)
     bound = torch.tensor(bound)
     if len(x[0]) != len(bound):
@@ -13,7 +14,11 @@ def normalize(x, bound):
     else:
         x = x / bound
     return x
+    """
+    return x
+
 def unnormalize(x, bound):
+    """
     # normalize to -1 ~ 1  (bound can be a tensor)
     # x only one dim
     bound = torch.tensor(bound)
@@ -24,4 +29,6 @@ def unnormalize(x, bound):
         x[-len(bound):] = x[-len(bound):] * bound
     else:
         x = x * bound
+    return x
+    """
     return x
