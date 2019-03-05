@@ -118,7 +118,7 @@ def main(args):
             bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
             mpNet.zero_grad()
             print('input:')
-            print(bi)
+            print(bi[:, args.AE_input_size:])
             print('target:')
             print(bt)
             bi=to_var(bi)
