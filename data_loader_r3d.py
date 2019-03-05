@@ -17,6 +17,7 @@ def load_dataset(N=100,NP=4000,folder='../data/simple/',s=0):
 	# load data as [path]
 	# for each path, it is
 	# [[input],[target],[env_id]]
+	print('load 3d data...')
 	obs = []
 	# add start s
 	for i in range(0,N):

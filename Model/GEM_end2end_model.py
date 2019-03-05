@@ -58,6 +58,7 @@ class End2EndMPNet(nn.Module):
     def forward(self, x):
         # xobs is the input to encoder
         # x is the input to mlp
+        print(self.AE_input_size)
         z = self.encoder(x[:,:self.AE_input_size])
         mlp_in = torch.cat((z,x[:,self.AE_input_size:]), 1)    # keep the first dim the same (# samples)
         return self.mlp(mlp_in)
