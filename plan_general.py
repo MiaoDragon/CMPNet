@@ -7,27 +7,63 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
     # given by step_sz, and with generic collision check function
     # here we assume start and end are tensors
     # return 0 if in coliision; 1 otherwise
-    DISCRETIZATION_STEP=step_sz
-    delta = end - start  # change
-    delta = delta.numpy()
-    total_dist = np.linalg.norm(delta)
-    # obtain the number of segments (start to end-1)
-    # the number of nodes including start and end is actually num_segs+1
-    num_segs = int(total_dist / DISCRETIZATION_STEP)
-    if num_segs == 0:
-        # distance smaller than threshold, just return 1
-        return 1
-    # obtain the change for each segment
-    delta_seg = delta / num_segs
-    # initialize segment
-    seg = start.numpy()
-    # check for each segment, if they are in collision
-    for i in range(num_segs+1):
-        #print(seg)
-        if IsInCollision(seg, obc):
-            # in collision
+    
+    # DISCRETIZATION_STEP=step_sz
+    # delta = end - start  # change
+    # delta = delta.numpy()
+    # total_dist = np.linalg.norm(delta)
+    # # obtain the number of segments (start to end-1)
+    # # the number of nodes including start and end is actually num_segs+1
+    # num_segs = int(total_dist / DISCRETIZATION_STEP)
+    # if num_segs == 0:
+    #     # distance smaller than threshold, just return 1
+    #     return 1
+    # # obtain the change for each segment
+    # delta_seg = delta / num_segs
+    # # initialize segment
+    # seg = start.numpy()
+    # # check for each segment, if they are in collision
+    # for i in range(num_segs+1):
+    #     #print(seg)
+    #     if IsInCollision(seg, obc):
+    #         # in collision
+    #         return 0
+    #     seg = seg + delta_seg
+    # return 1
+    dof = 7
+    DISCRETIZATION_STEP = step_sz
+    dists=np.zeros(dof,dtype=np.float32)
+    for i in range(0,dof):
+        dists[i] = end[i] - start[i]
+
+    distTotal = 0.0
+    for i in range(0,dof):
+        distTotal =distTotal+ dists[i]*dists[i]
+
+    distTotal = np.sqrt(distTotal)
+    if distTotal>0:
+        incrementTotal = distTotal/DISCRETIZATION_STEP
+        for i in range(0,dof):
+            dists[i] =dists[i]/incrementTotal
+
+        numSegments = int(np.floor(incrementTotal))
+
+        stateCurr = np.zeros(7,dtype=np.float32)
+        for i in range(0,dof):
+            stateCurr[i] = start[i]
+        for i in range(0,numSegments):
+
+            if IsInCollision(stateCurr, obc):
+                return 0
+
+            for j in range(0,dof):
+                stateCurr[j] = stateCurr[j]+dists[j]
+
+
+        if IsInCollision(end, obc):
             return 0
-        seg = seg + delta_seg
+
+
     return 1
 
 def feasibility_check(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
@@ -113,8 +149,6 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, unnormalize, M
             ip1=torch.cat((obs,start,goal)).unsqueeze(0)
             ip1=to_var(ip1)
             start=mpNet(ip1).squeeze(0)
-            # unnormalize to world size
-            start = unnormalize(start)
             start=start.data.cpu()
             pA.append(start)
             tree=1
@@ -122,8 +156,6 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, unnormalize, M
             ip2=torch.cat((obs,goal,start)).unsqueeze(0)
             ip2=to_var(ip2)
             goal=mpNet(ip2).squeeze(0)
-            # unnormalize to world size
-            goal = unnormalize(goal)
             goal=goal.data.cpu()
             pB.append(goal)
             tree=0

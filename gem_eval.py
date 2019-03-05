@@ -9,7 +9,7 @@ import math
 import time
 from plan_general import *
 
-def eval_tasks(mpNet, test_data, filename, IsInCollision, unnormalize_func=lambda x: x):
+def eval_tasks(mpNet, test_data, filename, IsInCollision, envs_load, envDict, sceneModifier, unnormalize_func=lambda x: x):
     obc, obs, paths, path_lengths = test_data
     obs = torch.from_numpy(obs)
     fes_env = []   # list of list
@@ -17,12 +17,20 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, unnormalize_func=lambd
     #for i in range(0,1):
     time_env = []
     time_total = []
-    for i in range(len(paths)):
+    # for i in range(len(paths)):
+    for i, env_name in enumerate(envs_load):
+
+        print("ENVIRONMENT: " + env_name)
+        sceneModifier.delete_obstacles()
+        new_pose = envDict['poses'][env_name]
+        sceneModifier.permute_obstacles(new_pose)
+
         time_path = []
         fes_path = []   # 1 for feasible, 0 for not feasible
         valid_path = []      # if the feasibility is valid or not
         # save paths to different files, indicated by i
         # feasible paths for each env
+
         for j in range(len(paths[0])):
             time0 = time.time()
             fp = 0 # indicator for feasibility
@@ -31,10 +39,12 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, unnormalize_func=lambd
             p1_ind=0
             p2_ind=0
             p_ind=0
+
             if path_lengths[i][j]==0:
                 # invalid, feasible = 0, and path count = 0
                 fp = 0
                 valid_path.append(0)
+
             if path_lengths[i][j]>0:
                 fp = 0
                 valid_path.append(1)
@@ -42,6 +52,7 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, unnormalize_func=lambd
                         torch.from_numpy(paths[i][j][path_lengths[i][j]-1]).type(torch.FloatTensor)]
                 step_sz = DEFAULT_STEP
                 MAX_NEURAL_REPLAN = 11
+
                 for t in range(MAX_NEURAL_REPLAN):
                 # adaptive step size on replanning attempts
                     if (t == 2):
@@ -50,10 +61,10 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, unnormalize_func=lambd
                         step_sz = 0.03
                     elif (t > 3):
                         step_sz = 0.02
-                    path = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
+                    path = neural_replan(mpNet, path, obc, obs[i], IsInCollision, \
                                          unnormalize_func, t==0, step_sz=step_sz)
-                    path = lvc(path, obc[i], IsInCollision, step_sz=step_sz)
-                    if feasibility_check(path, obc[i], IsInCollision, step_sz=0.01):
+                    path = lvc(path, obc, IsInCollision, step_sz=step_sz)
+                    if feasibility_check(path, obc, IsInCollision, step_sz=0.01):
                         fp = 1
                         print('feasible, ok!')
                         break
@@ -62,10 +73,13 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, unnormalize_func=lambd
                 time1 = time.time() - time0
                 time_path.append(time1)
                 print('test time: %f' % (time1))
+
             fes_path.append(fp)
+
         time_env.append(time_path)
         time_total += time_path
         print('average test time up to now: %f' % (np.mean(time_total)))
+
         fes_env.append(fes_path)
         valid_env.append(valid_path)
         print('accuracy up to now: %f' % (np.sum(fes_env) / np.sum(valid_env)))

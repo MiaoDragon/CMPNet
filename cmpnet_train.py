@@ -78,8 +78,6 @@ def main(args):
         CAE = CAE_r3d
         MLP = model.MLP
     elif args.env_type == 'baxter':
-
-
         load_dataset = data_loader_baxter.load_dataset
         CAE = CAE_baxter
         MLP = model_baxter.MLP
