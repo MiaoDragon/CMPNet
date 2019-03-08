@@ -75,7 +75,7 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, unnormalize, init_plan_f
     new_path.append(path[0])
     # rule out nodes that are already in collision
     for i in range(1,len(path)-1):
-        if not IsInCollision(path[i],obc):
+        if not IsInCollision(path[i].numpy(),obc):
             new_path.append(path[i])
     new_path.append(path[-1])
     path = new_path
