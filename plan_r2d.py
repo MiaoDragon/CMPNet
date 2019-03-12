@@ -1,55 +1,25 @@
 import numpy as np
 import math
-def in_between(p, a0, a1):
-    # check whether p is in between a0 and a1
-    # by solving p = a0 + alpha * (a1 - a0)
-    dif, t = p - a0, a1 - a0
-    # then dif = alpha * t
-    # then |alpha| = ||dif|| / ||t||
-    alpha = np.linalg.norm(dif) / np.linalg.norm(t)
-    # alpha * t = +- dif
-    d1 = sum(alpha * t + dif)
-    d2 = sum(alpha * t - dif)
-    if alpha >= 0. and alpha <= 1. and (d1 == 0. or d2 == 0.):
-        return True
-    return False
-
-def line_intersect(a0,a1,b0,b1):
-    """
-    # given one line [a0,a1], one line [b0,b1], decide whether they intersect
-    # l1: x = a0 + alpha * (a1-a0)  for alpha in [0,1]
-    # l2: x = b0 + beta * (b1-b0)   for beta in [0,1]
-    # obtaining system: a0 + alpha * (a1 - a0) = b0 + beta * (b1 - b0)
-    # hence (alpha, beta) = [-(a1-a0), b1-b0]^{-1} (a0 - b0)
-    # Notice that matrix [-(a1-a0), b1-b0] should be invertible
-    # if it is not, then the two lines are parallel
-    # then if there is one vertex in the line segment between the other
-    # collide
-    """
-    # varaible recording difference
-    t1, t2 = a1 - a0, b1 - b0
-    mat = np.array([-t1, t2]).T  # np array saves as row vectors, but we want col
-    # check if det is 0
-    if np.linalg.det(mat) == 0:
-        # parallel line, need to check whether they collide
-        # by checking if each point is in the other line
-        if in_between(a0,b0,b1):
-            return True
-        if in_between(a1,b0,b1):
-            return True
-        if in_between(b0,a0,a1):
-            return True
-        if in_between(b1,a0,a1):
-            return True
-        # otherwise parallel but no collision
+def line_intersect(a0, a1, b0, b1):
+    x1 = a1[1] - a0[1]
+    y1 = a0[0] - a1[0]
+    c1 = a1[0] * a0[1] - a0[0] * a1[1]
+    r3 = x1 * b0[0] + y1 * b0[1] + c1
+    r4 = x1 * b1[0] + y1 * b1[1] + c1
+    if r3 * r4 > 0:
         return False
-    # otherwise, obtain [alpha, beta]
-    sol = np.linalg.inv(mat) @ (a0 - b0)
-    # if colllision point is in both lines
-    if sol[0] >= 0 and sol[0] <= 1 and sol[1] >= 0 and sol[1] <= 1:
-        return True
-    return False
-
+    x2 = b1[1] - b0[1]
+    y2 = b0[0] - b1[0]
+    c2 = b1[0] * b0[1] - b0[0] * b1[1]
+    r1 = x2 * a0[0] + y2 * a0[1] + c2
+    r2 = x2 * a1[0] + y2 * a1[1] + c2
+    if r1 * r2 > 0:
+        return False
+    denom = x1 * y2 - x2 * y1
+    if denom == 0.:
+        return False  # collinear
+    return True
+    
 def IsInCollision(stateIn,obc):
     # if origin is out of world, return True
     if abs(stateIn[0]) > 20. or abs(stateIn[1]) > 20.:
@@ -87,7 +57,7 @@ def IsInCollision(stateIn,obc):
     robot_orign[0]=robot_corner[0][0]*robot_axis[0][0]+ robot_corner[0][1]*robot_axis[0][1]
     robot_orign[1]=robot_corner[0][0]*robot_axis[1][0]+ robot_corner[0][1]*robot_axis[1][1]
 
-    for i in range(0,1):
+    for i in range(0,7):
         cf=True
 
         obs_corner=np.zeros((4,2),dtype=np.float32)
