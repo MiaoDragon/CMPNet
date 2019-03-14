@@ -135,6 +135,8 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             pB.append(goal)
             tree=0
         target_reached=steerTo(start, goal, obc, IsInCollision, step_sz=step_sz)
+    print(pA)
+    print(pB)
     if target_reached==0:
         return 0
     else:
