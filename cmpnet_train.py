@@ -120,6 +120,8 @@ def main(args):
             bi=to_var(bi)
             bt=to_var(bt)
             mpNet.observe(bi, 0, bt)
+            print('input:')
+            print(bi)
             print('mpnet output:')
             print(mpNet(bi))
             print('target:')
