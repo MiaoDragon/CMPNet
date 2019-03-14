@@ -1,7 +1,7 @@
 # state space has 3DOF
 # input of MLP is thus 3*2+28=34
 python3 cmpnet_train.py --model_path ../CMPnet_res/r2d/state_normalize/ \
---no_env 10 --no_motion_paths 200 --grad_step 1 --learning_rate 0.02 \
+--no_env 10 --no_motion_paths 200 --grad_step 1 --learning_rate 0.01 \
 --num_epochs 1 --memory_strength 0.5 --n_memories 10000 \
 --n_tasks 1 --device 3 --freq_rehersal 10 --batch_rehersal 20 \
 --start_epoch 0 --data_path /media/arclabdl1/HD1/Ahmed/rigid-body/dataset/ --world_size 20 --env_type r2d \
