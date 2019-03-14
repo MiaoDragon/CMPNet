@@ -3,6 +3,6 @@
 python3 cmpnet_train.py --model_path ../CMPnet_res/r2d/state_normalize/ \
 --no_env 2 --no_motion_paths 20 --grad_step 1 --learning_rate 0.01 \
 --num_epochs 1 --memory_strength 0.5 --n_memories 10000 \
---n_tasks 1 --device 1 --freq_rehersal 2 --batch_rehersal 2 \
+--n_tasks 1 --device 3 --freq_rehersal 2 --batch_rehersal 2 \
 --start_epoch 0 --data_path /media/arclabdl1/HD1/Ahmed/rigid-body/dataset/ --world_size 20 --env_type r2d \
 --memory_type res --total_input_size 2806 --AE_input_size 2800 --mlp_input_size 34 --output_size 3
