@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 from utility import *
+import time
 DEFAULT_STEP = 0.05
 def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
     # test if there is a collision free path from start to end, with step size
@@ -12,6 +13,7 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
     #print(start)
     #print('end:')
     #print(end)
+    start_t = time.time()
     delta = end - start  # change
     delta = delta.numpy()
     total_dist = np.linalg.norm(delta)
@@ -30,8 +32,10 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
         #print(seg)
         if IsInCollision(seg, obc):
             # in collision
+            print(time.time()-start_t)
             return 0
         seg = seg + delta_seg
+    print(time.time()-start_t)
     return 1
 
 def feasibility_check(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
@@ -115,21 +119,21 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
         itr=itr+1  # prevent the path from being too long
         if tree==0:
             ip1=torch.cat((obs,start,goal)).unsqueeze(0)
-            print('before normalizing:')
-            print(ip1)
+            #print('before normalizing:')
+            #print(ip1)
             # firstly we need to normalize in order to input to network
             ip1=normalize(ip1)
-            print('after normalizing...')
-            print(ip1)
+            #print('after normalizing...')
+            #print(ip1)
             ip1=to_var(ip1)
             start=mpNet(ip1).squeeze(0)
             # unnormalize to world size
             start=start.data.cpu()
-            print('before unnormalizing..')
-            print(start)
+            #print('before unnormalizing..')
+            #print(start)
             start = unnormalize(start)
-            print('after unnormalizing:')
-            print(start)
+            #print('after unnormalizing:')
+            #print(start)
             pA.append(start)
             tree=1
         else:
