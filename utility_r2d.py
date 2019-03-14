@@ -8,11 +8,11 @@ def normalize(x, bound):
     if len(x[0]) != len(bound):
         # then the proceding is obstacle
         # don't normalize obstacles
-        x[:,:-2*len(bound)] = x[:,:-2*len(bound)] / bound[0] * 20.
-        x[:,-2*len(bound):-len(bound)] = x[:,-2*len(bound):-len(bound)] / bound * 20.
-        x[:,-len(bound):] = x[:,-len(bound):] / bound * 20.
+        #x[:,:-2*len(bound)] = x[:,:-2*len(bound)] / bound[0] * 20.
+        x[:,-2*len(bound):-len(bound)] = x[:,-2*len(bound):-len(bound)] / bound
+        x[:,-len(bound):] = x[:,-len(bound):] / bound
     else:
-        x = x / bound * 10.
+        x = x / bound
     return x
 
 def unnormalize(x, bound):
@@ -22,9 +22,9 @@ def unnormalize(x, bound):
     if len(x) != len(bound):
         # then the proceding is obstacle
         # don't normalize obstacles
-        x[:-2*len(bound)] = x[:-2*len(bound)] * bound[0] / 20.
-        x[-2*len(bound):-len(bound)] = x[-2*len(bound):-len(bound)] * bound / 20.
-        x[-len(bound):] = x[-len(bound):] * bound / 20.
+        x[:-2*len(bound)] = x[:-2*len(bound)] * bound[0]
+        x[-2*len(bound):-len(bound)] = x[-2*len(bound):-len(bound)] * bound
+        x[-len(bound):] = x[-len(bound):] * bound
     else:
-        x = x * bound / 20.
+        x = x * bound
     return x
