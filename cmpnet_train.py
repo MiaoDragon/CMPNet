@@ -115,19 +115,10 @@ def main(args):
             bt = targets
             bi = torch.FloatTensor(bi)
             bt = torch.FloatTensor(bt)
-            print('before normalization:')
-            print('input:')
-            print(bi)
-            print('output:')
-            print(bt)
             bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
             mpNet.zero_grad()
             bi=to_var(bi)
             bt=to_var(bt)
-            print('input:')
-            print(bi)
-            print('target:')
-            print(bt)
             mpNet.observe(bi, 0, bt)
             num_path_trained += 1
             # perform rehersal when certain number of batches have passed
@@ -144,10 +135,6 @@ def main(args):
                 mpNet.zero_grad()
                 bi=to_var(bi)
                 bt=to_var(bt)
-                print('input:')
-                print(bt)
-                print('target:')
-                print(bt)
                 mpNet.observe(bi, 0, bt, False)  # train but don't remember
 
         # Save the models

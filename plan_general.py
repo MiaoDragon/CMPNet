@@ -58,12 +58,12 @@ def lvc(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
                 return lvc(pc,obc,IsInCollision,step_sz=step_sz)
     return path
 
-def neural_replan(mpNet, path, obc, obs, IsInCollision, unnormalize, init_plan_flag, step_sz=DEFAULT_STEP):
+def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, init_plan_flag, step_sz=DEFAULT_STEP):
     if init_plan_flag:
         # if it is the initial plan, then we just do neural_replan
         MAX_LENGTH = 80
         mini_path = neural_replanner(mpNet, path[0], path[-1], obc, obs, IsInCollision, \
-                                     unnormalize, MAX_LENGTH, step_sz=step_sz)
+                                     normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
         if mini_path:
             return mini_path
         else:
@@ -91,7 +91,7 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, unnormalize, init_plan_f
         else:
             # plan mini path
             mini_path = neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, \
-                                         unnormalize, MAX_LENGTH, step_sz=step_sz)
+                                         normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
             if mini_path:
                 new_path += mini_path[1:]  # take out start point
             else:
@@ -100,7 +100,7 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, unnormalize, init_plan_f
     return new_path
 
 
-def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, unnormalize, MAX_LENGTH, step_sz=DEFAULT_STEP):
+def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unnormalize, MAX_LENGTH, step_sz=DEFAULT_STEP):
     # plan a mini path from start to goal
     # obs: tensor
     itr=0
@@ -115,6 +115,8 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, unnormalize, M
         itr=itr+1  # prevent the path from being too long
         if tree==0:
             ip1=torch.cat((obs,start,goal)).unsqueeze(0)
+            # firstly we need to normalize in order to input to network
+            ip1=normalize(ip1)
             ip1=to_var(ip1)
             start=mpNet(ip1).squeeze(0)
             # unnormalize to world size
@@ -124,6 +126,7 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, unnormalize, M
             tree=1
         else:
             ip2=torch.cat((obs,goal,start)).unsqueeze(0)
+            ip2=normalize(ip2)
             ip2=to_var(ip2)
             goal=mpNet(ip2).squeeze(0)
             # unnormalize to world size

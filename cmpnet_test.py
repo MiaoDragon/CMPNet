@@ -113,16 +113,17 @@ def main(args):
     T = 1
     for _ in range(T):
         # unnormalize function
+        normalize_func=lambda x: normalize(x, args.world_size)
         unnormalize_func=lambda x: unnormalize(x, args.world_size)
         # seen
         time_file = os.path.join(args.model_path,'time_seen_epoch_%d_mlp.p' % (args.start_epoch))
-        fes_path_, valid_path_ = eval_tasks(mpNet, seen_test_data, time_file, IsInCollision, unnormalize_func)
+        fes_path_, valid_path_ = eval_tasks(mpNet, seen_test_data, time_file, IsInCollision, normalize_func, unnormalize_func)
         valid_path = valid_path_.flatten()
         fes_path = fes_path_.flatten()   # notice different environments are involved
         seen_test_suc_rate += fes_path.sum() / valid_path.sum()
         # unseen
         time_file = os.path.join(args.model_path,'time_unseen_epoch_%d_mlp.p' % (args.start_epoch))
-        fes_path_, valid_path_ = eval_tasks(mpNet, unseen_test_data, time_file, IsInCollision, unnormalize_func)
+        fes_path_, valid_path_ = eval_tasks(mpNet, unseen_test_data, time_file, IsInCollision, normalize_func, unnormalize_func)
         valid_path = valid_path_.flatten()
         fes_path = fes_path_.flatten()   # notice different environments are involved
         unseen_test_suc_rate += fes_path.sum() / valid_path.sum()
