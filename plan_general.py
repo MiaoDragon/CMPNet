@@ -13,7 +13,7 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
     #print(start)
     #print('end:')
     #print(end)
-    start_t = time.time()
+    #start_t = time.time()
     delta = end - start  # change
     delta = delta.numpy()
     total_dist = np.linalg.norm(delta)
@@ -32,10 +32,10 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
         #print(seg)
         if IsInCollision(seg, obc):
             # in collision
-            print(time.time()-start_t)
+            #print(time.time()-start_t)
             return 0
         seg = seg + delta_seg
-    print(time.time()-start_t)
+    #print(time.time()-start_t)
     return 1
 
 def feasibility_check(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
