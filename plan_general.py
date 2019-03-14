@@ -8,10 +8,10 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
     # here we assume start and end are tensors
     # return 0 if in coliision; 1 otherwise
     DISCRETIZATION_STEP=step_sz
-    #print('start:')
-    #print(start)
-    #print('end:')
-    #print(end)
+    print('start:')
+    print(start)
+    print('end:')
+    print(end)
     delta = end - start  # change
     delta = delta.numpy()
     total_dist = np.linalg.norm(delta)
