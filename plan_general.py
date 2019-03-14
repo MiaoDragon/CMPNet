@@ -115,8 +115,12 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
         itr=itr+1  # prevent the path from being too long
         if tree==0:
             ip1=torch.cat((obs,start,goal)).unsqueeze(0)
+            print('before normalizing:')
+            print(ip1)
             # firstly we need to normalize in order to input to network
             ip1=normalize(ip1)
+            print('after normalizing...')
+            print(ip1)
             ip1=to_var(ip1)
             start=mpNet(ip1).squeeze(0)
             # unnormalize to world size
@@ -135,8 +139,7 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             pB.append(goal)
             tree=0
         target_reached=steerTo(start, goal, obc, IsInCollision, step_sz=step_sz)
-    print(pA)
-    print(pB)
+
     if target_reached==0:
         return 0
     else:
