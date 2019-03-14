@@ -21,11 +21,7 @@ class MLP(nn.Module):
         nn.Linear(128, 64),nn.PReLU(), nn.Dropout(),
         nn.Linear(64, 32),nn.PReLU(),
         nn.Linear(32, output_size))
-    def init_weights(m):
-        if type(m) == nn.Linear:
-            torch.nn.init.xavier_uniform(m.weight)
-            m.bias.data.fill_(0.01)
-        self.fc.apply(init_weights)
+        
     def forward(self, x):
         out = self.fc(x)
         return out
