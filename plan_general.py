@@ -125,7 +125,11 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             start=mpNet(ip1).squeeze(0)
             # unnormalize to world size
             start=start.data.cpu()
+            print('before unnormalizing..')
+            print(start)
             start = unnormalize(start)
+            print('after unnormalizing:')
+            print(start)
             pA.append(start)
             tree=1
         else:
