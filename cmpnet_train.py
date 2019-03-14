@@ -119,6 +119,10 @@ def main(args):
             mpNet.zero_grad()
             bi=to_var(bi)
             bt=to_var(bt)
+            print('input:')
+            print(bt)
+            print('target:')
+            print(bt)
             mpNet.observe(bi, 0, bt)
             num_path_trained += 1
             # perform rehersal when certain number of batches have passed
@@ -135,6 +139,10 @@ def main(args):
                 mpNet.zero_grad()
                 bi=to_var(bi)
                 bt=to_var(bt)
+                print('input:')
+                print(bt)
+                print('target:')
+                print(bt)
                 mpNet.observe(bi, 0, bt, False)  # train but don't remember
 
         # Save the models
