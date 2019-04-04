@@ -117,8 +117,6 @@ def main(args):
                 targets.append(p_targets[p_idx])
                 env_indices.append(p_env_indices[p_idx])
                 path_ids.append((env_idx[j], p_idx))
-            print('path ids:')
-            print(path_ids)
             print('epoch: %d, training... path: %d' % (epoch, i+1))
             # record
             bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
