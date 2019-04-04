@@ -128,12 +128,12 @@ def main(args):
             bi=to_var(bi)
             bt=to_var(bt)
             mpNet.observe(bi, 0, bt)
-            print('input:')
-            print(bi)
-            print('mpnet output:')
-            print(mpNet(bi))
-            print('target:')
-            print(bt)
+            #print('input:')
+            #print(bi)
+            #print('mpnet output:')
+            #print(mpNet(bi))
+            #print('target:')
+            #print(bt)
             num_path_trained += 1
         # Save the models
         if epoch > 0:
