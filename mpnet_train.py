@@ -103,12 +103,12 @@ def main(args):
         data_all = []
         num_path_trained = 0
         print('epoch' + str(epoch))
-        for i in range(400000//100):
+        for i in range(4000//40):
             # randomly pick 100 data
-            env_idx = random.sample(range(len(path_data)), 100)
+            env_idx = random.sample(range(len(path_data)), 40)
             path_ids = []
             dataset, targets, env_indices = [], [], []
-            for j in range(100):
+            for j in range(len(env_idx)):
                 p_dataset, p_targets, p_env_indices = path_data[env_idx[j]]
                 if len(p_dataset) == 0:
                     continue
