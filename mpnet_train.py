@@ -135,7 +135,7 @@ def main(args):
             print('target:')
             print(bt)
             print('losses:')
-            print(mpNet.loss(mpNet(bi), bt))
+            print(mpNet.loss(bi, mpNet(bi), bt))
             num_path_trained += 1
         # Save the models
         if epoch > 0:

@@ -61,8 +61,17 @@ class End2EndMPNet(nn.Module):
         z = self.encoder(x[:,:self.AE_input_size])
         mlp_in = torch.cat((z,x[:,self.AE_input_size:]), 1)    # keep the first dim the same (# samples)
         return self.mlp(mlp_in)
-    def loss(self, pred, truth):
-        return self.mse(pred, truth)
+    def loss(self, x, pred, truth):
+        #return self.mse(pred, truth)
+        # use new loss: - cos + mse loss  (minimizing the angle)
+        x = x[:,self.AE_input_size:]
+        norm1 = torch.norm(pred-x, dim=1)
+        norm2 = torch.norm(truth-x, dim=1)
+        print(norm1.size())
+        cos_loss = - (pred - x) * (truth - x) / norm1 / norm2
+        cos_loss = cos_loss.sum(dim=1).mean()
+        alpha = 1.
+        return alpha * cos_loss + self.mse(pred, truth)
 
     def load_memory(self, data):
         # data: (tasks, xs, ys)
@@ -126,11 +135,13 @@ class End2EndMPNet(nn.Module):
                     past_task = self.observed_tasks[tt]
                     if tt == len(self.observed_tasks) - 1:
                         ptloss = self.loss(
+                            self.memory_data[past_task][:self.mem_cnt[past_task]],
                             self.forward(
                             self.memory_data[past_task][:self.mem_cnt[past_task]]),   # TODO
                             self.memory_labs[past_task][:self.mem_cnt[past_task]])   # up to current
                     else:
                         ptloss = self.loss(
+                            self.memory_data[past_task][:self.mem_cnt[past_task]],
                             self.forward(
                             self.memory_data[past_task]),   # TODO
                             self.memory_labs[past_task])
@@ -140,7 +151,7 @@ class End2EndMPNet(nn.Module):
 
             # now compute the grad on the current minibatch
             self.zero_grad()
-            loss = self.loss(self.forward(x), y)
+            loss = self.loss(x, self.forward(x), y)
             loss.backward()
 
             # check if gradient violates constraints
