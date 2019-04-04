@@ -103,7 +103,7 @@ def main(args):
         data_all = []
         num_path_trained = 0
         print('epoch' + str(epoch))
-        for i in range(4000//40):
+        for i in range(args.no_env*args.no_motion_paths//40):
             # randomly pick 100 data
             env_idx = random.sample(range(len(path_data)), 40)
             path_ids = []
@@ -137,7 +137,7 @@ def main(args):
             num_path_trained += 1
         # Save the models
         if epoch > 0:
-            model_path='mpnet_epoch_%d.pkl' %(epoch)
+            model_path='cmpnet_epoch_%d.pkl' %(epoch)
             save_state(mpNet, torch_seed, np_seed, py_seed, os.path.join(args.model_path,model_path))
             # test
 
