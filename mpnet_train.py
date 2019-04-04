@@ -105,15 +105,14 @@ def main(args):
         print('epoch' + str(epoch))
         for i in range(400000//100):
             # randomly pick 100 data
-            print(path_data)
-            env_idx = random.sample(len(path_data), 100)
+            env_idx = random.sample(range(len(path_data)), 100)
             path_ids = []
             dataset, targets, env_indices = [], [], []
             for j in range(100):
                 p_dataset, p_targets, p_env_indices = path_data[env_idx[j]]
                 if len(p_dataset) == 0:
                     continue
-                p_idx = random.sample(len(p_targets), 1)
+                p_idx = random.sample(range(len(p_targets)), 1)
                 dataset.append(p_dataset[p_idx])
                 targets.append(p_targets[p_idx])
                 env_indices.append(p_env_indices[p_idx])
