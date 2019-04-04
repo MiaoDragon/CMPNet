@@ -69,8 +69,9 @@ class End2EndMPNet(nn.Module):
         norm2 = torch.norm(truth-x, dim=1)
         cos_loss = - ((pred - x) * (truth - x)).sum(dim=1) / norm1 / norm2
         cos_loss = cos_loss.mean()
+        scale_loss = self.mse(norm1, norm2)
         alpha = 10.
-        return alpha * cos_loss + self.mse(pred, truth)
+        return alpha * cos_loss + scale_loss
 
     def load_memory(self, data):
         # data: (tasks, xs, ys)
