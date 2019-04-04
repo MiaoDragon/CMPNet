@@ -127,7 +127,7 @@ def main(args):
             mpNet.zero_grad()
             bi=to_var(bi)
             bt=to_var(bt)
-            mpNet.observe(bi, 0, bt)
+            mpNet.observe(bi, 0, bt, False)
             print('input:')
             print(bi)
             print('mpnet output:')
