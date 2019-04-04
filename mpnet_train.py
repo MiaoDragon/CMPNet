@@ -105,6 +105,7 @@ def main(args):
         print('epoch' + str(epoch))
         for i in range(400000//100):
             # randomly pick 100 data
+            print(path_data)
             env_idx = random.sample(len(path_data), 100)
             path_ids = []
             dataset, targets, env_indices = [], [], []
