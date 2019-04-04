@@ -4,7 +4,7 @@ import copy
 import numpy as np
 def normalize(x, bound):
     # normalize to -1 ~ 1  (bound can be a tensor)
-    #return x
+    return x
     bound = torch.tensor(bound)
     if len(x[0]) != len(bound):
         # then the proceding is obstacle
@@ -23,7 +23,7 @@ def normalize(x, bound):
 def unnormalize(x, bound):
     # normalize to -1 ~ 1  (bound can be a tensor)
     # x only one dim
-    #return x
+    return x
     bound = torch.tensor(bound)
     if len(x) != len(bound):
         # then the proceding is obstacle
