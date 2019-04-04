@@ -64,7 +64,7 @@ class End2EndMPNet(nn.Module):
     def loss(self, x, pred, truth):
         #return self.mse(pred, truth)
         # use new loss: - cos + mse loss  (minimizing the angle)
-        x = x[:,self.AE_input_size:]
+        x = x[:,self.AE_input_size:-pred.size()[1]]
         norm1 = torch.norm(pred-x, dim=1)
         norm2 = torch.norm(truth-x, dim=1)
         print(norm1.size())
