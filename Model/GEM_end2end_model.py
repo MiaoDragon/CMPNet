@@ -67,8 +67,8 @@ class End2EndMPNet(nn.Module):
         x = x[:,self.AE_input_size:-pred.size()[1]]
         norm1 = torch.norm(pred-x, dim=1)
         norm2 = torch.norm(truth-x, dim=1)
-        print(norm1.size())
         cos_loss = - ((pred - x) * (truth - x)).sum(dim=1) / norm1 / norm2
+        print(cos_loss)
         cos_loss = cos_loss.mean()
         alpha = 1.
         return alpha * cos_loss + self.mse(pred, truth)
