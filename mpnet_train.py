@@ -112,7 +112,7 @@ def main(args):
                 p_dataset, p_targets, p_env_indices = path_data[env_idx[j]]
                 if len(p_dataset) == 0:
                     continue
-                p_idx = random.sample(range(len(p_targets)), 1)
+                p_idx = random.sample(range(len(p_targets)), 1)[0]
                 dataset.append(p_dataset[p_idx])
                 targets.append(p_targets[p_idx])
                 env_indices.append(p_env_indices[p_idx])
