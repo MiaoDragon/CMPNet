@@ -116,7 +116,8 @@ def main(args):
         obs, path_data = load_dataset(N=args.no_env, NP=args.no_motion_paths, folder=args.data_path)
     else:
         importer = fileImport()
-        env_data_path = '/baxter_mpnet_docker/data/full_dataset_sample/'
+        env_data_path = '/media/arclabdl1/HD1/Anthony/baxter_mpnet_data/data/full_dataset_sample/' #uncomment this if running on local
+#        env_data_path = '/baxter_mpnet_docker/data/full_dataset_sample/' #uncomment this if running on docker
         pcd_data_path = env_data_path+'pcd/'
         envs_file = 'trainEnvironments_GazeboPatch.pkl'
 

@@ -160,7 +160,7 @@ def main(args):
 
 
     rospy.init_node("environment_monitor")
-    limb = baxter_interface.Limb('right')
+    # limb = baxter_interface.Limb('right')
     scene = PlanningSceneInterface()
     robot = RobotCommander()
     group = MoveGroupCommander("right_arm")

@@ -75,6 +75,9 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, envs_load, envDict, sc
                 print('test time: %f' % (time1))
 
             fes_path.append(fp)
+            print('env accuracy up to now: %f' %
+                  (np.sum(fes_path) * 1.0 / np.sum(valid_path)))
+
 
         time_env.append(time_path)
         time_total += time_path
@@ -82,7 +85,7 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, envs_load, envDict, sc
 
         fes_env.append(fes_path)
         valid_env.append(valid_path)
-        print('accuracy up to now: %f' % (np.sum(fes_env) / np.sum(valid_env)))
+        print('accuracy up to now: %f' % (np.sum(fes_env) * 1.0 / np.sum(valid_env)))
     pickle.dump(time_env, open(filename, "wb" ))
         #print(fp/tp)
     return np.array(fes_env), np.array(valid_env)

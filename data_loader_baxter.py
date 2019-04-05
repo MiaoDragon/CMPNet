@@ -136,7 +136,7 @@ def load_test_dataset(env_names, data_path, pcd_path, importer, NP=100, min_leng
 	paths = np.zeros((N, NP, max_length, 7), dtype=np.float32)
 	for i, env in enumerate(env_names):
 		env_paths = importer.paths_import_single(
-			path_fname=data_path+paths_file, env_name=env, single_env=False)
+			path_fname=data_path+paths_file, env_name=env, single_env=False) #single_env=True if loading data from a pickle file for a single environment vs. the whole dataset
 		for j in range(0, NP):
 			paths[i][j][:len(env_paths[j])] = env_paths[j]
 
