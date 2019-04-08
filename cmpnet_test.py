@@ -78,7 +78,8 @@ def main(args):
         MLP = model_c2d.MLP
         args.world_size = [20., 20., np.pi]
     elif args.env_type == 'r2d_simple':
-        load_dataset = data_loader_r2d.load_dataset
+        IsInCollision = plan_r2d.IsInCollision
+        load_test_dataset = data_loader_r2d.load_test_dataset
         normalize = utility_r2d.normalize
         unnormalize = utility_r2d.unnormalize
         CAE = CAE_simple
