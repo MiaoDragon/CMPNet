@@ -18,6 +18,8 @@ import Model.model as model
 import Model.model_c2d as model_c2d
 import Model.AE.CAE_r3d as CAE_r3d
 import Model.AE.CAE as CAE_2d
+import Model.AE.CAE_simple as CAE_simple
+import Model.model_c2d_simple as model_c2d_simple
 import numpy as np
 import argparse
 import os
@@ -67,6 +69,15 @@ def main(args):
         #MLP = model.MLP
         MLP = model_c2d.MLP
         args.world_size = [20., 20., np.pi]
+    elif args.env_type == 'r2d_simple':
+        load_dataset = data_loader_r2d.load_dataset
+        normalize = utility_r2d.normalize
+        unnormalize = utility_r2d.unnormalize
+        CAE = CAE_simple
+        #MLP = model.MLP
+        MLP = model_c2d_simple.MLP
+        args.world_size = [20., 20., np.pi]
+
 
     if args.memory_type == 'res':
         mpNet = End2EndMPNet(args.total_input_size, args.AE_input_size, args.mlp_input_size, \
