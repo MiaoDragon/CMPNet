@@ -253,6 +253,10 @@ parser.add_argument('--start_epoch', type=int, default=0)
 parser.add_argument('--memory_type', type=str, default='res', help='res for reservoid, rand for random sampling')
 parser.add_argument('--env_type', type=str, default='s2d', help='s2d for simple 2d, c2d for complex 2d')
 parser.add_argument('--world_size', type=int, default=50, help='boundary of world')
+
+parser.add_argument('--dl1', type=bool, default=True)
+parser.add_argument('--docker', type=bool, default=False)
+
 args = parser.parse_args()
 print(args)
 main(args)

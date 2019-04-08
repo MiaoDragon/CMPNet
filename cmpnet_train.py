@@ -117,9 +117,17 @@ def main(args):
         obs, path_data = load_dataset(N=args.no_env, NP=args.no_motion_paths, folder=args.data_path)
     else:
         importer = fileImport()
-        # env_data_path = '/media/arclabdl1/HD1/Anthony/baxter_mpnet_data/data/full_dataset_sample/' #uncomment this if running on local
-        # env_data_path = '/baxter_mpnet_docker/data/full_dataset_sample/' #uncomment this if running on docker
-        env_data_path = '/home/anthony/catkin_workspaces/baxter_ws/src/baxter_mpnet/data/full_dataset_sample/'
+        if args.dl1:
+            if args.docker:
+                print("using dl1 docker")
+                env_data_path = '/baxter_mpnet_docker/data/full_dataset_sample/'
+            else:
+                print("using dl1 local")
+                env_data_path = '/media/arclabdl1/HD1/Anthony/baxter_mpnet_data/data/full_dataset_sample/' #uncomment this if running on local
+        else:
+            print("not on dl1")
+            env_data_path = '/home/anthony/catkin_workspaces/baxter_ws/src/baxter_mpnet/data/full_dataset_sample/'
+
         pcd_data_path = env_data_path+'pcd/'
         envs_file = 'trainEnvironments_GazeboPatch.pkl'
 
@@ -147,8 +155,8 @@ def main(args):
             bt = targets
             bi = torch.FloatTensor(bi)
             bt = torch.FloatTensor(bt)
-            if args.env_type != 'baxter':
-               bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
+            # if args.env_type != 'baxter':
+            #    bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
             mpNet.zero_grad()
             bi=to_var(bi)
             bt=to_var(bt)
@@ -205,6 +213,10 @@ parser.add_argument('--start_epoch', type=int, default=0)
 parser.add_argument('--memory_type', type=str, default='res', help='res for reservoid, rand for random sampling')
 parser.add_argument('--env_type', type=str, default='s2d', help='s2d for simple 2d, c2d for complex 2d')
 parser.add_argument('--world_size', type=int, default=50, help='boundary of world')
+
+parser.add_argument('--dl1', type=int, default=1)
+parser.add_argument('--docker', type=int, default=0)
+
 args = parser.parse_args()
 print(args)
 main(args)
