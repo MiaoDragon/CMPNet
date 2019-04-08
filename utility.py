@@ -19,7 +19,7 @@ def save_state(net, torch_seed, np_seed, py_seed, fname):
     torch.save(states, fname)
 
 def load_net_state(net, fname):
-    checkpoint = torch.load(fname)
+    checkpoint = torch.load(fname, map_location='cpu')
     net.load_state_dict(checkpoint['state_dict'])
 
 def load_opt_state(net, fname):
