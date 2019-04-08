@@ -17,19 +17,24 @@ from Model.AE.data_loader_baxter import load_normalized_dataset
 
 
 def load_dataset(env_names, data_path, pcd_path, importer, NP=940, min_length=5351*3):
+	print("Loading data for envs: ")
+	print(env_names)
 	N = len(env_names)
+
 	obs = load_normalized_dataset(env_names, pcd_path, importer)
 
 	### obtain path length data ###
 	# paths_file = 'trainPathsLarge.pkl'
-	paths_file = 'trainPathsLarge_RRTSTAR_Fix.pkl'
+	# paths_file = 'trainPathsLarge_RRTSTAR_Fix.pkl'
+	paths_file = 'trainPathsLarge_GoalsCorrect_RRTSTAR_trainEnv_4.pkl'
+	print("Loading path data from file: " + paths_file)
 
 	# calculating length of the longest trajectory
 	max_length = 0
 	path_lengths = np.zeros((N, NP), dtype=np.int64)
 	for i, env in enumerate(env_names):
 		env_paths = importer.paths_import_single(
-			path_fname=data_path+paths_file, env_name=env, single_env=False)
+			path_fname=data_path+paths_file, env_name=env, single_env=True)
 		for j in range(0, NP):  # for j in num_paths:
 			path_lengths[i][j] = len(env_paths[j])
 			if len(env_paths[j]) > max_length:
@@ -40,7 +45,7 @@ def load_dataset(env_names, data_path, pcd_path, importer, NP=940, min_length=53
 
 	for i in range(0, N):
 		env_paths = importer.paths_import_single(
-			path_fname=data_path+paths_file, env_name=env, single_env=False)
+			path_fname=data_path+paths_file, env_name=env, single_env=True)
 		for j in range(0, NP):
 			paths[i][j][:len(env_paths[j])] = env_paths[j]
 
@@ -63,6 +68,10 @@ def load_dataset(env_names, data_path, pcd_path, importer, NP=940, min_length=53
 					targets.append(paths[i][j][m+1])
 					dataset.append(data)
 					env_indices.append(i)
+				# print("First dataset value: ")
+				# print(dataset[0], targets[0],env_indices[0])
+				# print("Next dataset value: ")
+				# print(dataset[1])
 			path_data.append([dataset, targets, env_indices])
 
 	return obs, path_data
@@ -114,8 +123,8 @@ def load_test_dataset(env_names, data_path, pcd_path, importer, NP=100, min_leng
 	obstacles = load_normalized_dataset(env_names, pcd_path, importer)
 
 	### obtain path length data ###
-	# paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR_trainEnv_4.pkl'
-	paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR.pkl'
+	paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR_trainEnv_4.pkl'
+	# paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR.pkl'
 	print("LOADING FROM: ")
 	print(paths_file)
 	# calculating length of the longest trajectory
@@ -123,7 +132,7 @@ def load_test_dataset(env_names, data_path, pcd_path, importer, NP=100, min_leng
 	path_lengths = np.zeros((N, NP), dtype=np.int64)
 	for i, env in enumerate(env_names):
 		env_paths = importer.paths_import_single(
-			path_fname=data_path+paths_file, env_name=env, single_env=False)
+			path_fname=data_path+paths_file, env_name=env, single_env=True)
 		print("env len: " + str(len(env_paths)))
 		print("i: " + str(i))
 		print("env name: " + env)
@@ -136,7 +145,7 @@ def load_test_dataset(env_names, data_path, pcd_path, importer, NP=100, min_leng
 	paths = np.zeros((N, NP, max_length, 7), dtype=np.float32)
 	for i, env in enumerate(env_names):
 		env_paths = importer.paths_import_single(
-			path_fname=data_path+paths_file, env_name=env, single_env=False) #single_env=True if loading data from a pickle file for a single environment vs. the whole dataset
+			path_fname=data_path+paths_file, env_name=env, single_env=True) #single_env=True if loading data from a pickle file for a single environment vs. the whole dataset
 		for j in range(0, NP):
 			paths[i][j][:len(env_paths[j])] = env_paths[j]
 
@@ -145,3 +154,34 @@ def load_test_dataset(env_names, data_path, pcd_path, importer, NP=100, min_leng
 	path_lengths_new = path_lengths - 1
 
 	return obstacles, paths_new, path_lengths_new
+
+if __name__ == "__main__":
+	from mpnet_lib.import_tool import fileImport
+
+	importer = fileImport()
+	# env_data_path = '/media/arclabdl1/HD1/Anthony/baxter_mpnet_data/data/full_dataset_sample/' #uncomment this if running on local
+	# env_data_path = '/baxter_mpnet_docker/data/full_dataset_sample/' #uncomment this if running on docker
+	env_data_path = '/home/anthony/catkin_workspaces/baxter_ws/src/baxter_mpnet/data/full_dataset_sample/'
+	pcd_data_path = env_data_path+'pcd/'
+	envs_file = 'trainEnvironments_GazeboPatch.pkl'
+
+	envs = importer.environments_import(env_data_path + envs_file)
+	envs_load = [envs[0]]
+
+	obs, path_data = load_dataset(env_names=envs_load, data_path=env_data_path, pcd_path=pcd_data_path,
+					importer=importer)
+	obstacles = np.reshape(obs, (obs.shape[0], 3, obs.shape[1]/3), 'F')
+
+	import matplotlib.pyplot as plt
+	from mpl_toolkits.mplot3d import Axes3D
+
+	fig1 = plt.figure()
+	ax = fig1.add_subplot(111, projection='3d')
+	# ax = Axes3D(fig)
+	ax.scatter(obstacles[0, 0, :], obstacles[0, 1, :], obstacles[0, 2, :], color='b', marker='.')
+	plt.show()
+
+
+
+
+	

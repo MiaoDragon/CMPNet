@@ -32,6 +32,9 @@ def load_normalized_dataset(env_names, data_path, importer, min_length=(5351*3))
 	# get file names, just grabbing first one available (sometimes there's multiple)
 	fnames = []
 
+	print("Loading point cloud data for envs: ")
+	print(env_names)
+
 	print("Searing for file names...")
 	for i, env in enumerate(env_names):
 		# hacky reordering so that we don't load the last .pcd file which is always corrupt

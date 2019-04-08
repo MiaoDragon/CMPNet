@@ -80,7 +80,8 @@ def main(args):
     elif args.env_type == 'baxter':
         load_dataset = data_loader_baxter.load_dataset
         CAE = CAE_baxter
-        MLP = model_baxter.MLP
+        # MLP = model_baxter.MLP
+        MLP = model_baxter.MLP_Path #testing small model on single environment
 
     if args.memory_type == 'res':
         mpNet = End2EndMPNet(args.total_input_size, args.AE_input_size, args.mlp_input_size, \
@@ -116,13 +117,14 @@ def main(args):
         obs, path_data = load_dataset(N=args.no_env, NP=args.no_motion_paths, folder=args.data_path)
     else:
         importer = fileImport()
-        env_data_path = '/media/arclabdl1/HD1/Anthony/baxter_mpnet_data/data/full_dataset_sample/' #uncomment this if running on local
-#        env_data_path = '/baxter_mpnet_docker/data/full_dataset_sample/' #uncomment this if running on docker
+        # env_data_path = '/media/arclabdl1/HD1/Anthony/baxter_mpnet_data/data/full_dataset_sample/' #uncomment this if running on local
+        # env_data_path = '/baxter_mpnet_docker/data/full_dataset_sample/' #uncomment this if running on docker
+        env_data_path = '/home/anthony/catkin_workspaces/baxter_ws/src/baxter_mpnet/data/full_dataset_sample/'
         pcd_data_path = env_data_path+'pcd/'
         envs_file = 'trainEnvironments_GazeboPatch.pkl'
 
         envs = importer.environments_import(env_data_path + envs_file)
-        envs_load = envs
+        envs_load = [envs[0]]
 
         obs, path_data = load_dataset(env_names=envs_load, data_path=env_data_path, pcd_path=pcd_data_path,
                      importer=importer)
