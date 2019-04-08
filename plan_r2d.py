@@ -19,12 +19,13 @@ def line_intersect(a0, a1, b0, b1):
     if denom == 0.:
         return False  # collinear
     return True
-    
+
 def IsInCollision(stateIn,obc):
     # if origin is out of world, return True
     if abs(stateIn[0]) > 20. or abs(stateIn[1]) > 20.:
         return True
-    size = 5.
+    size = 4. # padding
+    #size = 5.
     robot_corner=np.zeros((4,2),dtype=np.float32)
     robot_axis=np.zeros((2,2),dtype=np.float32)
     robot_orign=np.zeros(2,dtype=np.float32)
@@ -48,8 +49,8 @@ def IsInCollision(stateIn,obc):
 
     length[0]=robot_axis[0][0]*robot_axis[0][0]+robot_axis[0][1]*robot_axis[0][1]
     length[1]=robot_axis[1][0]*robot_axis[1][0]+robot_axis[1][1]*robot_axis[1][1]
-    for i in range(0,4):
-        pass
+    #for i in range(0,4):
+    #    pass
     for i in range(0,2):
         for j in range(0,2):
             robot_axis[i][j]=robot_axis[i][j]/float(length[j])

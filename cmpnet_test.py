@@ -72,7 +72,8 @@ def main(args):
         normalize = utility_r2d.normalize
         unnormalize = utility_r2d.unnormalize
         CAE = CAE_2d
-        MLP = model.MLP
+        #MLP = model.MLP
+        MLP = model_c2d.MLP
         args.world_size = [20., 20., np.pi]
 
     if args.memory_type == 'res':
