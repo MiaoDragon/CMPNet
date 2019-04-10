@@ -82,7 +82,7 @@ def main(args):
         load_test_dataset = data_loader_r2d.load_test_dataset
         normalize = utility_r2d.normalize
         unnormalize = utility_r2d.unnormalize
-        CAE = CAE_simple
+        CAE = CAE_2d
         #MLP = model.MLP
         MLP = model_c2d_simple.MLP
         args.world_size = [20., 20., np.pi]
