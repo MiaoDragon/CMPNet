@@ -34,7 +34,7 @@ parser.add_argument('--opt', type=str, default='Adagrad')
 args = parser.parse_args()
 
 model_path = args.model_path
-for lr in [0.0001, 0.001, 0.01, 0.1, 1., 10.]:
+for lr in [0.000001, 0.00001]:
     args.model_path = model_path + str(lr) + '/'
     args.learning_rate = lr
     main(args)
