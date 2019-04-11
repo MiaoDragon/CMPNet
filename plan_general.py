@@ -124,6 +124,8 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             #print(ip1)
             # firstly we need to normalize in order to input to network
             ip1=normalize(ip1)
+            print('before normalizating...')
+            print(ip1)
             print('after normalizing...')
             print(ip1)
             print('after unnormalizationg....')
