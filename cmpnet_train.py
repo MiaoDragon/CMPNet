@@ -102,7 +102,12 @@ def main(args):
         mpNet.cuda()
         mpNet.mlp.cuda()
         mpNet.encoder.cuda()
-        mpNet.set_opt(torch.optim.Adagrad, lr=args.learning_rate)
+        if args.opt == 'Adagrad':
+            mpNet.set_opt(torch.optim.Adagrad, lr=args.learning_rate)
+        elif args.opt == 'Adam':
+            mpNet.set_opt(torch.optim.Adam, lr=args.learning_rate)
+        elif args.opt == 'SGD':
+            mpNet.set_opt(torch.optim.SGD, lr=args.learning_rate, momentum=0.9)
     if args.start_epoch > 0:
         load_opt_state(mpNet, os.path.join(args.model_path, model_path))
 
@@ -189,6 +194,7 @@ parser.add_argument('--start_epoch', type=int, default=0)
 parser.add_argument('--memory_type', type=str, default='res', help='res for reservoid, rand for random sampling')
 parser.add_argument('--env_type', type=str, default='s2d', help='s2d for simple 2d, c2d for complex 2d')
 parser.add_argument('--world_size', nargs='+', type=float, default=20., help='boundary of world')
+parser.add_argument('--opt', type=str, default='Adagrad')
 args = parser.parse_args()
 print(args)
 main(args)
