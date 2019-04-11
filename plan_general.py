@@ -127,7 +127,7 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             print('after normalizing...')
             print(ip1)
             print('after unnormalizationg....')
-            print(unnormalize(ip1))
+            print(unnormalize(torch.tensor(ip1)))
             ip1=to_var(ip1)
             start=mpNet(ip1).squeeze(0)
             # unnormalize to world size
