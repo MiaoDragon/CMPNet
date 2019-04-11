@@ -136,6 +136,8 @@ def main(args):
             mpNet.zero_grad()
             bi=to_var(bi)
             bt=to_var(bt)
+            print('before training losses:')
+            print(mpNet.loss(bi, mpNet(bi), bt))
             mpNet.observe(bi, 0, bt)
             print('input:')
             print(bi)
@@ -143,6 +145,8 @@ def main(args):
             print(mpNet(bi))
             print('target:')
             print(bt)
+            print('after training losses:')
+            print(mpNet.loss(bi, mpNet(bi), bt))
             num_path_trained += 1
             # perform rehersal when certain number of batches have passed
             if args.freq_rehersal and num_path_trained % args.freq_rehersal == 0:
