@@ -109,7 +109,7 @@ def main(args):
         elif args.opt == 'SGD':
             mpNet.set_opt(torch.optim.SGD, lr=args.learning_rate, momentum=0.9)
         elif args.opt == 'ASGD':
-            mpNet.set_opt(torch.optim.ASGD, lr=args.learning_rate, momentum=0.9)
+            mpNet.set_opt(torch.optim.ASGD, lr=args.learning_rate)
     if args.start_epoch > 0:
         load_opt_state(mpNet, os.path.join(args.model_path, model_path))
 
