@@ -35,8 +35,8 @@ parser.add_argument('--train_path', type=int, default=1)
 args = parser.parse_args()
 
 model_path = args.model_path
-for lr in [0.0001, 0.001, 0.01, 0.1, 1., 10.]:
-    for train_path in [2, 4, 8, 16, 32]:
+for lr in [0.0001, 0.001, 0.0005, 0.00001, 0.01, 0.1, 1., 10.]:
+    for train_path in [2, 5, 10, 20]:
         args.model_path = model_path + str(lr) + '/' + str(train_path) + '/'
         args.learning_rate = lr
         args.train_path = train_path
