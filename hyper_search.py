@@ -31,10 +31,13 @@ parser.add_argument('--memory_type', type=str, default='res', help='res for rese
 parser.add_argument('--env_type', type=str, default='s2d', help='s2d for simple 2d, c2d for complex 2d')
 parser.add_argument('--world_size', nargs='+', type=float, default=20., help='boundary of world')
 parser.add_argument('--opt', type=str, default='Adagrad')
+parser.add_argument('--train_path', type=int, default=1)
 args = parser.parse_args()
 
 model_path = args.model_path
 for lr in [0.0001, 0.001, 0.01, 0.1, 1., 10.]:
-    args.model_path = model_path + str(lr) + '/'
-    args.learning_rate = lr
-    main(args)
+    for train_path in [2, 4, 8, 16, 32]:
+        args.model_path = model_path + str(lr) + '/' + str(train_path) + '/'
+        args.learning_rate = lr
+        args.train_path = train_path
+        main(args)

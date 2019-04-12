@@ -108,6 +108,8 @@ def main(args):
             mpNet.set_opt(torch.optim.Adam, lr=args.learning_rate)
         elif args.opt == 'SGD':
             mpNet.set_opt(torch.optim.SGD, lr=args.learning_rate, momentum=0.9)
+        elif args.opt == 'ASGD':
+            mpNet.set_opt(torch.optim.ASGD, lr=args.learning_rate, momentum=0.9)
     if args.start_epoch > 0:
         load_opt_state(mpNet, os.path.join(args.model_path, model_path))
 
@@ -120,11 +122,19 @@ def main(args):
         data_all = []
         num_path_trained = 0
         print('epoch' + str(epoch))
+        dataset, targets, env_indices = [], [], []
+        path_ct = 0
         for i in range(0,len(path_data)):
             print('epoch: %d, training... path: %d' % (epoch, i+1))
-            dataset, targets, env_indices = path_data[i]
-            if len(dataset) == 0:
+            p_dataset, p_targets, p_env_indices = path_data[i]
+            if len(p_dataset) == 0:
                 # empty path
+                continue
+            dataset += p_dataset
+            targets += p_targets
+            env_indices += p_env_indices
+            path_ct += 1
+            if path_ct % args.train_path != 0:
                 continue
             # record
             data_all += list(zip(dataset,targets,env_indices))
@@ -163,6 +173,8 @@ def main(args):
                 bi=to_var(bi)
                 bt=to_var(bt)
                 mpNet.observe(bi, 0, bt, False)  # train but don't remember
+            dataset, targets, env_indices = [], [], []
+            path_ct = 0
 
         # Save the models
         if epoch > 0:
@@ -199,6 +211,7 @@ parser.add_argument('--memory_type', type=str, default='res', help='res for rese
 parser.add_argument('--env_type', type=str, default='s2d', help='s2d for simple 2d, c2d for complex 2d')
 parser.add_argument('--world_size', nargs='+', type=float, default=20., help='boundary of world')
 parser.add_argument('--opt', type=str, default='Adagrad')
+parser.add_argument('--train_path', type=int, default=1)
 args = parser.parse_args()
 print(args)
 main(args)
