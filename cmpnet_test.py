@@ -36,6 +36,7 @@ from utility import *
 import utility_s2d, utility_c2d, utility_r3d, utility_r2d
 def main(args):
     # set seed
+    print(args.model_path)
     torch_seed = np.random.randint(low=0, high=1000)
     np_seed = np.random.randint(low=0, high=1000)
     py_seed = np.random.randint(low=0, high=1000)
@@ -153,7 +154,7 @@ def main(args):
     f.write(str(unseen_test_suc_rate))
     f.close()
 
-
+"""
 parser = argparse.ArgumentParser()
 # for training
 parser.add_argument('--model_path', type=str, default='./models/',help='path for saving trained models')
@@ -186,3 +187,4 @@ parser.add_argument('--opt', type=str, default='Adagrad')
 args = parser.parse_args()
 print(args)
 main(args)
+"""
