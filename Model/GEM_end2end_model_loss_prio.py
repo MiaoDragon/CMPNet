@@ -109,6 +109,7 @@ class End2EndMPNet(nn.Module):
             labels += list(y)
             data = torch.stack(data).cuda()
             labels = torch.stack(labels).cuda()
+            print(data.size())
             # compute loss
             loss = self.prio_mse(self(data), labels)
             print(loss)
