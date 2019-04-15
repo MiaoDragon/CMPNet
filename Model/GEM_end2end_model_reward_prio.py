@@ -11,6 +11,7 @@ class End2EndMPNet(nn.Module):
         self.encoder = CAE.Encoder()
         self.mlp = MLP(mlp_input_size, output_size)
         self.mse = nn.MSELoss()
+        self.prio_mse = nn.MSELoss(reduce=False)
         self.opt = torch.optim.Adagrad(list(self.encoder.parameters())+list(self.mlp.parameters()))
         '''
         Below is the attributes defined in GEM implementation
@@ -95,25 +96,25 @@ class End2EndMPNet(nn.Module):
             self.remember(x, tasks[i], y)
 
     def remember(self, x, t, y):
-        # follow reservoir sampling
-        # i-th item is remembered with probability min(B/i, 1)
-        for i in range(len(x)):
-            self.num_seen[t] += 1
-            prob_thre = min(self.n_memories, self.num_seen[t])
-            rand_num = np.random.choice(self.num_seen[t], 1) # 0---self.num_seen[t]-1
-            if rand_num < prob_thre:
-                # keep the new item
-                #print('remembering...')
-                if self.mem_cnt[t] < self.n_memories:
-                    self.memory_data[t, self.mem_cnt[t]].copy_(x.data[i])
-                    self.memory_labs[t, self.mem_cnt[t]].copy_(y.data[i])
-                    self.mem_cnt[t] += 1
-                else:
-                    # randomly choose one to rewrite
-                    idx = np.random.choice(self.n_memories, size=1)
-                    idx = idx[0]
-                    self.memory_data[t, idx].copy_(x.data[i])
-                    self.memory_labs[t, idx].copy_(y.data[i])
+        # pick the memories with the highest prediction error
+        if self.mem_cnt[t] + len(x) <= self.n_memories:
+            self.memory_data[t, self.mem_cnt[t]:self.mem_cnt[t]+len(x)].copy_(x.data)
+            self.memory_labs[t, self.mem_cnt[t]:self.mem_cnt[t]+len(x)].copy_(y.data)
+            self.mem_cnt[t] += len(x)
+        else:
+            data = []
+            data = list(self.memory_data[t, :self.mem_cnt])
+            data += list(x)
+            labels = list(self.memory_labs[t, :self.mem_cnt])
+            labels += list(y)
+            data = torch.stack(data).cuda()
+            labels = torch.stack(labels).cuda()
+            # compute loss
+            loss = self.prio_ms(data, labels)
+            _, indices = torch.topk(-loss, self.n_memories)
+            self.memory_data[t].copy_(data[indices])
+            self.memory_labs[t].copy_(labels[indices])
+            self.mem_cnt = self.n_memories
 
     '''
     Below is the added GEM feature

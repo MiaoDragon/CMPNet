@@ -46,11 +46,11 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                 for t in range(MAX_NEURAL_REPLAN):
                 # adaptive step size on replanning attempts
                     if (t == 2):
-                        step_sz = 0.08
+                        step_sz = 0.8
                     elif (t == 3):
-                        step_sz = 0.06
+                        step_sz = 0.6
                     elif (t > 3):
-                        step_sz = 0.05
+                        step_sz = 0.5
                     if time_flag:
                         path, time_norm = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
                                             normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag=True)
@@ -75,6 +75,7 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
         fes_env.append(fes_path)
         valid_env.append(valid_path)
         print('accuracy up to now: %f' % (np.sum(fes_env) / np.sum(valid_env)))
-    pickle.dump(time_env, open(filename, "wb" ))
+    if filename is not None:
+        pickle.dump(time_env, open(filename, "wb" ))
         #print(fp/tp)
     return np.array(fes_env), np.array(valid_env)

@@ -172,8 +172,18 @@ def main(args):
                 bi=to_var(bi)
                 bt=to_var(bt)
                 print('validation loss: ' + str(mpNet.loss(mpNet(bi), bt)))
-                
+                time_file = None
+                fes_path_, valid_path_ = eval_tasks(mpNet, seen_test_data, time_file, IsInCollision, normalize_func, unnormalize_func, True)
+                valid_path = valid_path_.flatten()
+                fes_path = fes_path_.flatten()   # notice different environments are involved
+                seen_test_suc_rate += fes_path.sum() / valid_path.sum()
 
+                fes_path_, valid_path_ = eval_tasks(mpNet, unseen_test_data, time_file, IsInCollision, normalize_func, unnormalize_func, True)
+                valid_path = valid_path_.flatten()
+                fes_path = fes_path_.flatten()   # notice different environments are involved
+                unseen_test_suc_rate += fes_path.sum() / valid_path.sum()
+                print('seen accuracy: ' + str(seen_test_suc_rate))
+                print('unseen accuracy: ' + str(unseen_test_suc_rate))
 parser = argparse.ArgumentParser()
 # for training
 parser.add_argument('--model_path', type=str, default='./models/',help='path for saving trained models')
