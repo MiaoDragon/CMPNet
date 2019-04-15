@@ -48,9 +48,9 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                     if (t == 2):
                         step_sz = 1.2
                     elif (t == 3):
-                        step_sz = 0.8
-                    elif (t > 3):
                         step_sz = 0.5
+                    elif (t > 3):
+                        step_sz = 0.1
                     if time_flag:
                         path, time_norm = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
                                             normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag=time_flag)
