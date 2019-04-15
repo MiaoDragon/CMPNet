@@ -17,6 +17,7 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
     # given by step_sz, and with generic collision check function
     # here we assume start and end are tensors
     # return 0 if in coliision; 1 otherwise
+    start_t = time.time()
     DISCRETIZATION_STEP=step_sz
     #print('start:')
     #print(start)
@@ -44,7 +45,8 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
             #print(time.time()-start_t)
             return 0
         seg = seg + delta_seg
-    #print(time.time()-start_t)
+    print('steerTo time: ')
+    print(time.time()-start_t)
     return 1
 
 def feasibility_check(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
@@ -97,6 +99,7 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
             # plan mini path
             mini_path = neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, \
                                          normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
+            print('mini path length: %d' % (mini_path))
             if mini_path:
                 new_path += removeCollision(mini_path[1:], obc, IsInCollision)  # take out start point
             else:
