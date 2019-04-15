@@ -111,6 +111,7 @@ class End2EndMPNet(nn.Module):
             labels = torch.stack(labels).cuda()
             # compute loss
             loss = self.prio_mse(self(data), labels)
+            print(loss)
             _, indices = torch.topk(loss, self.n_memories)
             self.memory_data[t].copy_(data[indices])
             self.memory_labs[t].copy_(labels[indices])
