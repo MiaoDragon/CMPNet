@@ -170,7 +170,8 @@ def main(args):
             #print('after training losses:')
             #print(mpNet.loss(mpNet(bi), bt))
             num_path_trained += 1
-
+            seen_test_suc_rate = 0.
+            unseen_test_suc_rate = 0.
             if i % args.test_frequency == 0:
                 # after several training data, test mse loss, success rate on test data
                 bi = np.concatenate( (val_obs[val_env_indices], val_dataset), axis=1).astype(np.float32)
