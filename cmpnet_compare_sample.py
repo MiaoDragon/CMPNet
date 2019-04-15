@@ -13,6 +13,8 @@ here for simplicity, we just use single-process to simulate this scenario
 '''
 from __future__ import print_function
 from Model.GEM_end2end_model import End2EndMPNet
+from Model.GEM_end2end_model_loss_prio import End2EndMPNet as End2EndMPNet_loss
+from Model.GEM_end2end_model_reward_prio import End2EndMPNet as End2EndMPNet_reward
 #from GEM_end2end_model_rand import End2EndMPNet as End2EndMPNet_rand
 import Model.model as model
 import Model.model_c2d as model_c2d
