@@ -46,17 +46,17 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                 for t in range(MAX_NEURAL_REPLAN):
                 # adaptive step size on replanning attempts
                     if (t == 2):
-                        step_sz = 0.8
+                        step_sz = 1.2
                     elif (t == 3):
-                        step_sz = 0.6
+                        step_sz = 0.8
                     elif (t > 3):
                         step_sz = 0.5
                     if time_flag:
                         path, time_norm = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
-                                            normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag=True)
+                                            normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag=time_flag)
                     else:
                         path = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
-                                            normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag=True)
+                                            normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag=time_flag)
                     path = lvc(path, obc[i], IsInCollision, step_sz=step_sz)
                     if feasibility_check(path, obc[i], IsInCollision, step_sz=0.01):
                         fp = 1
