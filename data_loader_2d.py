@@ -29,7 +29,7 @@ def load_train_dataset(N=100,NP=4000,folder='../data/simple/',s=0):
 	path_lengths=np.zeros((N,NP),dtype=np.int8)
 	for i in range(0,N):
 		for j in range(0,NP):
-			fname=folder+'e'+str(i+s)+'/path'+str(j)+'.dat'
+			fname=folder+'env/'+'e'+str(i+s)+'/path'+str(j)+'.dat'
 			if os.path.isfile(fname):
 				path=np.fromfile(fname)
 				path=path.reshape(len(path)//2,2)
@@ -42,7 +42,7 @@ def load_train_dataset(N=100,NP=4000,folder='../data/simple/',s=0):
 
 	for i in range(0,N):
 		for j in range(0,NP):
-			fname=folder+'e'+str(i+s)+'/path'+str(j)+'.dat'
+			fname=folder+'env/'+'e'+str(i+s)+'/path'+str(j)+'.dat'
 			if os.path.isfile(fname):
 				path=np.fromfile(fname)
 				path=path.reshape(len(path)//2,2)
