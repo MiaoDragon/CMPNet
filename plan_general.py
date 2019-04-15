@@ -2,7 +2,7 @@ import torch
 import numpy as np
 from utility import *
 import time
-DEFAULT_STEP = 0.05
+DEFAULT_STEP = 0.1
 def removeCollision(path, obc, IsInCollision):
     new_path = []
     # rule out nodes that are already in collision
