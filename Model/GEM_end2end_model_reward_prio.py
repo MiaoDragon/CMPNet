@@ -114,7 +114,7 @@ class End2EndMPNet(nn.Module):
             _, indices = torch.topk(-loss, self.n_memories)
             self.memory_data[t].copy_(data[indices])
             self.memory_labs[t].copy_(labels[indices])
-            self.mem_cnt = self.n_memories
+            self.mem_cnt[t] = self.n_memories
 
     '''
     Below is the added GEM feature
