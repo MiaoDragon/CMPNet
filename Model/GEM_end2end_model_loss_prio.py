@@ -115,11 +115,7 @@ class End2EndMPNet(nn.Module):
             self.memory_data[t].copy_(data[indices])
             self.memory_labs[t].copy_(labels[indices])
             self.mem_cnt[t] = self.n_memories
-            print('loss:')
-            print(loss)
-            print('indices:')
-            print(indices)
-        print(self.memory_labs)
+
     '''
     Below is the added GEM feature
     reference: https://arxiv.org/abs/1706.08840

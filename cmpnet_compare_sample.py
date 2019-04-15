@@ -35,6 +35,7 @@ import os
 import random
 from utility import *
 import utility_s2d, utility_c2d, utility_r3d, utility_r2d
+import plot_util
 def main(args):
     # set seed
     torch_seed = np.random.randint(low=0, high=1000)
@@ -134,6 +135,10 @@ def main(args):
     unseen_test_data = load_test_dataset(N=args.unseen_N, NP=args.unseen_NP, s=args.unseen_s, sp=args.unseen_sp, folder=args.data_path)
     normalize_func=lambda x: normalize(x, args.world_size)
     unnormalize_func=lambda x: unnormalize(x, args.world_size)
+
+    val_losses = []
+    seen_test_accs = []
+    unseen_test_accs = []
     # Train the Models
     print('training...')
     for epoch in range(args.start_epoch+1,args.num_epochs+1):
@@ -181,7 +186,10 @@ def main(args):
                 bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
                 bi=to_var(bi)
                 bt=to_var(bt)
-                print('validation loss: ' + str(mpNet.loss(mpNet(bi), bt)))
+                loss = mpNet.loss(mpNet(bi), bt)
+                print('validation loss: ' + str(loss))
+                val_losses.append(loss.data.item())
+
                 time_file = None
                 fes_path_, valid_path_ = eval_tasks(mpNet, seen_test_data, time_file, IsInCollision, normalize_func, unnormalize_func, True)
                 valid_path = valid_path_.flatten()
@@ -194,6 +202,19 @@ def main(args):
                 unseen_test_suc_rate += fes_path.sum() / valid_path.sum()
                 print('seen accuracy: ' + str(seen_test_suc_rate))
                 print('unseen accuracy: ' + str(unseen_test_suc_rate))
+                seen_test_accs.append(seen_test_suc_rate)
+                unseen_test_accs.append(unseen_test_suc_rate)
+    # save and plot
+    plot_util.plot(val_losses, title='validation loss during training', xlabel='every %d paths' % (args.test_frequency), \
+                   ylabel='val loss', path=args.model_path+'val_loss.png')
+    plot_util.plot(seen_test_accs, title='test accuracy on seen dataset', xlabel='every %d paths' % (args.test_frequency), \
+                   ylabel='seen accuracy', path=args.model_path+'seen_test_accs.png')
+    plot_util.plot(unseen_test_accs, title='test accuracy on unseen dataset', xlabel='every %d paths' % (args.test_frequency), \
+                   ylabel='unseen accuracy', path=args.model_path+'unseen_test_accs.png')
+    pickle.dump(val_losses, open(args.model_path+'val_loss.p', "wb" ))
+    pickle.dump(seen_test_accs, open(args.model_path+'seen_accs.p', 'wb'))
+    pickle.dump(unseen_test_accs, open(args.model_path+'unseen_accs.p', 'wb'))
+
 parser = argparse.ArgumentParser()
 # for training
 parser.add_argument('--model_path', type=str, default='./models/',help='path for saving trained models')
