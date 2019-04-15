@@ -45,8 +45,8 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
             #print(time.time()-start_t)
             return 0
         seg = seg + delta_seg
-    print('steerTo time: ')
-    print(time.time()-start_t)
+    #print('steerTo time: ')
+    #print(time.time()-start_t)
     return 1
 
 def feasibility_check(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
