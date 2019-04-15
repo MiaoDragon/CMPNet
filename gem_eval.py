@@ -53,10 +53,10 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                         step_sz = 0.02
                     if time_flag:
                         path, time_norm = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
-                                            normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag)
+                                            normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag=True)
                     else:
                         path = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
-                                            normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag)
+                                            normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag=True)
                     path = lvc(path, obc[i], IsInCollision, step_sz=step_sz)
                     if feasibility_check(path, obc[i], IsInCollision, step_sz=0.01):
                         fp = 1
