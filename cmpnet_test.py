@@ -154,7 +154,7 @@ def main(args):
     f.write(str(unseen_test_suc_rate))
     f.close()
 
-if __name__ == __main__:
+if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     # for training
     parser.add_argument('--model_path', type=str, default='./models/',help='path for saving trained models')
