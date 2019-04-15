@@ -1,5 +1,6 @@
 import numpy as np
 import math
+size=4
 def overlap(b1corner,b1axis,b1orign,b2corner,b2axis,b2orign):
     for a in range(0,2):
         t=b1corner[0][0]*b2axis[a][0]+b1corner[0][1]*b2axis[a][1]
