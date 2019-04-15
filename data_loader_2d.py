@@ -11,7 +11,64 @@ from torch.autograd import Variable
 import torch.nn as nn
 import math
 import gc
+#N=number of environments; NP=Number of Paths
+def load_train_dataset(N=100,NP=4000,folder='../data/simple/',s=0):
+	# load data as [path]
+	# for each path, it is
+	# [[input],[target],[env_id]]
+	obs = []
+	# add start s
+	for i in range(0,N):
+		#load obstacle point cloud
+		temp=np.fromfile(folder+'obs_cloud/obc'+str(i+s)+'.dat')
+		obs.append(temp)
+	obs = np.array(obs)
 
+	## calculating length of the longest trajectory
+	max_length=0
+	path_lengths=np.zeros((N,NP),dtype=np.int8)
+	for i in range(0,N):
+		for j in range(0,NP):
+			fname=folder+'e'+str(i+s)+'/path'+str(j)+'.dat'
+			if os.path.isfile(fname):
+				path=np.fromfile(fname)
+				path=path.reshape(len(path)//2,2)
+				path_lengths[i][j]=len(path)
+				if len(path)> max_length:
+					max_length=len(path)
+
+
+	paths=np.zeros((N,NP,max_length,2), dtype=np.float32)   ## padded paths
+
+	for i in range(0,N):
+		for j in range(0,NP):
+			fname=folder+'e'+str(i+s)+'/path'+str(j)+'.dat'
+			if os.path.isfile(fname):
+				path=np.fromfile(fname)
+				path=path.reshape(len(path)//2,2)
+				for k in range(0,len(path)):
+					paths[i][j][k]=path[k]
+
+
+	dataset=[]
+	targets=[]
+	env_indices=[]
+	for i in range(0,N):
+		for j in range(0,NP):
+			if path_lengths[i][j]>0:
+				for m in range(0, path_lengths[i][j]-1):
+					data = np.concatenate( (paths[i][j][m], paths[i][j][path_lengths[i][j]-1]) ).astype(np.float32)
+					targets.append(paths[i][j][m+1])
+					dataset.append(data)
+					env_indices.append(i)
+	# only return raw data (in order), follow below to randomly shuffle
+	data=list(zip(dataset,targets,env_indices))
+	random.shuffle(data)
+	dataset,targets,env_indices=list(zip(*data))
+	dataset = list(dataset)
+	targets = list(targets)
+	env_indices = list(env_indices)
+	return obs, dataset, targets, env_indices
 #N=number of environments; NP=Number of Paths
 def load_dataset(N=100,NP=4000,folder='../data/simple/',s=0):
 	# load data as [path]

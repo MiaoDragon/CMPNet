@@ -9,7 +9,7 @@ import math
 import time
 from plan_general import *
 
-def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambda x:x, unnormalize_func=lambda x: x):
+def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambda x:x, unnormalize_func=lambda x: x, time_flag=False):
     obc, obs, paths, path_lengths = test_data
     obs = torch.from_numpy(obs)
     fes_env = []   # list of list
@@ -25,6 +25,7 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
         # feasible paths for each env
         for j in range(len(paths[0])):
             time0 = time.time()
+            time_norm = 0.
             fp = 0 # indicator for feasibility
             print ("step: i="+str(i)+" j="+str(j))
             #for j in range(0,2):
@@ -50,8 +51,12 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                         step_sz = 0.03
                     elif (t > 3):
                         step_sz = 0.02
-                    path = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
-                                         normalize_func, unnormalize_func, t==0, step_sz=step_sz)
+                    if time_flag:
+                        path, time_norm = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
+                                            normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag)
+                    else:
+                        path = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
+                                            normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag)
                     path = lvc(path, obc[i], IsInCollision, step_sz=step_sz)
                     if feasibility_check(path, obc[i], IsInCollision, step_sz=0.01):
                         fp = 1
@@ -60,6 +65,7 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
             if fp:
                 # only for successful paths
                 time1 = time.time() - time0
+                time1 -= time_norm
                 time_path.append(time1)
                 print('test time: %f' % (time1))
             fes_path.append(fp)

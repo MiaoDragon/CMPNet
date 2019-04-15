@@ -73,20 +73,27 @@ def lvc(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
                 return lvc(pc,obc,IsInCollision,step_sz=step_sz)
     return path
 
-def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, init_plan_flag, step_sz=DEFAULT_STEP):
+def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, init_plan_flag, step_sz=DEFAULT_STEP, time_flag=False):
     if init_plan_flag:
         # if it is the initial plan, then we just do neural_replan
         MAX_LENGTH = 80
-        mini_path = neural_replanner(mpNet, path[0], path[-1], obc, obs, IsInCollision, \
-                                     normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
+        mini_path, time_d = neural_replanner(mpNet, path[0], path[-1], obc, obs, IsInCollision, \
+                                            normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
         if mini_path:
-            return removeCollision(mini_path, obc, IsInCollision)
+            if time_flag:
+                return removeCollision(mini_path, obc, IsInCollision), time_d
+            else:
+                return removeCollision(mini_path, obc, IsInCollision)
         else:
             # can't find a path
-            return path
+            if time_flag:
+                return path, time_d
+            else:
+                return path
     MAX_LENGTH = 50
     # replan segments of paths
     new_path = [path[0]]
+    time_norm = 0.
     for i in range(len(path)-1):
         # look at if adjacent nodes can be connected
         # assume start is already in new path
@@ -97,15 +104,19 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
             new_path.append(goal)
         else:
             # plan mini path
-            mini_path = neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, \
-                                         normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
-            print('mini path length: %d' % (len(mini_path)))
+            mini_path, time_d = neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, \
+                                                normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
+            #print('mini path length: %d' % (len(mini_path)))
+            time_norm += time_d
             if mini_path:
                 new_path += removeCollision(mini_path[1:], obc, IsInCollision)  # take out start point
             else:
                 new_path += path[i+1:]     # just take in the rest of the path
                 break
-    return new_path
+    if time_flag:
+        return new_path, time_norm
+    else:
+        return new_path
 
 
 def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unnormalize, MAX_LENGTH, step_sz=DEFAULT_STEP):
@@ -119,6 +130,7 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
     target_reached=0
     tree=0
     new_path = []
+    time_norm = 0.
     while target_reached==0 and itr<MAX_LENGTH:
         itr=itr+1  # prevent the path from being too long
         if tree==0:
@@ -128,7 +140,9 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             # firstly we need to normalize in order to input to network
             #print('before normalizating...')
             #print(ip1)
+            time0 = time.time()
             ip1=normalize(ip1)
+            time_norm += time.time() - time0
             #print('after normalizing...')
             #print(ip1)
             #print('after unnormalizationg....')
@@ -139,31 +153,37 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             start=start.data.cpu()
             #print('before unnormalizing..')
             #print(start)
+            time0 = time.time()
             start = unnormalize(start)
+            time_norm += time.time() - time0
             #print('after unnormalizing:')
             #print(start)
             pA.append(start)
             tree=1
         else:
             ip2=torch.cat((obs,goal,start)).unsqueeze(0)
+            time0 = time.time()
             ip2=normalize(ip2)
+            time_norm += time.time() - time0
             ip2=to_var(ip2)
             goal=mpNet(ip2).squeeze(0)
             # unnormalize to world size
             goal=goal.data.cpu()
+            time0 = time.time()
             goal = unnormalize(goal)
+            time_norm += time.time() - time0
             pB.append(goal)
             tree=0
         target_reached=steerTo(start, goal, obc, IsInCollision, step_sz=step_sz)
 
     if target_reached==0:
-        return 0
+        return 0, time_norm
     else:
         for p1 in range(len(pA)):
             new_path.append(pA[p1])
         for p2 in range(len(pB)-1,-1,-1):
             new_path.append(pB[p2])
-    return new_path
+    return new_path, time_norm
 
 
 def complete_replan_global(mpNet, path, true_path, true_path_length, obc, obs, obs_i, \
