@@ -132,7 +132,8 @@ def main(args):
                                                     folder=args.data_path, s=args.unseen_s)
     seen_test_data = load_test_dataset(N=args.seen_N, NP=args.seen_NP, s=args.seen_s, sp=args.seen_sp, folder=args.data_path)
     unseen_test_data = load_test_dataset(N=args.unseen_N, NP=args.unseen_NP, s=args.unseen_s, sp=args.unseen_sp, folder=args.data_path)
-
+    normalize_func=lambda x: normalize(x, args.world_size)
+    unnormalize_func=lambda x: unnormalize(x, args.world_size)
     # Train the Models
     print('training...')
     for epoch in range(args.start_epoch+1,args.num_epochs+1):
@@ -169,6 +170,7 @@ def main(args):
             #print('after training losses:')
             #print(mpNet.loss(mpNet(bi), bt))
             num_path_trained += 1
+
             if i % args.test_frequency == 0:
                 # after several training data, test mse loss, success rate on test data
                 bi = np.concatenate( (val_obs[val_env_indices], val_dataset), axis=1).astype(np.float32)
