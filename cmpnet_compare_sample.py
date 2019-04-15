@@ -48,6 +48,7 @@ def main(args):
         torch.cuda.set_device(args.device)
     # decide dataloader, MLP, AE based on env_type
     if args.env_type == 's2d':
+        IsInCollision = plan_s2d.IsInCollision
         load_dataset = data_loader_2d.load_dataset
         load_test_dataset = data_loader_2d.load_test_dataset
         load_train_dataset = data_loader_2d.load_train_dataset
@@ -56,6 +57,7 @@ def main(args):
         CAE = CAE_2d
         MLP = model.MLP
     elif args.env_type == 'c2d':
+        IsInCollision = plan_c2d.IsInCollision
         load_dataset = data_loader_2d.load_dataset
         load_test_dataset = data_loader_2d.load_test_dataset
         load_train_dataset = data_loader_2d.load_train_dataset
@@ -64,6 +66,7 @@ def main(args):
         CAE = CAE_2d
         MLP = model_c2d.MLP
     elif args.env_type == 'r3d':
+        IsInCollision = plan_r3d.IsInCollision
         load_dataset = data_loader_r3d.load_dataset
         load_test_dataset = data_loader_r3d.load_test_dataset
         load_train_dataset = data_loader_r3d.load_train_dataset
@@ -72,6 +75,7 @@ def main(args):
         CAE = CAE_r3d
         MLP = model.MLP
     elif args.env_type == 'r2d':
+        IsInCollision = plan_r2d.IsInCollision
         load_dataset = data_loader_r2d.load_dataset
         load_test_dataset = data_loader_r2d.load_test_dataset
         load_train_dataset = data_loader_r2d.load_train_dataset
