@@ -99,7 +99,7 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
             # plan mini path
             mini_path = neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, \
                                          normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
-            print('mini path length: %d' % (mini_path))
+            print('mini path length: %d' % (len(mini_path)))
             if mini_path:
                 new_path += removeCollision(mini_path[1:], obc, IsInCollision)  # take out start point
             else:
