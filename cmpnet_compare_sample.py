@@ -47,7 +47,7 @@ def main(args):
     if args.env_type == 's2d':
         load_dataset = data_loader_2d.load_dataset
         load_test_dataset = data_loader_2d.load_test_dataset
-        load_train_dataset = data_load_2d.load_train_dataset
+        load_train_dataset = data_loader_2d.load_train_dataset
         normalize = utility_s2d.normalize
         unnormalize = utility_s2d.unnormalize
         CAE = CAE_2d
@@ -55,7 +55,7 @@ def main(args):
     elif args.env_type == 'c2d':
         load_dataset = data_loader_2d.load_dataset
         load_test_dataset = data_loader_2d.load_test_dataset
-        load_train_dataset = data_load_2d.load_train_dataset
+        load_train_dataset = data_loader_2d.load_train_dataset
         normalize = utility_c2d.normalize
         unnormalize = utility_c2d.unnormalize
         CAE = CAE_2d
@@ -63,7 +63,7 @@ def main(args):
     elif args.env_type == 'r3d':
         load_dataset = data_loader_r3d.load_dataset
         load_test_dataset = data_loader_r3d.load_test_dataset
-        load_train_dataset = data_load_r3d.load_train_dataset
+        load_train_dataset = data_loader_r3d.load_train_dataset
         normalize = utility_r3d.normalize
         unnormalize = utility_r3d.unnormalize
         CAE = CAE_r3d
@@ -71,7 +71,7 @@ def main(args):
     elif args.env_type == 'r2d':
         load_dataset = data_loader_r2d.load_dataset
         load_test_dataset = data_loader_r2d.load_test_dataset
-        load_train_dataset = data_load_r2d.load_train_dataset
+        load_train_dataset = data_loader_r2d.load_train_dataset
         normalize = utility_r2d.normalize
         unnormalize = utility_r2d.unnormalize
         CAE = CAE_2d
