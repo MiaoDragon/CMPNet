@@ -103,9 +103,9 @@ class End2EndMPNet(nn.Module):
             self.mem_cnt[t] += len(x)
         else:
             data = []
-            data = list(self.memory_data[t, :self.mem_cnt])
+            data = list(self.memory_data[t, :self.mem_cnt[t]])
             data += list(x)
-            labels = list(self.memory_labs[t, :self.mem_cnt])
+            labels = list(self.memory_labs[t, :self.mem_cnt[t]])
             labels += list(y)
             data = torch.stack(data).cuda()
             labels = torch.stack(labels).cuda()
