@@ -205,8 +205,7 @@ parser.add_argument('--seen', type=int, default=0, help='seen or unseen? 0 for s
 parser.add_argument('--device', type=int, default=0, help='cuda device')
 
 parser.add_argument('--num_epochs', type=int, default=500)
-parser.add_argument('--freq_rehersal', type=int, default=20, help='after how many paths perform rehersal')
-parser.add_argument('--batch_rehersal', type=int, default=100, help='rehersal on how many data (not path)')
+parser.add_argument('--test_frequency', type=int, default=20, help='after how many paths perform rehersal')
 parser.add_argument('--data_path', type=str, default='../data/simple/')
 parser.add_argument('--start_epoch', type=int, default=0)
 parser.add_argument('--memory_type', type=str, default='res', help='res for reservoid, rand for random sampling')
