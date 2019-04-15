@@ -184,6 +184,7 @@ if __name__ == '__main__':
     parser.add_argument('--env_type', type=str, default='s2d', help='s2d for simple 2d, c2d for complex 2d')
     parser.add_argument('--world_size', nargs='+', type=float, default=20., help='boundary of world')
     parser.add_argument('--opt', type=str, default='Adagrad')
+    parser.add_argument('--train_path', type=int, default=1)
     args = parser.parse_args()
     print(args)
     main(args)
