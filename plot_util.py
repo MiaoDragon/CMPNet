@@ -40,7 +40,7 @@ def plot(y, title, xlabel, ylabel, path, smooth=False):
     x,y = _convert_to_xy(y)
     if smooth:
         y = running_mean(y, 100)
-    plt.plot(x,y,label='episode reward')
+    plt.plot(x,y,label=ylabel)
     n = max(x)
     """
     ax = fig.add_subplot(212)
