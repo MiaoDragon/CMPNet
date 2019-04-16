@@ -2,7 +2,7 @@ import time
 import seaborn as sn
 import pandas as pd
 import matplotlib
-matplotlib.use('agg')
+matplotlib.pyplot.switch_backend('agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
