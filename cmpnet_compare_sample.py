@@ -97,7 +97,7 @@ def main(args):
         mpNet = End2EndMPNet_loss(args.total_input_size, args.AE_input_size, args.mlp_input_size, \
                     args.output_size, 'deep', args.n_tasks, args.n_memories, args.memory_strength, args.grad_step, \
                     CAE, MLP)
-    elif args.memory_type == 'reward_loss':
+    elif args.memory_type == 'prio_reward':
         mpNet = End2EndMPNet_reward(args.total_input_size, args.AE_input_size, args.mlp_input_size, \
                     args.output_size, 'deep', args.n_tasks, args.n_memories, args.memory_strength, args.grad_step, \
                     CAE, MLP)
@@ -130,7 +130,7 @@ def main(args):
     # load train and test data
     print('loading...')
     obs, path_data = load_dataset(N=args.no_env, NP=args.no_motion_paths, folder=args.data_path)
-    val_obs, val_dataset, val_targets, val_env_indices = load_train_dataset(N=10, NP=100, \
+    val_obs, val_dataset, val_targets, val_env_indices = load_train_dataset(N=10, NP=200, \
                                                     folder=args.data_path, s=args.unseen_s)
     seen_test_data = load_test_dataset(N=args.seen_N, NP=args.seen_NP, s=args.seen_s, sp=args.seen_sp, folder=args.data_path)
     unseen_test_data = load_test_dataset(N=args.unseen_N, NP=args.unseen_NP, s=args.unseen_s, sp=args.unseen_sp, folder=args.data_path)
