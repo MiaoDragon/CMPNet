@@ -1,6 +1,6 @@
 # state space has 3DOF
 # input of MLP is thus 3*2+28=34
-python3 cmpnet_compare_sample.py --model_path ../CMPnet_res/s2d/sample_exp/ \
+python3 cmpnet_compare_sample.py --model_path ../CMPnet_res/s2d/sample_exp/reward/ \
 --no_env 100 --no_motion_paths 4000 --grad_step 1 --learning_rate 0.01 \
 --num_epochs 1 --memory_strength 0.5 --n_memories 10000 \
 --n_tasks 1 --device 0 --test_frequency 20 \
