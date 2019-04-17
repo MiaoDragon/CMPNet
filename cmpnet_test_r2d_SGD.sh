@@ -1,4 +1,4 @@
-python3 cmpnet_test.py --model_path ../CMPnet_res/r2d/SGD/ \
+python3 cmpnet_test.py --model_path ../CMPnet_res/r2d/SGD/simple/ \
 --grad_step 1 --learning_rate 0.01 \
 --memory_strength 0.5 --n_memories 1 \
 --n_tasks 1 --device 0 --data_path /media/arclabdl1/HD1/Ahmed/rigid-body/dataset/ \
