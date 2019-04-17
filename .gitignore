@@ -1,2 +1,4 @@
 *.pyc
 CMPnet_res/*
+good_path_samples/*
+bad_path_samples/*
