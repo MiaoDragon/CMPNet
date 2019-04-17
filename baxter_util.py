@@ -45,11 +45,11 @@ def load_seed(fname):
     return checkpoint['torch_seed'], checkpoint['np_seed'], checkpoint['py_seed']
 
 
-def IsInCollision(x, obc, filler_robot_state, sv, rs_man):
-    joint_ranges = np.array([3.4033, 3.194, 6.117, 3.6647, 6.117, 6.1083, 2.67])
+# def IsInCollision(x, obc, filler_robot_state, sv, rs_man):
+#     joint_ranges = np.array([3.4033, 3.194, 6.117, 3.6647, 6.117, 6.1083, 2.67])
 
-    filler_robot_state[10:17] = moveit_scrambler(np.multiply(x, joint_ranges))
-    rs_man.joint_state.position = tuple(filler_robot_state)
+#     filler_robot_state[10:17] = moveit_scrambler(np.multiply(x, joint_ranges))
+#     rs_man.joint_state.position = tuple(filler_robot_state)
 
-    collision_free = sv.getStateValidity(rs_man, group_name="right_arm")
-    return collision_free
+#     collision_free = sv.getStateValidity(rs_man, group_name="right_arm")
+#     return collision_free

@@ -151,16 +151,26 @@ def main(args):
                 continue
             # record
             data_all += list(zip(dataset,targets,env_indices))
-            bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
+            bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32) #passing in the full path, not batches...?
             bt = targets
             bi = torch.FloatTensor(bi)
             bt = torch.FloatTensor(bt)
             # if args.env_type != 'baxter':
             #    bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
+            print("before training loss:\n")
+            print(mpNet.loss(mpNet(bi), bt))
             mpNet.zero_grad()
             bi=to_var(bi)
             bt=to_var(bt)
             mpNet.observe(bi, 0, bt)
+            print("input: \n")
+            print(bi)
+            print("mpnet output: \n")
+            print(mpNet(bi))
+            print("target: \n")
+            print(bt)
+            print("after training loss:\n")
+            print(mpNet.loss(mpNet(bi), bt))
             num_path_trained += 1
             # perform rehersal when certain number of batches have passed
             if args.freq_rehersal and num_path_trained % args.freq_rehersal == 0:

@@ -170,6 +170,19 @@ if __name__ == "__main__":
 
 	obs, path_data = load_dataset(env_names=envs_load, data_path=env_data_path, pcd_path=pcd_data_path,
 					importer=importer)
+
+	print("length of path_data: " + str(len(path_data)))
+	for i in range(len(path_data)):
+		dataset, targets, env_indices = path_data[i]
+		print("dataset:")
+		print(dataset[0])
+		# print(dataset[])
+		# print(dataset[-1])
+		# print("targets:")
+		# print(targets[-2])
+		# print(targets[-1])
+		raw_input("press enter\n")
+	
 	obstacles = np.reshape(obs, (obs.shape[0], 3, obs.shape[1]/3), 'F')
 
 	import matplotlib.pyplot as plt
