@@ -50,6 +50,12 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, envs_load, envDict, sc
                 valid_path.append(1)
                 path = [torch.from_numpy(paths[i][j][0]).type(torch.FloatTensor),\
                         torch.from_numpy(paths[i][j][path_lengths[i][j]-1]).type(torch.FloatTensor)]
+                print("checking collisions...")
+                startIsInCollision = IsInCollision(path[0], None)
+                endIsInCollision = IsInCollision(path[1], None)
+                print("start state is in collision (should be False): " + str(startIsInCollision))
+                print("end state is in collision (should be False): " + str(endIsInCollision))
+
                 step_sz = DEFAULT_STEP
                 MAX_NEURAL_REPLAN = 11
 

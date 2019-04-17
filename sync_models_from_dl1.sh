@@ -1,0 +1,1 @@
+rsync -ahv --progress arclabdl1@arclabdl1:/media/arclabdl1/HD1/Anthony/repos/CMPNet/CMPnet_res/ .

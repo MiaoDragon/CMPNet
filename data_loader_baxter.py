@@ -12,7 +12,6 @@ import torch.nn as nn
 import math
 import gc
 from Model.AE.data_loader_baxter import load_normalized_dataset
-
 #N=number of environments; NP=Number of Paths
 
 

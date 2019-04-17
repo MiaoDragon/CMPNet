@@ -58,8 +58,18 @@ class End2EndMPNet(nn.Module):
     def forward(self, x):
         # xobs is the input to encoder
         # x is the input to mlp
-        z = self.encoder(x[:,:self.AE_input_size])
-        mlp_in = torch.cat((z,x[:,self.AE_input_size:]), 1)    # keep the first dim the same (# samples)
+
+        # print("size: " + str(self.AE_input_size))
+        # print("tensor size: " + str(x.size()))
+
+        # UNCOMMENT BELOW FOR TRAINING... ?
+        # z = self.encoder(x[:,:self.AE_input_size])
+        # mlp_in = torch.cat((z,x[:,self.AE_input_size:]), 1)    # keep the first dim the same (# samples)
+
+        # hacky dimension fix       
+        z = self.encoder(x[:self.AE_input_size])
+        mlp_in = torch.cat((z, x[self.AE_input_size:]))
+
         return self.mlp(mlp_in)
     def loss(self, pred, truth):
         return self.mse(pred, truth)
