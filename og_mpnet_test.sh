@@ -1,4 +1,4 @@
-python og_mpnet_test.py --model_path CMPnet_res/baxter_test_small_10000_ms50_b100_f230/ \
+python og_mpnet_test.py --model_path CMPnet_res/baxter_test_small_2_10000_ms50_b100_f100/ \
 --grad_step 1 --learning_rate 0.01 \
 --memory_strength 0.5 --n_memories 10000 \
 --n_tasks 1 --device 0 --data_path ../data/test_100/ \

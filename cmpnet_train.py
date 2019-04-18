@@ -134,8 +134,9 @@ def main(args):
         envs = importer.environments_import(env_data_path + envs_file)
         envs_load = [envs[0]]
 
-        obs, path_data = load_dataset(env_names=envs_load, data_path=env_data_path, pcd_path=pcd_data_path,
-                     importer=importer)
+        # obs, path_data = load_dataset(env_names=envs_load, data_path=env_data_path, pcd_path=pcd_data_path, importer=importer)
+        obs, dataset, targets, env_indices = load_dataset(env_names=envs_load, data_path=env_data_path, pcd_path=pcd_data_path, importer=importer)
+
 
     # Train the Models
     print('training...')
@@ -143,9 +144,10 @@ def main(args):
         data_all = []
         num_path_trained = 0
         print('epoch' + str(epoch))
-        for i in range(0,len(path_data)):
-            print('epoch: %d, training... path: %d' % (epoch, i+1))
-            dataset, targets, env_indices = path_data[i]
+        # for i in range(0,len(path_data)):
+        for i in range(0, len(dataset)):
+            # print('epoch: %d, training... path: %d' % (epoch, i+1))
+            # dataset, targets, env_indices = path_data[i]
             if len(dataset) == 0:
                 # empty path
                 continue
@@ -164,6 +166,12 @@ def main(args):
             # print("before training loss:\n")
             # print(mpNet.loss(mpNet(bi), bt).data.cpu())
             mpNet.observe(bi, 0, bt)
+            if (i == 0):
+                print("start epoch loss: ")
+                print(mpNet.loss(mpNet(bi), bt).data.cpu())
+            if (i == len(dataset) - 1):
+                print("end epoch loss: ")
+                print(mpNet.loss(mpNet(bi), bt).data.cpu())
             # print("input: \n")
             # print(bi[0:2, -14:])
             # print("mpnet output: \n")
@@ -176,7 +184,7 @@ def main(args):
             num_path_trained += 1
             # perform rehersal when certain number of batches have passed
             if args.freq_rehersal and num_path_trained % args.freq_rehersal == 0:
-                print('rehersal...')
+                # print('rehersal...')
                 sample = random.sample(data_all, args.batch_rehersal)
                 dataset, targets, env_indices = list(zip(*sample))
                 dataset, targets, env_indices = list(dataset), list(targets), list(env_indices)

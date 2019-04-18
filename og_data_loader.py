@@ -280,6 +280,7 @@ def load_test_dataset_end2end(env_names,data_path,pcd_path,importer,NP=80,min_le
 	# paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR.pkl'
 	
 	paths_file = 'trainPathsLarge_GoalsCorrect_RRTSTAR_trainEnv_4.pkl' #TRAINING DATA SANITY CHECK
+	# paths_file = 'trainPathsLarge_RRTSTAR_Fix.pkl' #TRAINING DATA SANITY CHECK
 	print("LOADING FROM: ")
 	print(paths_file)
 	# calculating length of the longest trajectory
@@ -315,10 +316,10 @@ def load_test_dataset_end2end(env_names,data_path,pcd_path,importer,NP=80,min_le
 	### create dataset and targets ###
 
 	# clean up paths
-	paths_new = paths[:, :, 1:, :]
-	path_lengths_new = path_lengths - 1
+	paths = paths[:, :, 1:, :]
+	path_lengths = path_lengths - 1
 
-	return 	obstacles, paths_new, path_lengths_new
+	return 	obstacles, paths, path_lengths
 
 
 #N=number of environments; NP=Number of Paths; s=starting environment no.; sp=starting_path_no

@@ -616,8 +616,8 @@ for i, env_name in enumerate(envs_load):
     new_pose = envDict['poses'][env_name]
     sceneModifier.permute_obstacles(new_pose)
 
-    for j in range(15, path_lengths.shape[1]):
-    # for j in range(0,path_lengths.shape[1]):
+    # for j in range(46, path_lengths.shape[1]):
+    for j in range(0,path_lengths.shape[1]):
         print ("step: i="+str(i)+" j="+str(j))
         print("fp: " + str(fp_env))
         print("tp: " + str(tp_env))
@@ -679,12 +679,6 @@ for i, env_name in enumerate(envs_load):
             print("in while loop\n")
             while target_reached==0 and step<3000:
                 step=step+1
-                if (j > 15):
-                    print("step: " + str(step))
-                    print("start: ")
-                    print(start1)
-                    print("goal: ")
-                    print(start2)
                 if tree==0:
                     # inp1=torch.cat((obs.data.cpu(),start1,start2), 0).unsqueeze(1)
                     inp1=torch.cat((obs.data.cpu(),start1,start2))

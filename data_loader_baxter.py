@@ -73,7 +73,16 @@ def load_dataset(env_names, data_path, pcd_path, importer, NP=940, min_length=53
 				# print(dataset[1])
 			path_data.append([dataset, targets, env_indices])
 
-	return obs, path_data
+	data = list(zip(dataset, targets, env_indices))
+	random.shuffle(data)
+	dataset, targets, env_indices = list(zip(*data))
+	dataset = list(dataset)
+	targets = list(targets)
+	env_indices = list(env_indices)
+	
+	return obs, dataset, targets, env_indices
+
+	# return obs, path_data
 
 
 def load_raw_dataset(env_names, data_path, pcd_path, importer, NP=940, min_length=5351*3):
