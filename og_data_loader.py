@@ -277,14 +277,16 @@ def load_test_dataset_end2end(env_names,data_path,pcd_path,importer,NP=80,min_le
 
 	### obtain path length data ###
 	# paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR_trainEnv_4.pkl'
-	paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR.pkl'
+	# paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR.pkl'
+	
+	paths_file = 'trainPathsLarge_GoalsCorrect_RRTSTAR_trainEnv_4.pkl' #TRAINING DATA SANITY CHECK
 	print("LOADING FROM: ")
 	print(paths_file)
 	# calculating length of the longest trajectory
 	max_length=0
 	path_lengths=np.zeros((N,NP),dtype=np.int64)
 	for i, env in enumerate(env_names):
-		env_paths = importer.paths_import_single(path_fname=data_path+paths_file, env_name=env, single_env=False)
+		env_paths = importer.paths_import_single(path_fname=data_path+paths_file, env_name=env, single_env=True)
 		print("env len: " + str(len(env_paths)))
 		print("i: " + str(i))
 		print("env name: " + env)
@@ -300,7 +302,7 @@ def load_test_dataset_end2end(env_names,data_path,pcd_path,importer,NP=80,min_le
 
 	paths=np.zeros((N,NP,max_length,7), dtype=np.float32)   ## padded paths #7D from 2D originally
 	for i, env in enumerate(env_names):
-		env_paths = importer.paths_import_single(path_fname=data_path+paths_file, env_name=env, single_env=False)
+		env_paths = importer.paths_import_single(path_fname=data_path+paths_file, env_name=env, single_env=True)
 		for j in range(0,NP):
 			paths[i][j][:len(env_paths[j])] = env_paths[j]
 

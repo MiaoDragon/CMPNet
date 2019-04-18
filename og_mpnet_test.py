@@ -106,7 +106,7 @@ DEFAULT_STEP = 0.05
 #                      CAE, MLP)
 
 mpNet = End2EndMPNet(total_input_size=16067, AE_input_size=16053, mlp_input_size=74, output_size=7, AEtype='deep', \
-            n_tasks=1, n_memories=10000, memory_strength=0.5, grad_step=1, CAE=CAE, MLP=MLP)
+            n_tasks=1, n_memories=10000, memory_strength=0.5, grad_step=1, CAE=CAE, MLP=MLP, train=False)
 
 print("CAE:")
 print(mpNet.encoder)
@@ -616,7 +616,8 @@ for i, env_name in enumerate(envs_load):
     new_pose = envDict['poses'][env_name]
     sceneModifier.permute_obstacles(new_pose)
 
-    for j in range(0,path_lengths.shape[1]):
+    for j in range(15, path_lengths.shape[1]):
+    # for j in range(0,path_lengths.shape[1]):
         print ("step: i="+str(i)+" j="+str(j))
         print("fp: " + str(fp_env))
         print("tp: " + str(tp_env))
@@ -675,10 +676,15 @@ for i, env_name in enumerate(envs_load):
             tic_start = time.clock()
             step_sz = DEFAULT_STEP
 
-
+            print("in while loop\n")
             while target_reached==0 and step<3000:
                 step=step+1
-
+                if (j > 15):
+                    print("step: " + str(step))
+                    print("start: ")
+                    print(start1)
+                    print("goal: ")
+                    print(start2)
                 if tree==0:
                     # inp1=torch.cat((obs.data.cpu(),start1,start2), 0).unsqueeze(1)
                     inp1=torch.cat((obs.data.cpu(),start1,start2))
@@ -703,7 +709,7 @@ for i, env_name in enumerate(envs_load):
                     start2=start2.data.cpu()
                     path2.append(start2)
                     tree=0
-                target_reached=steerTo(start1.squeeze(),start2.squeeze())
+                target_reached=steerTo(start1,start2)
 
             tp=tp+1
             tp_env=tp_env+1
@@ -741,6 +747,7 @@ for i, env_name in enumerate(envs_load):
                     indicator=0
                     step_sz = DEFAULT_STEP
                     while indicator==0 and sp<10 and path !=0:
+                        print("in replanning, step: " + str(sp))
 
                         # adaptive step size on replanning attempts
                         if (sp == 1):

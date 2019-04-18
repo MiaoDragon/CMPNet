@@ -122,7 +122,9 @@ def load_test_dataset(env_names, data_path, pcd_path, importer, NP=100, min_leng
 	obstacles = load_normalized_dataset(env_names, pcd_path, importer)
 
 	### obtain path length data ###
-	paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR_trainEnv_4.pkl'
+	# paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR_trainEnv_4.pkl'
+	paths_file = 'trainPathsLarge_GoalsCorrect_RRTSTAR_trainEnv_4.pkl' #TRAINING DATA SANITY CHECK
+
 	# paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR.pkl'
 	print("LOADING FROM: ")
 	print(paths_file)
@@ -175,6 +177,8 @@ if __name__ == "__main__":
 		dataset, targets, env_indices = path_data[i]
 		print("dataset:")
 		print(dataset[0])
+		print("target:")
+		print(targets[0])
 		# print(dataset[])
 		# print(dataset[-1])
 		# print("targets:")

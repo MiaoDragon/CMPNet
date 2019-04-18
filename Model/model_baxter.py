@@ -31,8 +31,8 @@ class MLP_Path(nn.Module):
  	def __init__(self, input_size, output_size):
  		super(MLP_Path, self).__init__()
  		self.fc = nn.Sequential(
-                    nn.Linear(input_size, 512), nn.PReLU(), nn.Dropout(),
-                    nn.Linear(512, 512), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(input_size, 1024), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(1024, 512), nn.PReLU(), nn.Dropout(),
                     nn.Linear(512, output_size))
 
  	def forward(self, x):

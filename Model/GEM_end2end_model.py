@@ -6,7 +6,7 @@ import copy
 # Auxiliary functions useful for GEM's inner optimization.
 class End2EndMPNet(nn.Module):
     def __init__(self, total_input_size, AE_input_size, mlp_input_size, output_size, AEtype, \
-                 n_tasks, n_memories, memory_strength, grad_step, CAE, MLP):
+                 n_tasks, n_memories, memory_strength, grad_step, CAE, MLP, train=True):
         super(End2EndMPNet, self).__init__()
         self.encoder = CAE.Encoder()
         self.mlp = MLP(mlp_input_size, output_size)
@@ -24,6 +24,8 @@ class End2EndMPNet(nn.Module):
             n_tasks, self.n_memories, total_input_size)
         #self.memory_labs = torch.LongTensor(n_tasks, self.n_memories, output_size)
         self.memory_labs = torch.FloatTensor(n_tasks, self.n_memories, output_size)
+
+        self.train = train
         if torch.cuda.is_available():
             self.memory_data = self.memory_data.cuda()
             self.memory_labs = self.memory_labs.cuda()
@@ -63,12 +65,14 @@ class End2EndMPNet(nn.Module):
         # print("tensor size: " + str(x.size()))
 
         # UNCOMMENT BELOW FOR TRAINING... ?
-        # z = self.encoder(x[:,:self.AE_input_size])
-        # mlp_in = torch.cat((z,x[:,self.AE_input_size:]), 1)    # keep the first dim the same (# samples)
+        # if self.train:
+        z = self.encoder(x[:,:self.AE_input_size])
+        mlp_in = torch.cat((z,x[:,self.AE_input_size:]), 1)    # keep the first dim the same (# samples)
 
+        # else:
         # hacky dimension fix       
-        z = self.encoder(x[:self.AE_input_size])
-        mlp_in = torch.cat((z, x[self.AE_input_size:]))
+        # z = self.encoder(x[:self.AE_input_size])
+        # mlp_in = torch.cat((z, x[self.AE_input_size:]))
 
         return self.mlp(mlp_in)
     def loss(self, pred, truth):

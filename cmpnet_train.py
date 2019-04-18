@@ -157,21 +157,22 @@ def main(args):
             bt = torch.FloatTensor(bt)
             # if args.env_type != 'baxter':
             #    bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
-            #print("before training loss:\n")
             #print(mpNet.loss(mpNet(bi), bt))
             mpNet.zero_grad()
             bi=to_var(bi)
             bt=to_var(bt)
-            print(mpNet.loss(mpNet(bi), bt))
+            # print("before training loss:\n")
+            # print(mpNet.loss(mpNet(bi), bt).data.cpu())
             mpNet.observe(bi, 0, bt)
             # print("input: \n")
-            # print(bi)
+            # print(bi[0:2, -14:])
             # print("mpnet output: \n")
-            # print(mpNet(bi))
+            # print(mpNet(bi)[0:2])
             # print("target: \n")
-            # print(bt)
+            # print(bt[0:2])
             # print("after training loss:\n")
-            # print(mpNet.loss(mpNet(bi), bt))
+            # print(mpNet.loss(mpNet(bi), bt).data.cpu())
+            # print("\n\n\n")
             num_path_trained += 1
             # perform rehersal when certain number of batches have passed
             if args.freq_rehersal and num_path_trained % args.freq_rehersal == 0:
