@@ -143,7 +143,7 @@ def main(args):
     # Train the Models
     print('training...')
     for epoch in range(args.start_epoch+1,args.num_epochs+1):
-        data_all = []
+        #data_all = []
         num_path_trained = 0
         print('epoch' + str(epoch))
         dataset, targets, env_indices = [], [], []
@@ -161,7 +161,7 @@ def main(args):
             if path_ct % args.train_path != 0:
                 continue
             # record
-            data_all += list(zip(dataset,targets,env_indices))
+            #data_all += list(zip(dataset,targets,env_indices))
             bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
             bt = targets
             bi = torch.FloatTensor(bi)
@@ -179,6 +179,8 @@ def main(args):
             seen_test_suc_rate = 0.
             unseen_test_suc_rate = 0.
             torch.cuda.empty_cache()  # free unused memory
+            dataset, targets, env_indices = [], [], []
+            path_ct = 0
             if i % args.test_frequency == 0:
                 # after several training data, test mse loss, success rate on test data
                 bi = np.concatenate( (val_obs[val_env_indices], val_dataset), axis=1).astype(np.float32)
