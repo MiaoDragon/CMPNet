@@ -54,12 +54,12 @@ def load_dataset(env_names, data_path, pcd_path, importer, NP=940, min_length=53
 	print("Imported path data")
 	print(paths.shape)
 
+	dataset = []
+	targets = []
+	env_indices = []
 	path_data = []
 	for i in range(0, N):
 		for j in range(0, NP):
-			dataset = []
-			targets = []
-			env_indices = []
 			if path_lengths[i][j] > 0:
 				for m in range(0, path_lengths[i][j]-1):
 					data = np.concatenate(
@@ -79,7 +79,7 @@ def load_dataset(env_names, data_path, pcd_path, importer, NP=940, min_length=53
 	dataset = list(dataset)
 	targets = list(targets)
 	env_indices = list(env_indices)
-	
+
 	return obs, dataset, targets, env_indices
 
 	# return obs, path_data
@@ -132,9 +132,9 @@ def load_test_dataset(env_names, data_path, pcd_path, importer, NP=100, min_leng
 
 	### obtain path length data ###
 	# paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR_trainEnv_4.pkl'
-	paths_file = 'trainPathsLarge_GoalsCorrect_RRTSTAR_trainEnv_4.pkl' #TRAINING DATA SANITY CHECK
+	# paths_file = 'trainPathsLarge_GoalsCorrect_RRTSTAR_trainEnv_4.pkl' #TRAINING DATA SANITY CHECK
 
-	# paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR.pkl'
+	paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR.pkl'
 	print("LOADING FROM: ")
 	print(paths_file)
 	# calculating length of the longest trajectory
@@ -142,7 +142,7 @@ def load_test_dataset(env_names, data_path, pcd_path, importer, NP=100, min_leng
 	path_lengths = np.zeros((N, NP), dtype=np.int64)
 	for i, env in enumerate(env_names):
 		env_paths = importer.paths_import_single(
-			path_fname=data_path+paths_file, env_name=env, single_env=True)
+			path_fname=data_path+paths_file, env_name=env, single_env=False)
 		print("env len: " + str(len(env_paths)))
 		print("i: " + str(i))
 		print("env name: " + env)
@@ -155,7 +155,7 @@ def load_test_dataset(env_names, data_path, pcd_path, importer, NP=100, min_leng
 	paths = np.zeros((N, NP, max_length, 7), dtype=np.float32)
 	for i, env in enumerate(env_names):
 		env_paths = importer.paths_import_single(
-			path_fname=data_path+paths_file, env_name=env, single_env=True) #single_env=True if loading data from a pickle file for a single environment vs. the whole dataset
+			path_fname=data_path+paths_file, env_name=env, single_env=False) #single_env=True if loading data from a pickle file for a single environment vs. the whole dataset
 		for j in range(0, NP):
 			paths[i][j][:len(env_paths[j])] = env_paths[j]
 
