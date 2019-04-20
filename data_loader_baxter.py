@@ -54,12 +54,13 @@ def load_dataset(env_names, data_path, pcd_path, importer, NP=940, min_length=53
 	print("Imported path data")
 	print(paths.shape)
 
-	dataset = []
-	targets = []
-	env_indices = []
+
 	path_data = []
 	for i in range(0, N):
 		for j in range(0, NP):
+			dataset = []
+			targets = []
+			env_indices = []
 			if path_lengths[i][j] > 0:
 				for m in range(0, path_lengths[i][j]-1):
 					data = np.concatenate(
@@ -73,16 +74,16 @@ def load_dataset(env_names, data_path, pcd_path, importer, NP=940, min_length=53
 				# print(dataset[1])
 			path_data.append([dataset, targets, env_indices])
 
-	data = list(zip(dataset, targets, env_indices))
-	random.shuffle(data)
-	dataset, targets, env_indices = list(zip(*data))
-	dataset = list(dataset)
-	targets = list(targets)
-	env_indices = list(env_indices)
+	# data = list(zip(dataset, targets, env_indices))
+	# random.shuffle(data)
+	# dataset, targets, env_indices = list(zip(*data))
+	# dataset = list(dataset)
+	# targets = list(targets)
+	# env_indices = list(env_indices)
 
-	return obs, dataset, targets, env_indices
+	# return obs, dataset, targets, env_indices
 
-	# return obs, path_data
+	return obs, path_data
 
 
 def load_raw_dataset(env_names, data_path, pcd_path, importer, NP=940, min_length=5351*3):

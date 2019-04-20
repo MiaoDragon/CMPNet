@@ -13,6 +13,7 @@ import math
 from mpnet_lib.import_tool import fileImport
 import fnmatch
 from data_loader_baxter import load_normalized_dataset
+import copy
 
 # Environment Encoder
 class Encoder(nn.Module):
@@ -276,25 +277,34 @@ def load_test_dataset_end2end(env_names,data_path,pcd_path,importer,NP=80,min_le
 	obstacles = load_normalized_dataset(env_names,pcd_path,importer)
 
 	### obtain path length data ###
-	# paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR_trainEnv_4.pkl'
+	paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR_trainEnv_4.pkl'
 	# paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR.pkl'
 	
-	paths_file = 'trainPathsLarge_GoalsCorrect_RRTSTAR_trainEnv_4.pkl' #TRAINING DATA SANITY CHECK
+	# paths_file = 'trainPathsLarge_GoalsCorrect_RRTSTAR_trainEnv_4.pkl' #TRAINING DATA SANITY CHECK
 	# paths_file = 'trainPathsLarge_RRTSTAR_Fix.pkl' #TRAINING DATA SANITY CHECK
 	print("LOADING FROM: ")
 	print(paths_file)
 	# calculating length of the longest trajectory
 	max_length=0
 	path_lengths=np.zeros((N,NP),dtype=np.int64)
+	env_paths_all = []
 	for i, env in enumerate(env_names):
-		env_paths = importer.paths_import_single(path_fname=data_path+paths_file, env_name=env, single_env=True)
-		print("env len: " + str(len(env_paths)))
+		env_paths_lengths = importer.paths_import_single(path_fname=data_path+paths_file, env_name=env, single_env=True)
+		env_paths_paths = copy.deepcopy(env_paths_lengths)
+		# env_paths_paths = importer.paths_import_single(path_fname=data_path+paths_file, env_name=env, single_env=True)
+		
+		paths = zip(env_paths_lengths, env_paths_paths)
+		random.shuffle(paths)
+		env_paths_lengths, env_paths_paths = zip(*paths)
+		env_paths_all.append(env_paths_paths)
+		
+		print("env len: " + str(len(env_paths_lengths)))
 		print("i: " + str(i))
 		print("env name: " + env)
 		for j in range(0,NP): #for j in num_paths:
-			path_lengths[i][j] = len(env_paths[j])
-			if len(env_paths[j])> max_length:
-				max_length=len(env_paths[j])
+			path_lengths[i][j] = len(env_paths_lengths[j])
+			if len(env_paths_lengths[j])> max_length:
+				max_length=len(env_paths_lengths[j])
 
 	print("Obtained max path length: \n")
 	print(max_length)
@@ -303,9 +313,9 @@ def load_test_dataset_end2end(env_names,data_path,pcd_path,importer,NP=80,min_le
 
 	paths=np.zeros((N,NP,max_length,7), dtype=np.float32)   ## padded paths #7D from 2D originally
 	for i, env in enumerate(env_names):
-		env_paths = importer.paths_import_single(path_fname=data_path+paths_file, env_name=env, single_env=True)
+		# env_paths = importer.paths_import_single(path_fname=data_path+paths_file, env_name=env, single_env=True)
 		for j in range(0,NP):
-			paths[i][j][:len(env_paths[j])] = env_paths[j]
+			paths[i][j][:len(env_paths_all[i][j])] = env_paths_all[i][j]
 
 	print("Obtained paths,for envs: ")
 	print(len(paths))

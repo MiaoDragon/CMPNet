@@ -616,7 +616,7 @@ for i, env_name in enumerate(envs_load):
     new_pose = envDict['poses'][env_name]
     sceneModifier.permute_obstacles(new_pose)
 
-    # for j in range(46, path_lengths.shape[1]):
+    # for j in range(33, path_lengths.shape[1]):
     for j in range(0,path_lengths.shape[1]):
         print ("step: i="+str(i)+" j="+str(j))
         print("fp: " + str(fp_env))
@@ -653,6 +653,9 @@ for i, env_name in enumerate(envs_load):
             for l in range(0,dof):
                 goal[l]=paths[i][j][path_lengths[i][j]-1][l]
 
+            print("goal state: ")
+            print(goal)
+
             if (IsInCollision(goal)):
                 print("GOAL IN COLLISION --- BREAKING")
                 goal_collision.append(j)
@@ -676,7 +679,7 @@ for i, env_name in enumerate(envs_load):
             tic_start = time.clock()
             step_sz = DEFAULT_STEP
 
-            print("in while loop\n")
+            # print("in while loop\n")
             while target_reached==0 and step<3000:
                 step=step+1
                 if tree==0:
@@ -741,7 +744,7 @@ for i, env_name in enumerate(envs_load):
                     indicator=0
                     step_sz = DEFAULT_STEP
                     while indicator==0 and sp<10 and path !=0:
-                        print("in replanning, step: " + str(sp))
+                        # print("in replanning, step: " + str(sp))
 
                         # adaptive step size on replanning attempts
                         if (sp == 1):

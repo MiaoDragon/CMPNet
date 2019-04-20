@@ -134,8 +134,8 @@ def main(args):
         envs = importer.environments_import(env_data_path + envs_file)
         envs_load = [envs[0]]
 
-        # obs, path_data = load_dataset(env_names=envs_load, data_path=env_data_path, pcd_path=pcd_data_path, importer=importer)
-        obs, dataset, targets, env_indices = load_dataset(env_names=envs_load, data_path=env_data_path, pcd_path=pcd_data_path, importer=importer)
+        obs, path_data = load_dataset(env_names=envs_load, data_path=env_data_path, pcd_path=pcd_data_path, importer=importer)
+        # obs, dataset, targets, env_indices = load_dataset(env_names=envs_load, data_path=env_data_path, pcd_path=pcd_data_path, importer=importer)
 
 
     # Train the Models
@@ -144,10 +144,16 @@ def main(args):
         data_all = []
         num_path_trained = 0
         print('epoch' + str(epoch))
-        # for i in range(0,len(path_data)):
-        for i in range(0, len(dataset)):
+        for i in range(0,len(path_data)):
+        # for i in range(0, len(dataset)):
             # print('epoch: %d, training... path: %d' % (epoch, i+1))
-            # dataset, targets, env_indices = path_data[i]
+            dataset, targets, env_indices = path_data[i]
+            # data = list(zip(dataset, targets, env_indices))
+            # random.shuffle(data)
+            # dataset, targets, env_indices = list(zip(*data))
+            # dataset = list(dataset)
+            # targets = list(targets)
+            # env_indices = list(env_indices)
             if len(dataset) == 0:
                 # empty path
                 continue
@@ -169,7 +175,7 @@ def main(args):
             if (i == 0):
                 print("start epoch loss: ")
                 print(mpNet.loss(mpNet(bi), bt).data.cpu())
-            if (i == len(dataset) - 1):
+            if (i == len(path_data) - 1):
                 print("end epoch loss: ")
                 print(mpNet.loss(mpNet(bi), bt).data.cpu())
             # print("input: \n")
