@@ -6,45 +6,72 @@ from torch.autograd import Variable
 
 
 # # DMLP Model-Path Generator
-# class MLP(nn.Module):
-# 	def __init__(self, input_size, output_size):
-# 		super(MLP, self).__init__()
-# 		self.fc = nn.Sequential(
-# 			nn.Linear(input_size, 1280), nn.PReLU(), nn.Dropout(),
-# 			nn.Linear(1280, 896), nn.PReLU(), nn.Dropout(),
-# 			nn.Linear(896, 512), nn.PReLU(), nn.Dropout(),
-# 			nn.Linear(512, 384), nn.PReLU(), nn.Dropout(),
-# 			nn.Linear(384, 256), nn.PReLU(), nn.Dropout(),
-# 			nn.Linear(256, 128), nn.PReLU(), nn.Dropout(),
-# 			nn.Linear(128, 64), nn.PReLU(), nn.Dropout(),
-# 			nn.Linear(64, 32), nn.PReLU(),
-# 			nn.Linear(32, output_size)
-# 			)
+class MLP_1(nn.Module):
+	def __init__(self, input_size, output_size):
+		super(MLP, self).__init__()
+		self.fc = nn.Sequential(
+			nn.Linear(input_size, 1280), nn.PReLU(), nn.Dropout(),
+			nn.Linear(1280, 896), nn.PReLU(), nn.Dropout(),
+			nn.Linear(896, 512), nn.PReLU(), nn.Dropout(),
+			nn.Linear(512, 384), nn.PReLU(), nn.Dropout(),
+			nn.Linear(384, 256), nn.PReLU(), nn.Dropout(),
+			nn.Linear(256, 128), nn.PReLU(), nn.Dropout(),
+			nn.Linear(128, 64), nn.PReLU(), nn.Dropout(),
+			nn.Linear(64, 32), nn.PReLU(),
+			nn.Linear(32, output_size)
+			)
+
+	def forward(self, x):
+		out = self.fc(x)
+		# out = torch.clamp(out, -1, 1)
+		return out
+
+
+# # DMLP Model-Path Generator
+class MLP_15(nn.Module):
+	def __init__(self, input_size, output_size):
+		super(MLP, self).__init__()
+		self.fc = nn.Sequential(
+                    nn.Linear(input_size, 1920), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(1920, 1344), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(1344, 768), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(768, 576), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(576, 384), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(384, 192), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(192, 96), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(96, 48), nn.PReLU(),
+                    nn.Linear(48, output_size)
+                )
+
+	def forward(self, x):
+		out = self.fc(x)
+		# out = torch.clamp(out, -1, 1)
+		return out
 
 
 # DMLP Model-Path Generator (x2)
-# class MLP(nn.Module):
-# 	def __init__(self, input_size, output_size):
-# 		super(MLP, self).__init__()
-# 		self.fc = nn.Sequential(
-#                     nn.Linear(input_size, 2560), nn.PReLU(), nn.Dropout(),
-#                     nn.Linear(2560, 1792), nn.PReLU(), nn.Dropout(),
-#                     nn.Linear(1792, 1024), nn.PReLU(), nn.Dropout(),
-#                     nn.Linear(1024, 768), nn.PReLU(), nn.Dropout(),
-#                     nn.Linear(768, 512), nn.PReLU(), nn.Dropout(),
-#                     nn.Linear(512, 256), nn.PReLU(), nn.Dropout(),
-#                     nn.Linear(256, 128), nn.PReLU(), nn.Dropout(),
-#                     nn.Linear(128, 64), nn.PReLU(),
-#                     nn.Linear(64, output_size)
-#                 )
+class MLP_2(nn.Module):
+	def __init__(self, input_size, output_size):
+		super(MLP, self).__init__()
+		self.fc = nn.Sequential(
+                    nn.Linear(input_size, 2560), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(2560, 1792), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(1792, 1024), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(1024, 768), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(768, 512), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(512, 256), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(256, 128), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(128, 64), nn.PReLU(),
+                    nn.Linear(64, output_size)
+                )
 
-# 	def forward(self, x):
-# 		out = self.fc(x)
-# 		out = torch.clamp(out, -1, 1)
-# 		return out
+	def forward(self, x):
+		out = self.fc(x)
+		# out = torch.clamp(out, -1, 1)
+		return out
 
 # DMLP Model-Path Generator (x3)
-class MLP(nn.Module):
+class MLP_3(nn.Module):
 	def __init__(self, input_size, output_size):
 		super(MLP, self).__init__()
 		self.fc = nn.Sequential(
@@ -61,11 +88,11 @@ class MLP(nn.Module):
 
 	def forward(self, x):
 		out = self.fc(x)
-		out = torch.clamp(out, -1, 1)
+		# out = torch.clamp(out, -1, 1)
 		return out
 
 # DMLP Model-Path Generator (x4)
-class MLP(nn.Module):
+class MLP_4(nn.Module):
 	def __init__(self, input_size, output_size):
 		super(MLP, self).__init__()
 		self.fc = nn.Sequential(
@@ -82,7 +109,7 @@ class MLP(nn.Module):
 
 	def forward(self, x):
 		out = self.fc(x)
-		out = torch.clamp(out, -1, 1)
+		# out = torch.clamp(out, -1, 1)
 		return out
 
 
