@@ -106,6 +106,7 @@ class End2EndMPNet(nn.Module):
             self.memory_data[t, self.mem_cnt[t]:self.mem_cnt[t]+len(x)].copy_(x.data)
             self.memory_labs[t, self.mem_cnt[t]:self.mem_cnt[t]+len(x)].copy_(y.data)
             self.mem_cnt[t] = self.mem_cnt[t] + len(x)
+
             for j in range(len(x)):
                 dist = torch.norm((self.memory_data[t, :self.mem_cnt[t]] - x[j].data) / 20, dim=1)
                 print(dist)
@@ -115,6 +116,8 @@ class End2EndMPNet(nn.Module):
                         print(i)
                         self.sim_num[t,i] = self.sim_num[t,i] + 1
                         self.sim_num[t,j] = self.sim_num[t,j] + 1
+            print('memory number:')
+            print(self.mem_cnt[t])
         else:
             data = []
             data = list(self.memory_data[t, :self.mem_cnt[t]])
