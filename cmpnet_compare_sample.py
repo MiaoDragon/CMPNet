@@ -15,6 +15,7 @@ from __future__ import print_function
 from Model.GEM_end2end_model import End2EndMPNet
 from Model.GEM_end2end_model_loss_prio import End2EndMPNet as End2EndMPNet_loss
 from Model.GEM_end2end_model_reward_prio import End2EndMPNet as End2EndMPNet_reward
+from Model.GEM_end2end_model_cover_prio import End2EndMPNet as End2EndMPNet_cover
 #from GEM_end2end_model_rand import End2EndMPNet as End2EndMPNet_rand
 import Model.model as model
 import Model.model_c2d as model_c2d
@@ -99,6 +100,10 @@ def main(args):
                     CAE, MLP)
     elif args.memory_type == 'prio_reward':
         mpNet = End2EndMPNet_reward(args.total_input_size, args.AE_input_size, args.mlp_input_size, \
+                    args.output_size, 'deep', args.n_tasks, args.n_memories, args.memory_strength, args.grad_step, \
+                    CAE, MLP)
+    elif args.memory_type == 'prio_cover':
+        mpNet = End2EndMPNet_cover(args.total_input_size, args.AE_input_size, args.mlp_input_size, \
                     args.output_size, 'deep', args.n_tasks, args.n_memories, args.memory_strength, args.grad_step, \
                     CAE, MLP)
 
