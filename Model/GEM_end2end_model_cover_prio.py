@@ -124,7 +124,7 @@ class End2EndMPNet(nn.Module):
             data = torch.stack(data).cuda()
             labels = torch.stack(labels).cuda()
             sim_num = list(self.sim_num[t,:self.mem_cnt[t]])
-            sim_num += list(torch.IntTensor(len(data)-int(self.mem_cnt[t])).cuda())
+            sim_num += list(0*torch.IntTensor(len(data)-int(self.mem_cnt[t])).cuda())
             sim_num = torch.stack(sim_num).cuda()
             for j in range(len(x)):
                 dist = torch.norm((data - x[j].data) / 20, dim=1)
