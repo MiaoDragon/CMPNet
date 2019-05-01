@@ -25,7 +25,7 @@ class End2EndMPNet(nn.Module):
             n_tasks, self.n_memories, total_input_size)
         #self.memory_labs = torch.LongTensor(n_tasks, self.n_memories, output_size)
         self.memory_labs = torch.FloatTensor(n_tasks, self.n_memories, output_size)
-        self.sim_num = torch.IntTensor(n_tasks, self.n_memories)
+        self.sim_num = torch.IntTensor(n_tasks, self.n_memories) * 0
         if torch.cuda.is_available():
             self.memory_data = self.memory_data.cuda()
             self.memory_labs = self.memory_labs.cuda()
@@ -123,7 +123,7 @@ class End2EndMPNet(nn.Module):
             data = torch.stack(data).cuda()
             labels = torch.stack(labels).cuda()
             sim_num = list(self.sim_num[t,:self.mem_cnt[t]])
-            sim_num += list(torch.IntTensor((len(data)-self.mem_cnt[t])))
+            sim_num += list(torch.IntTensor(len(data)-int(self.mem_cnt[t])))
             sim_num = torch.stack(sim_num).cuda()
             for j in range(len(x)):
                 dist = torch.norm((data - x[j].data) / 20, dim=1)
