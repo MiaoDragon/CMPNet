@@ -101,6 +101,7 @@ class End2EndMPNet(nn.Module):
 
     def remember(self, x, t, y):
         # pick the memories with the highest prediction error
+        print(x)
         if self.mem_cnt[t] + len(x) <= self.n_memories:
             self.memory_data[t, self.mem_cnt[t]:self.mem_cnt[t]+len(x)].copy_(x.data)
             self.memory_labs[t, self.mem_cnt[t]:self.mem_cnt[t]+len(x)].copy_(y.data)
@@ -137,7 +138,7 @@ class End2EndMPNet(nn.Module):
             keep_indices = list(set(range(len(data))) - set(indices.tolist()))
             for j in indices:
                 print('trying to deduct by 1')
-                dist = torch.norm((data - x[j].data) / 20, dim=1)
+                dist = torch.norm((data - data[j]) / 20, dim=1)
                 print(dist < self.sim_threshold)
                 print('before deducting')
                 print(sim_num)
