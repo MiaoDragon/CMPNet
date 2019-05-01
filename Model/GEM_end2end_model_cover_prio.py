@@ -31,8 +31,8 @@ class End2EndMPNet(nn.Module):
             self.memory_labs = self.memory_labs.cuda()
             self.sim_num = self.sim_num.cuda()
 
-        self.sim_threshold = np.sqrt(4 * self.total_input_size) * 0.2
-
+        self.sim_threshold = np.sqrt(4 * total_input_size) * 0.2
+        print(self.sim_threshold)
         # allocate temporary synaptic memory
         self.grad_dims = []
         for param in self.parameters():
@@ -107,8 +107,11 @@ class End2EndMPNet(nn.Module):
             self.mem_cnt[t] += len(x)
             for j in range(len(x)):
                 dist = torch.norm((self.memory_data[t, :self.mem_cnt[t]] - x[j].data) / 20)
+                print(dist)
                 for i in range(len(dist)):
                     if i != j and dist[i] < self.sim_threshold:
+                        print('smaller than threshold:')
+                        print(i)
                         self.sim_num[t,i] = self.sim_num[t,i] + 1
                         self.sim_num[t,j] = self.sim_num[t,j] + 1
         else:
@@ -133,8 +136,14 @@ class End2EndMPNet(nn.Module):
             _, indices = torch.topk(sim_num, len(data)-self.n_memories)
             keep_indices = list(set(range(len(data))) - set(indices.tolist()))
             for j in indices:
+                print('trying to deduct by 1')
                 dist = torch.norm((data - x[j].data) / 20)
+                print(dist < self.sim_threshold)
+                print('before deducting')
+                print(sim_num)
                 sim_num[dist < self.sim_threshold] = sim_num[dist<self.sim_threshold] - 1
+                print('after deducting')
+                print(sim_num)
             keep_indices = torch.IntTensor(keep_indices)
             # compute loss
             self.memory_data[t].copy_(data[keep_indices])
