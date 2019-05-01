@@ -108,8 +108,8 @@ class End2EndMPNet(nn.Module):
             self.mem_cnt[t] = self.mem_cnt[t] + len(x)
             print('memory:')
             print(self.mem_cnt[t])
-            for j in range(len(x)):
-                dist = torch.norm((self.memory_data[t, :self.mem_cnt[t]] - x[j].data) / 20, dim=1)
+            for j in range(self.mem_cnt[t]-len(x), self.mem_cnt[t]):
+                dist = torch.norm((self.memory_data[t, :self.mem_cnt[t]] - self.mem_cnt[t,j]) / 20, dim=1)
                 print(dist)
                 for i in range(len(dist)):
                     if i != j and dist[i] < self.sim_threshold:
@@ -131,8 +131,8 @@ class End2EndMPNet(nn.Module):
             sim_num = list(self.sim_num[t,:self.mem_cnt[t]])
             sim_num += list(0*torch.IntTensor(len(data)-int(self.mem_cnt[t])).cuda())
             sim_num = torch.stack(sim_num).cuda()
-            for j in range(len(x)):
-                dist = torch.norm((data - x[j].data) / 20, dim=1)
+            for j in range(self.mem_cnt[t],self.mem_cnt[t]+len(x)):
+                dist = torch.norm((data - data[j]) / 20, dim=1)
                 for i in range(len(dist)):
                     if i != j and dist[i] < self.sim_threshold:
                         if i < self.mem_cnt[t]:
