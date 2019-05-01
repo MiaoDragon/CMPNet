@@ -31,7 +31,7 @@ class End2EndMPNet(nn.Module):
             self.memory_labs = self.memory_labs.cuda()
             self.sim_num = self.sim_num.cuda()
 
-        self.sim_threshold = np.sqrt(4 * total_input_size) * 0.1
+        self.sim_threshold = np.sqrt(4 * output_size*2) * 0.4
         print(self.sim_threshold)
         # allocate temporary synaptic memory
         self.grad_dims = []
@@ -116,8 +116,8 @@ class End2EndMPNet(nn.Module):
                         print(i)
                         self.sim_num[t,i] = self.sim_num[t,i] + 1
                         self.sim_num[t,j] = self.sim_num[t,j] + 1
-            print('memory number:')
-            print(self.mem_cnt[t])
+            print('sim num:')
+            print(self.sim_num[t])
         else:
             data = []
             data = list(self.memory_data[t, :self.mem_cnt[t]])
@@ -135,7 +135,8 @@ class End2EndMPNet(nn.Module):
                     if i != j and dist[i] < self.sim_threshold:
                         sim_num[i] = sim_num[i] + 1
                         sim_num[j] = sim_num[j] + 1
-
+            print('sim num:')
+            print(sim_num[t])
             # indices to remove
             _, indices = torch.topk(sim_num, len(data)-self.n_memories)
             keep_indices = list(set(range(len(data))) - set(indices.tolist()))
