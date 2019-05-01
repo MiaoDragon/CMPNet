@@ -136,7 +136,7 @@ class End2EndMPNet(nn.Module):
                         sim_num[i] = sim_num[i] + 1
                         sim_num[j] = sim_num[j] + 1
             print('sim num:')
-            print(sim_num[t])
+            print(sim_num)
             # indices to remove
             _, indices = torch.topk(sim_num, len(data)-self.n_memories)
             keep_indices = list(set(range(len(data))) - set(indices.tolist()))
