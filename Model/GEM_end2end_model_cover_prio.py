@@ -114,7 +114,8 @@ class End2EndMPNet(nn.Module):
                     if i != j and dist[i] < self.sim_threshold:
                         print('smaller than threshold:')
                         print(i)
-                        self.sim_num[t,i] = self.sim_num[t,i] + 1
+                        if i < self.mem_cnt[t] - len(x):
+                            self.sim_num[t,i] = self.sim_num[t,i] + 1
                         self.sim_num[t,j] = self.sim_num[t,j] + 1
             print('sim num:')
             print(self.sim_num[t])
