@@ -106,7 +106,7 @@ class End2EndMPNet(nn.Module):
             self.memory_labs[t, self.mem_cnt[t]:self.mem_cnt[t]+len(x)].copy_(y.data)
             self.mem_cnt[t] += len(x)
             for j in range(len(x)):
-                dist = torch.norm((self.memory_data[t, :self.mem_cnt[t]] - x[j].data) / 20)
+                dist = torch.norm((self.memory_data[t, :self.mem_cnt[t]] - x[j].data) / 20, dim=1)
                 print(dist)
                 for i in range(len(dist)):
                     if i != j and dist[i] < self.sim_threshold:
@@ -126,7 +126,7 @@ class End2EndMPNet(nn.Module):
             sim_num += list(torch.IntTensor(len(data)-self.mem_cnt[t]))
             sim_num = torch.stack(sim_num).cuda()
             for j in range(len(x)):
-                dist = torch.norm((data - x[j].data) / 20)
+                dist = torch.norm((data - x[j].data) / 20, dim=1)
                 for i in range(len(dist)):
                     if i != j and dist[i] < self.sim_threshold:
                         sim_num[i] = sim_num[i] + 1
@@ -137,7 +137,7 @@ class End2EndMPNet(nn.Module):
             keep_indices = list(set(range(len(data))) - set(indices.tolist()))
             for j in indices:
                 print('trying to deduct by 1')
-                dist = torch.norm((data - x[j].data) / 20)
+                dist = torch.norm((data - x[j].data) / 20, dim=1)
                 print(dist < self.sim_threshold)
                 print('before deducting')
                 print(sim_num)
