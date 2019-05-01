@@ -101,25 +101,18 @@ class End2EndMPNet(nn.Module):
 
     def remember(self, x, t, y):
         # pick the memories with the highest prediction error
-        print(x)
         if self.mem_cnt[t] + len(x) <= self.n_memories:
             self.memory_data[t, self.mem_cnt[t]:self.mem_cnt[t]+len(x)].copy_(x.data)
             self.memory_labs[t, self.mem_cnt[t]:self.mem_cnt[t]+len(x)].copy_(y.data)
             self.mem_cnt[t] = self.mem_cnt[t] + len(x)
-            print('memory:')
-            print(self.mem_cnt[t])
             for j in range(self.mem_cnt[t]-len(x), self.mem_cnt[t]):
                 dist = torch.norm((self.memory_data[t, :self.mem_cnt[t]] - self.memory_data[t,j]) / 20, dim=1)
-                print(dist)
                 for i in range(len(dist)):
                     if i != j and dist[i] < self.sim_threshold:
-                        print('smaller than threshold:')
-                        print(i)
                         if i < self.mem_cnt[t] - len(x):
                             self.sim_num[t,i] = self.sim_num[t,i] + 1
                         self.sim_num[t,j] = self.sim_num[t,j] + 1
-            print('sim num:')
-            print(self.sim_num[t])
+
         else:
             data = []
             data = list(self.memory_data[t, :self.mem_cnt[t]])
@@ -138,28 +131,20 @@ class End2EndMPNet(nn.Module):
                         if i < self.mem_cnt[t]:
                             sim_num[i] = sim_num[i] + 1
                         sim_num[j] = sim_num[j] + 1
-            print('sim num:')
-            print(sim_num)
+
             # indices to remove
             _, indices = torch.topk(sim_num, len(data)-self.n_memories)
             keep_indices = list(set(range(len(data))) - set(indices.tolist()))
             for j in indices:
-                print('trying to deduct by 1')
                 dist = torch.norm((data - data[j]) / 20, dim=1)
-                print(dist < self.sim_threshold)
-                print('before deducting')
-                print(sim_num)
                 sim_num[dist < self.sim_threshold] = sim_num[dist<self.sim_threshold] - 1
-                print('after deducting')
-                print(sim_num)
             keep_indices = torch.LongTensor(keep_indices)
             # compute loss
             self.memory_data[t].copy_(data[keep_indices])
             self.memory_labs[t].copy_(labels[keep_indices])
             self.sim_num[t].copy_(sim_num[keep_indices])
             self.mem_cnt[t] = self.n_memories
-            print('after prioritize...')
-            print(self.sim_num[t])
+
 
     '''
     Below is the added GEM feature
