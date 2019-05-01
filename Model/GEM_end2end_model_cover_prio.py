@@ -155,6 +155,8 @@ class End2EndMPNet(nn.Module):
             self.memory_labs[t].copy_(labels[keep_indices])
             self.sim_num[t].copy_(sim_num[keep_indices])
             self.mem_cnt[t] = self.n_memories
+            print('after prioritize...')
+            print(self.sim_num[t])
 
     '''
     Below is the added GEM feature
