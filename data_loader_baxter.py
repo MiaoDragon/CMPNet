@@ -170,9 +170,9 @@ if __name__ == "__main__":
 	from mpnet_lib.import_tool import fileImport
 
 	importer = fileImport()
-	# env_data_path = '/media/arclabdl1/HD1/Anthony/baxter_mpnet_data/data/full_dataset_sample/' #uncomment this if running on local
+	env_data_path = '/media/arclabdl1/HD1/Anthony/baxter_mpnet_data/data/full_dataset_sample/' #uncomment this if running on local
 	# env_data_path = '/baxter_mpnet_docker/data/full_dataset_sample/' #uncomment this if running on docker
-	env_data_path = '/home/anthony/catkin_workspaces/baxter_ws/src/baxter_mpnet/data/full_dataset_sample/'
+	# env_data_path = '/home/anthony/catkin_workspaces/baxter_ws/src/baxter_mpnet/data/full_dataset_sample/'
 	pcd_data_path = env_data_path+'pcd/'
 	envs_file = 'trainEnvironments_GazeboPatch.pkl'
 
