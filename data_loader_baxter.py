@@ -121,7 +121,7 @@ def load_raw_dataset(env_names, data_path, pcd_path, importer, NP=940, min_lengt
 	paths = paths[:, :, 1:, :]
 	path_lengths = path_lengths - 1
 	return obs, paths, path_lengths
-	
+
 #N=number of environments; NP=Number of Paths; s=starting environment no.; sp=starting_path_no
 #Unseen_environments==> N=10, NP=2000,s=100, sp=0
 #seen_environments==> N=100, NP=200,s=0, sp=4000
@@ -178,6 +178,7 @@ if __name__ == "__main__":
 
 	envs = importer.environments_import(env_data_path + envs_file)
 	envs_load = [envs[0]]
+	print(envs_load)
 
 	obs, path_data = load_dataset(env_names=envs_load, data_path=env_data_path, pcd_path=pcd_data_path,
 					importer=importer)
@@ -195,7 +196,7 @@ if __name__ == "__main__":
 		# print(targets[-2])
 		# print(targets[-1])
 		raw_input("press enter\n")
-	
+
 	obstacles = np.reshape(obs, (obs.shape[0], 3, obs.shape[1]/3), 'F')
 
 	import matplotlib.pyplot as plt
@@ -206,8 +207,3 @@ if __name__ == "__main__":
 	# ax = Axes3D(fig)
 	ax.scatter(obstacles[0, 0, :], obstacles[0, 1, :], obstacles[0, 2, :], color='b', marker='.')
 	plt.show()
-
-
-
-
-	
