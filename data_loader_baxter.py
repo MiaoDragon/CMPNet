@@ -177,6 +177,7 @@ if __name__ == "__main__":
 	envs_file = 'trainEnvironments_GazeboPatch.pkl'
 
 	envs = importer.environments_import(env_data_path + envs_file)
+	print(envs)
 	envs_load = [envs[0]]
 	print(envs_load)
 
