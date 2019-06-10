@@ -10,8 +10,8 @@ import random
 from torch.autograd import Variable
 import torch.nn as nn
 import math
-#import pypcd
-from pypcd import pypcd
+import pypcd
+#from pypcd import pypcd
 
 
 class fileImport():
