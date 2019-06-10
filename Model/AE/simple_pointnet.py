@@ -107,7 +107,8 @@ class PointNetfeat(nn.Module):
     def forward(self, x):
         # x shape: [B*2, shape]
         n_pts = x.size()[2]
-        trans = self.stn(x)
+        #trans = self.stn(x)
+        trans = None
         x = x.transpose(2, 1)
         x = torch.bmm(x, trans)
         x = x.transpose(2, 1)
