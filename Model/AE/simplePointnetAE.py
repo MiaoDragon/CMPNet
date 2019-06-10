@@ -25,13 +25,13 @@ class Encoder(nn.Module):
         # concatenate golbal features to local features
         self.feat = PointNetfeat(global_feat=False, feature_transform=feature_transform)
         self.conv1 = torch.nn.Conv1d(320, 128, 1)
-        self.conv2 = torch.nn.Conv1d(128, 128, 1)
+        self.conv2 = torch.nn.Conv1d(128, 64, 1)
         self.bn1 = nn.BatchNorm1d(128)
-        self.bn2 = nn.BatchNorm1d(128)
+        self.bn2 = nn.BatchNorm1d(64)
         # concatenate local features into global features
         # then use fully connected layer to obtain global features
-        self.fc1 = nn.Linear(128, 128)
-        self.fc2 = nn.Linear(128, 60)
+        self.fc1 = nn.Linear(64, 64)
+        self.fc2 = nn.Linear(64, 60)
         self.dropout = nn.Dropout(p=0.3)
         self.fc_bn1 = nn.BatchNorm1d(64)
         self.fc_bn2 = nn.BatchNorm1d(2)
@@ -48,7 +48,7 @@ class Encoder(nn.Module):
         x = F.relu(self.conv2(x))
         # concatenate local features into global features
         x = torch.max(x, 2, keepdim=True)[0]
-        x = x.view(-1, 128)
+        x = x.view(-1, 64)
         # then use fully connected layer to obtain global features
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
