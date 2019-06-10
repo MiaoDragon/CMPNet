@@ -133,6 +133,7 @@ def main(args):
         envs_file = 'trainEnvironments_GazeboPatch.pkl'
 
         envs = importer.environments_import(env_data_path + envs_file)
+        print(envs)
         envs_load = [envs[0]]
 
         obs, path_data = load_dataset(env_names=envs_load, data_path=env_data_path, pcd_path=pcd_data_path, importer=importer)
