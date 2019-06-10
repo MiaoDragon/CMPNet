@@ -8,7 +8,7 @@ from PIL import Image
 import os.path
 import random
 import fnmatch
-import pickle 
+import pickle
 
 
 def load_dataset(task, N=30000,NP=1800):
@@ -53,7 +53,7 @@ def load_normalized_dataset(env_names, data_path, importer, min_length=(5351*3))
 
 	N = len(fnames)
 
-	min_length_array = min_length/3
+	min_length_array = min_length//3
 	obstacles_array = np.zeros((3, min_length_array, N), dtype=np.float32)
 	for i, fname in enumerate(fnames):
 		data = importer.pointcloud_import_array(data_path + fname, min_length_array)
