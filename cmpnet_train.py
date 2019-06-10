@@ -171,8 +171,8 @@ def main(args):
             mpNet.zero_grad()
             bi=to_var(bi)
             bt=to_var(bt)
-            # print("before training loss:\n")
-            # print(mpNet.loss(mpNet(bi), bt).data.cpu())
+            print("before training loss:\n")
+            print(mpNet.loss(mpNet(bi), bt).data.cpu())
             mpNet.observe(bi, 0, bt)
             if (i == 0):
                 print("start epoch loss: ")
