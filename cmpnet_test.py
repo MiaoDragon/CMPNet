@@ -19,7 +19,8 @@ import Model.model_c2d as model_c2d
 import Model.model_baxter as model_baxter
 import Model.AE.CAE_r3d as CAE_r3d
 import Model.AE.CAE as CAE_2d
-import Model.AE.CAE_baxter as CAE_baxter
+import Model.AE.simplePointnetAE as CAE_baxter
+#import Model.AE.CAE_baxter as CAE_baxter
 import numpy as np
 import argparse
 import os
@@ -37,7 +38,7 @@ from utility import *
 from baxter_util import *
 import utility_s2d, utility_c2d
 
-from mpnet_lib.import_tool import fileImport 
+from mpnet_lib.import_tool import fileImport
 import baxter_interface
 import time
 import rospy
@@ -48,7 +49,7 @@ def BaxterIsInCollision(x, obc):
     global filler_robot_state
     global rs_man
     global sv
-    
+
     joint_ranges = np.array(
         [3.4033, 3.194, 6.117, 3.6647, 6.117, 6.1083, 2.67])
 
@@ -206,7 +207,7 @@ def main(args):
         valid_path = valid_path_.flatten()
         fes_path = fes_path_.flatten()   # notice different environments are involved
         seen_test_suc_rate += fes_path.sum() / valid_path.sum()
-        
+
         # unseen
         # time_file = os.path.join(args.model_path,'time_unseen_epoch_%d_mlp.p' % (args.start_epoch))
         # fes_path_, valid_path_ = eval_tasks(mpNet, unseen_test_data, time_file, IsInCollision, unnormalize_func)
