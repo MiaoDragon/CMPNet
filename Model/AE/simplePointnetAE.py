@@ -48,7 +48,7 @@ class Encoder(nn.Module):
         x = F.relu(self.conv2(x))
         # concatenate local features into global features
         x = torch.max(x, 2, keepdim=True)[0]
-        x = x.view(-1, 64)
+        x = x.view(-1, 128)
         # then use fully connected layer to obtain global features
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
