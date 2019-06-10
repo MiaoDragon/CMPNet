@@ -39,7 +39,7 @@ class Encoder(nn.Module):
 
     def forward(self, x):
         # x shape: [B, N*2]
-        x = x.view(x.size()[0], 2, -1)
+        x = x.view(x.size()[0], 3, -1)
         batchsize = x.size()[0]
         n_pts = x.size()[2]
         # concatenate golbal features to local features
