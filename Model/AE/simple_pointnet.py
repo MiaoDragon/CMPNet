@@ -96,9 +96,9 @@ class PointNetfeat(nn.Module):
         self.stn = STNkd(k=3)
         #self.conv1 = torch.nn.Conv1d(2, 64, 1)
         self.conv1 = torch.nn.Conv1d(3, 64, 1)
-        self.conv2 = torch.nn.Conv1d(64, 256, 1)
+        self.conv2 = torch.nn.Conv1d(64, 128, 1)
         self.bn1 = nn.BatchNorm1d(64)
-        self.bn2 = nn.BatchNorm1d(256)
+        self.bn2 = nn.BatchNorm1d(128)
         self.global_feat = global_feat
         self.feature_transform = feature_transform
         if self.feature_transform:
@@ -124,9 +124,9 @@ class PointNetfeat(nn.Module):
         pointfeat = x
         x = self.conv2(x)
         x = torch.max(x, 2, keepdim=True)[0]
-        x = x.view(-1, 256)
+        x = x.view(-1, 128)
         if self.global_feat:
             return x, trans, trans_feat
         else:
-            x = x.view(-1, 256, 1).repeat(1, 1, n_pts)
+            x = x.view(-1, 128, 1).repeat(1, 1, n_pts)
             return torch.cat([x, pointfeat], 1), trans, trans_feat

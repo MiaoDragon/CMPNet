@@ -24,7 +24,7 @@ class Encoder(nn.Module):
         self.feature_transform=feature_transform
         # concatenate golbal features to local features
         self.feat = PointNetfeat(global_feat=False, feature_transform=feature_transform)
-        self.conv1 = torch.nn.Conv1d(320, 128, 1)
+        self.conv1 = torch.nn.Conv1d(192, 128, 1)
         self.conv2 = torch.nn.Conv1d(128, 64, 1)
         self.bn1 = nn.BatchNorm1d(128)
         self.bn2 = nn.BatchNorm1d(64)
