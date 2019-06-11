@@ -4,7 +4,7 @@ import copy
 import numpy as np
 
 import sys
-sys.path.append('/home/anthony/catkin_workspaces/baxter_ws/src/baxter_mpnet/scripts/')
+sys.path.append('/media/arclabdl1/HD1/Anthony/repos/baxter_mpnet/scripts/')
 # sys.path.append('/baxter_mpnet_docker/scripts')
 from motion_planning_dataset import *
 from moveit_functions import *
