@@ -18,6 +18,7 @@ import Model.model as model
 import Model.model_c2d as model_c2d
 import Model.AE.CAE_r3d as CAE_r3d
 import Model.AE.CAE as CAE_2d
+import Model.model_c2d_simple as model_c2d_simple
 import numpy as np
 import argparse
 import os
@@ -52,7 +53,7 @@ def main(args):
         normalize = utility_c2d.normalize
         unnormalize = utility_c2d.unnormalize
         CAE = CAE_2d
-        MLP = model_c2d.MLP
+        MLP = model_c2d_simple.MLP
     elif args.env_type == 'r3d':
         load_dataset = data_loader_r3d.load_dataset
         normalize = utility_r3d.normalize
@@ -64,7 +65,7 @@ def main(args):
         normalize = utility_r2d.normalize
         unnormalize = utility_r2d.unnormalize
         CAE = CAE_2d
-        MLP = model.MLP
+        MLP = model_c2d.MLP
         args.world_size = [20., 20., np.pi]
 
     if args.memory_type == 'res':
@@ -72,8 +73,6 @@ def main(args):
                     args.output_size, 'deep', args.n_tasks, args.n_memories, args.memory_strength, args.grad_step, \
                     CAE, MLP)
     elif args.memory_type == 'rand':
-        #mpNet = End2EndMPNet_rand(args.mlp_input_size, args.output_size, 'deep', \
-        #            args.n_tasks, args.n_memories, args.memory_strength, args.grad_step)
         pass
 
     # load previously trained model if start epoch > 0
@@ -128,12 +127,6 @@ def main(args):
             bi=to_var(bi)
             bt=to_var(bt)
             mpNet.observe(bi, 0, bt, False)
-            #print('input:')
-            #print(bi)
-            #print('mpnet output:')
-            #print(mpNet(bi))
-            #print('target:')
-            #print(bt)
             print('losses:')
             print(mpNet.loss(mpNet(bi), bt))
             num_path_trained += 1

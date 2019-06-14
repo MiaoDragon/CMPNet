@@ -124,12 +124,7 @@ def load_dataset(N=100,NP=4000,folder='../data/simple/',s=0):
 			path_data.append([dataset, targets, env_indices])
 	# only return raw data (in order), follow below to randomly shuffle
 	return obs, path_data
-	# data=list(zip(dataset,targets))
-	# random.shuffle(data)
-	# dataset,targets=list(zip(*data))
-	# dataset and targets are both list
-	# here the first item of data is index in obs
-	# return obs, list(zip(*data))
+
 def load_raw_dataset(N=100,NP=4000,s=0,sp=0,folder='../data/simple/'):
 	obc=np.zeros((N,7,2),dtype=np.float32)
 	temp=np.fromfile(folder+'obs.dat')

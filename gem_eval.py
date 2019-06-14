@@ -14,7 +14,6 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
     obs = torch.from_numpy(obs)
     fes_env = []   # list of list
     valid_env = []
-    #for i in range(0,1):
     time_env = []
     time_total = []
     for i in range(len(paths)):
@@ -28,7 +27,6 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
             time_norm = 0.
             fp = 0 # indicator for feasibility
             print ("step: i="+str(i)+" j="+str(j))
-            #for j in range(0,2):
             p1_ind=0
             p2_ind=0
             p_ind=0

@@ -9,7 +9,6 @@ def removeCollision(path, obc, IsInCollision):
     for i in range(0,len(path)):
         if not IsInCollision(path[i].numpy(),obc):
             new_path.append(path[i])
-    #new_path.append(path[-1])
     return new_path
 
 def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
@@ -19,11 +18,6 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
     # return 0 if in coliision; 1 otherwise
     start_t = time.time()
     DISCRETIZATION_STEP=step_sz
-    #print('start:')
-    #print(start)
-    #print('end:')
-    #print(end)
-    #start_t = time.time()
     delta = end - start  # change
     delta = delta.numpy()
     total_dist = np.linalg.norm(delta)
@@ -39,14 +33,10 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
     seg = start.numpy()
     # check for each segment, if they are in collision
     for i in range(num_segs+1):
-        #print(seg)
         if IsInCollision(seg, obc):
             # in collision
-            #print(time.time()-start_t)
             return 0
         seg = seg + delta_seg
-    #print('steerTo time: ')
-    #print(time.time()-start_t)
     return 1
 
 def feasibility_check(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
@@ -106,7 +96,6 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
             # plan mini path
             mini_path, time_d = neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, \
                                                 normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
-            #print('mini path length: %d' % (len(mini_path)))
             time_norm += time_d
             if mini_path:
                 new_path += removeCollision(mini_path[1:], obc, IsInCollision)  # take out start point
@@ -135,29 +124,16 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
         itr=itr+1  # prevent the path from being too long
         if tree==0:
             ip1=torch.cat((obs,start,goal)).unsqueeze(0)
-            #print('before normalizing:')
-            #print(ip1)
-            # firstly we need to normalize in order to input to network
-            #print('before normalizating...')
-            #print(ip1)
             time0 = time.time()
             ip1=normalize(ip1)
             time_norm += time.time() - time0
-            #print('after normalizing...')
-            #print(ip1)
-            #print('after unnormalizationg....')
-            #print(unnormalize(torch.tensor(ip1)))
             ip1=to_var(ip1)
             start=mpNet(ip1).squeeze(0)
             # unnormalize to world size
             start=start.data.cpu()
-            #print('before unnormalizing..')
-            #print(start)
             time0 = time.time()
             start = unnormalize(start)
             time_norm += time.time() - time0
-            #print('after unnormalizing:')
-            #print(start)
             pA.append(start)
             tree=1
         else:
@@ -192,7 +168,6 @@ def complete_replan_global(mpNet, path, true_path, true_path_length, obc, obs, o
     # input path: list of tensor
     # obs: tensor
     demo_path = true_path[:true_path_length]
-    #demo_path = [torch.from_numpy(p).type(torch.FloatTensor) for p in demo_path]
     dataset, targets, env_indices = transformToTrain(demo_path, len(demo_path), obs, obs_i)
     added_data = list(zip(dataset,targets,env_indices))
     bi = np.concatenate( (obs.numpy().reshape(1,-1).repeat(len(dataset),axis=0), dataset), axis=1).astype(np.float32)

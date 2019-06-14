@@ -13,12 +13,11 @@ here for simplicity, we just use single-process to simulate this scenario
 '''
 from __future__ import print_function
 from Model.GEM_end2end_model import End2EndMPNet
-#from GEM_end2end_model_rand import End2EndMPNet as End2EndMPNet_rand
 import Model.model as model
 import Model.model_c2d as model_c2d
 import Model.AE.CAE_r3d as CAE_r3d
 import Model.AE.CAE as CAE_2d
-#import Model.AE.CAE_complex as CAE_2d
+
 import Model.AE.CAE_simple as CAE_simple
 import Model.model_c2d_simple as model_c2d_simple
 import numpy as np
@@ -68,7 +67,7 @@ def main(args):
         unnormalize = utility_r2d.unnormalize
         CAE = CAE_2d
         #MLP = model.MLP
-        MLP = model_c2d_simple.MLP
+        MLP = model_c2d.MLP
         args.world_size = [20., 20., np.pi]
     elif args.env_type == 'r2d_simple':
         load_dataset = data_loader_r2d.load_dataset
@@ -85,8 +84,6 @@ def main(args):
                     args.output_size, 'deep', args.n_tasks, args.n_memories, args.memory_strength, args.grad_step, \
                     CAE, MLP)
     elif args.memory_type == 'rand':
-        #mpNet = End2EndMPNet_rand(args.mlp_input_size, args.output_size, 'deep', \
-        #            args.n_tasks, args.n_memories, args.memory_strength, args.grad_step)
         pass
 
     # load previously trained model if start epoch > 0
@@ -150,12 +147,6 @@ def main(args):
             print('before training losses:')
             print(mpNet.loss(mpNet(bi), bt))
             mpNet.observe(bi, 0, bt)
-            #print('input:')
-            #print(bi)
-            #print('mpnet output:')
-            #print(mpNet(bi))
-            #print('target:')
-            #print(bt)
             print('after training losses:')
             print(mpNet.loss(mpNet(bi), bt))
             num_path_trained += 1

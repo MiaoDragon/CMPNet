@@ -165,8 +165,6 @@ def main(args):
             path_ct += 1
             if path_ct % args.train_path != 0:
                 continue
-            # record
-            #data_all += list(zip(dataset,targets,env_indices))
             bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
             bt = targets
             bi = torch.FloatTensor(bi)

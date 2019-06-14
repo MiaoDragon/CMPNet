@@ -42,7 +42,6 @@ class End2EndMPNet(nn.Module):
         self.old_task = -1
         self.mem_cnt = np.zeros(n_tasks).astype(int)
         self.num_seen = np.zeros(n_tasks).astype(int)
-        #self.mem_cnt = 0
         self.grad_step = grad_step
         self.total_input_size = total_input_size
         self.AE_input_size = AE_input_size
@@ -67,21 +66,11 @@ class End2EndMPNet(nn.Module):
         return self.mlp(mlp_in)
     def loss(self, pred, truth):
         return self.mse(pred, truth)
-        # use new loss: - cos + mse loss  (minimizing the angle)
-        #x = x[:,self.AE_input_size:-pred.size()[1]]
-        #norm1 = torch.norm(pred-x, dim=1)
-        #norm2 = torch.norm(truth-x, dim=1)
-        #cos_loss = - ((pred - x) * (truth - x)).sum(dim=1) / norm1 / norm2
-        #cos_loss = cos_loss.mean()
-        #scale_loss = self.mse(norm1, norm2)
-        #alpha = 10.
-        #return alpha * cos_loss + scale_loss
 
     def load_memory(self, data):
         # data: (tasks, xs, ys)
         # continuously load memory based on previous memory loading
         tasks, xs, ys = data
-        #batch_size = 100  # remember 100 at a time
         for i in range(len(tasks)):
             if tasks[i] != self.old_task:
                 # new task, clear mem_cnt
@@ -145,7 +134,6 @@ class End2EndMPNet(nn.Module):
                             self.memory_labs[past_task][:self.mem_cnt[past_task]])   # up to current
                     else:
                         ptloss = self.loss(
-                            #self.memory_data[past_task][:self.mem_cnt[past_task]],
                             self.forward(
                             self.memory_data[past_task]),   # TODO
                             self.memory_labs[past_task])
@@ -167,16 +155,12 @@ class End2EndMPNet(nn.Module):
                 store_grad(self.parameters, self.grads, self.grad_dims, new_t)
                 indx = torch.cuda.LongTensor(self.observed_tasks) if torch.cuda.is_available() \
                     else torch.LongTensor(self.observed_tasks)   # here we need all observed tasks
-                #indx = torch.cuda.FloatTensor(self.observed_tasks[:-1]) if torch.cuda.is_available() \
-                #    else torch.FloatTensor(self.observed_tasks[:-1])
                 # here is different, we are using new_t instead of t to ditinguish between
                 # newly observed data and previous data
                 dotp = torch.mm(self.grads[:, new_t].unsqueeze(0),
                                 self.grads.index_select(1, indx))
-                #print('dot product computed')
                 if (dotp < 0).sum() != 0:
                     # remember norm
-                    #print('projecting...')
                     norm = torch.norm(self.grads[:, new_t], 2)
                     project2cone2(self.grads[:, new_t].unsqueeze(1),
                                   self.grads.index_select(1, indx), self.margin)

@@ -42,19 +42,6 @@ def plot(y, title, xlabel, ylabel, path, smooth=False):
         y = running_mean(y, 100)
     plt.plot(x,y,label=ylabel)
     n = max(x)
-    """
-    ax = fig.add_subplot(212)
-    title = 'loss over episodes'
-    xlabel, ylabel = 'episodes', 'loss'
-    nbins = 10
-
-    ax.set_title(title)
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
-    x,y = _convert_to_xy(train_loss)
-    plt.plot(x,y,label='training loss')
-    n = max(max(x),n)
-    """
     ticks = (np.arange(nbins) + 1) * n//nbins
     plt.xticks(ticks)
 
