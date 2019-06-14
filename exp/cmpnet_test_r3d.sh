@@ -1,3 +1,4 @@
+cd ..
 python3 cmpnet_test.py --model_path ../CMPnet_res/r3d/ \
 --grad_step 1 --learning_rate 0.01 \
 --memory_strength 0.5 --n_memories 10000 \
@@ -8,3 +9,4 @@ python3 cmpnet_test.py --model_path ../CMPnet_res/r3d/ \
 --unseen_N 10 --unseen_NP 2000 --unseen_s 100 --unseen_sp 0
 # seen: 100, 200, 0, 4000
 # unseen: 10, 2000, 100, 0
+cd exp
