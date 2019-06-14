@@ -1,4 +1,5 @@
-python3 ../cmpnet_test.py --model_path ../CMPnet_res/c2d/ \
+cd ..
+python3 cmpnet_test.py --model_path ../CMPnet_res/c2d/ \
 --grad_step 1 --learning_rate 0.001 \
 --memory_strength 0.5 --n_memories 10000 \
 --n_tasks 1 --device 1 --data_path /media/arclabdl1/HD1/Ahmed/r-2d/ \
@@ -8,3 +9,4 @@ python3 ../cmpnet_test.py --model_path ../CMPnet_res/c2d/ \
 --unseen_N 10 --unseen_NP 2000 --unseen_s 100 --unseen_sp 0
 # seen: 100, 200, 0, 4000
 # unseen: 10, 2000, 100, 0
+cd exp
