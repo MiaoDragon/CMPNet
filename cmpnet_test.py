@@ -98,6 +98,8 @@ def main(args):
     model_path='cmpnet_epoch_%d.pkl' %(args.start_epoch)
     if args.start_epoch > 0:
         load_net_state(mpNet, os.path.join(args.model_path, model_path))
+        for name, param in mpNet.named_parameters():
+            print(name)
         torch_seed, np_seed, py_seed = load_seed(os.path.join(args.model_path, model_path))
         # set seed after loading
         torch.manual_seed(torch_seed)

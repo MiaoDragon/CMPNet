@@ -1,5 +1,5 @@
 cd ..
-python3 cmpnet_test.py --model_path ../CMPnet_res/s2d/ \
+python3 cmpnet_test.py --model_path /media/arclabdl1/HD1/YLmiao/CMPnet_res/s2d/ \
 --grad_step 1 --learning_rate 0.01 \
 --memory_strength 0.5 --n_memories 10000 \
 --n_tasks 1 --device 2 --data_path /media/arclabdl1/HD1/YLmiao/mpnet/data/simple/ \
