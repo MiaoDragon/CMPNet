@@ -43,7 +43,7 @@ def main(args):
         torch.cuda.set_device(args.device)
     # decide dataloader, MLP, AE based on env_type
     if args.env_type == 's2d':
-        load_dataset = data_loader_2d.load_dataset
+        load_train_dataset = data_loader_2d.load_train_dataset
         normalize = utility_s2d.normalize
         unnormalize = utility_s2d.unnormalize
         CAE = CAE_2d
@@ -95,31 +95,17 @@ def main(args):
 
     # load train and test data
     print('loading...')
-    obs, path_data = load_dataset(N=args.no_env, NP=args.no_motion_paths, folder=args.data_path)
+    obstacles, dataset, targets, env_indices = load_train_dataset(N=args.no_env, NP=args.no_motion_paths, folder=args.data_path)
     # Train the Models
     print('training...')
     for epoch in range(args.start_epoch+1,args.num_epochs+1):
-        data_all = []
-        num_path_trained = 0
         print('epoch' + str(epoch))
-        for i in range(args.no_env*args.no_motion_paths//40):
+        for i in range(0, len(dataset), 100):
             # randomly pick 100 data
-            env_idx = random.sample(range(len(path_data)), 40)
-            path_ids = []
-            dataset, targets, env_indices = [], [], []
-            for j in range(len(env_idx)):
-                p_dataset, p_targets, p_env_indices = path_data[env_idx[j]]
-                if len(p_dataset) == 0:
-                    continue
-                p_idx = random.sample(range(len(p_targets)), 1)[0]
-                dataset.append(p_dataset[p_idx])
-                targets.append(p_targets[p_idx])
-                env_indices.append(p_env_indices[p_idx])
-                path_ids.append((env_idx[j], p_idx))
             print('epoch: %d, training... path: %d' % (epoch, i+1))
             # record
-            bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
-            bt = targets
+            bi = np.concatenate( (obstacles[env_indices[i:i+100]], dataset[i:i+100]), axis=1).astype(np.float32)
+            bt = targets[i:i+100]
             bi = torch.FloatTensor(bi)
             bt = torch.FloatTensor(bt)
             bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
