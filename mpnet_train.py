@@ -115,7 +115,7 @@ def main(args):
             mpNet.observe(bi, 0, bt, False)
             print('losses:')
             print(mpNet.loss(mpNet(bi), bt))
-            num_path_trained += 1
+            #num_path_trained += 1
         # Save the models
         if epoch > 0:
             model_path='cmpnet_epoch_%d.pkl' %(epoch)
