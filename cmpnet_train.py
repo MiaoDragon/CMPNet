@@ -128,9 +128,9 @@ def main(args):
             if len(p_dataset) == 0:
                 # empty path
                 continue
-            dataset += p_dataset
-            targets += p_targets
-            env_indices += p_env_indices
+            dataset = p_dataset
+            targets = p_targets
+            env_indices = p_env_indices
             path_ct += 1
             if path_ct % args.train_path != 0:
                 continue
