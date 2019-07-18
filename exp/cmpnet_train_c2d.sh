@@ -1,4 +1,4 @@
-1cd ..
+cd ..
 python3 cmpnet_train.py --model_path /media/arclabdl1/HD1/YLmiao/CMPnet_res/c2d/ \
 --no_env 100 --no_motion_paths 4000 --grad_step 1 --learning_rate 0.001 \
 --num_epochs 1 --memory_strength 0.5 --n_memories 10000 \
