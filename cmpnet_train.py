@@ -15,7 +15,7 @@ from __future__ import print_function
 from Model.GEM_end2end_model import End2EndMPNet
 #from GEM_end2end_model_rand import End2EndMPNet as End2EndMPNet_rand
 import Model.model as model
-import Model.model_baxter as model_baxter 
+import Model.model_baxter as model_baxter
 import Model.model_c2d as model_c2d
 import Model.AE.CAE_r3d as CAE_r3d
 import Model.AE.CAE as CAE_2d
@@ -81,7 +81,7 @@ def main(args):
         load_dataset = data_loader_baxter.load_dataset
         CAE = CAE_baxter
         # MLP = model_baxter.MLP
-        MLP = model_baxter.MLP_Path #testing small model on single environment
+        MLP = model_baxter.MLP_2 #testing small model on single environment
 
     if args.memory_type == 'res':
         mpNet = End2EndMPNet(args.total_input_size, args.AE_input_size, args.mlp_input_size, \
