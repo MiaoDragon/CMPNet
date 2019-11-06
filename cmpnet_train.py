@@ -77,6 +77,12 @@ def main(args):
         #MLP = model.MLP
         MLP = model_c2d_simple.MLP
         args.world_size = [20., 20., np.pi]
+    elif args.env_type == 'home':
+        load_dataset = data_loader_home.load_dataset
+        normalize = utility_home.normalize
+        unnormalize = utility_home.unnormalize
+        CAE = CAE_home
+        MLP = model_home.MLP
 
 
     if args.memory_type == 'res':

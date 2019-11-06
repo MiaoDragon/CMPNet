@@ -25,15 +25,19 @@ import argparse
 import os
 import torch
 from gem_eval import eval_tasks
-import plan_s2d, plan_c2d, plan_r3d, plan_r2d
-import data_loader_2d, data_loader_r3d, data_loader_r2d
+import plan_s2d, plan_c2d, plan_r3d, plan_r2d, plan_home
+import data_loader_2d, data_loader_r3d, data_loader_r2d, data_loader_home
 from torch.autograd import Variable
 import copy
 import os
 import gc
 import random
 from utility import *
-import utility_s2d, utility_c2d, utility_r3d, utility_r2d
+import utility_s2d, utility_c2d, utility_r3d, utility_r2d, utility_home
+
+
+
+
 def main(args):
     # set seed
     print(args.model_path)
@@ -87,6 +91,16 @@ def main(args):
         #MLP = model.MLP
         MLP = model_c2d_simple.MLP
         args.world_size = [20., 20., np.pi]
+    elif args.env_type == 'home':
+        IsInCollision = plan_home.IsInCollision
+        load_test_dataset = data_loader_home.load_test_dataset
+        normalize = utility_home.normalize
+        unnormalize = utility_home.unnormalize
+        CAE = CAE_home
+        MLP = model_home.MLP
+        args.world_size = [20., 20., np.pi]
+
+
 
     if args.memory_type == 'res':
         mpNet = End2EndMPNet(args.total_input_size, args.AE_input_size, args.mlp_input_size, \
