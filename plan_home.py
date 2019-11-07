@@ -13,8 +13,9 @@ setup = oa.SE3RigidBodyPlanning()
 setup.setRobotMesh(join(ompl_resources_dir, 'Home_robot.dae'))
 setup.setEnvironmentMesh(join(ompl_resources_dir, 'Home_env.dae'))
 setup.getSpaceInformation().setStateValidityCheckingResolution(0.01)
-setup.setup()
+#setup.setup()
 val = setup.getStateValidityChecker()
+print(val)
 
 def QtoAxisAngle(Q):
     # angle = 2 * acos(qw)
