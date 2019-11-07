@@ -11,7 +11,9 @@ from torch.autograd import Variable
 import torch.nn as nn
 import math
 import gc
-
+import pypcd
+import numpy as np
+import torch
 #N=number of environments; NP=Number of Paths
 def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
     # load data as [path]
