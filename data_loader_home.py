@@ -52,7 +52,7 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
             fname=folder+'paths/'+'path_'+str(j)+'.txt'
             if os.path.isfile(fname):
                 path=np.loadtxt(fname)
-                path=path.reshape(int(len(path)/7),7)
+                #path=path.reshape(len(path)//7,7)
                 path_lengths[i][j]=len(path)
                 if len(path)> max_length:
                     max_length=len(path)
@@ -67,7 +67,7 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
                 path=np.loadtxt(fname)
                 print('loaded path')
                 print(path.shape)
-                path=path.reshape(int(len(path)/7),7)
+                #path=path.reshape(len(path)//7,7)
                 for k in range(0,len(path)):
                     paths[i][j][k]=path[k]
 
@@ -136,7 +136,7 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
             fname=folder+'paths/'+'path_'+str(j+sp)+'.txt'
             if os.path.isfile(fname):
                 path=np.loadtxt(fname)
-                path=path.reshape(int(len(path)/7),7)
+                #path=path.reshape(len(path)//7,7)
                 path_lengths[i][j]=len(path)
                 if len(path)> max_length:
                     max_length=len(path)
@@ -149,7 +149,9 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
             fname=folder+'paths/'+'path_'+str(j+sp)+'.txt'
             if os.path.isfile(fname):
                 path=np.loadtxt(fname)
-                path=path.reshape(int(len(path)/7),7)
+                print('loading path...')
+                print(path.shape)
+                #path=path.reshape(len(path)//7,7)
                 for k in range(0,len(path)):
                     paths[i][j][k]=path[k]
 
