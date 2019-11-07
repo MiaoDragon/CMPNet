@@ -26,6 +26,8 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
         pc = pypcd.PointCloud.from_path(folder+'home_env.pcd')
         # flatten into vector
         temp = []
+        print('original obstacle length:')
+        print(len(pc.pc_data['x']))
         temp.append(pc.pc_data['x'][~np.isnan(pc.pc_data['x'])])
         temp.append(pc.pc_data['y'][~np.isnan(pc.pc_data['x'])])
         temp.append(pc.pc_data['z'][~np.isnan(pc.pc_data['x'])])
