@@ -63,6 +63,8 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
 			fname=folder+'paths/'+'path_'+str(j)+'.txt'
 			if os.path.isfile(fname):
 				path=np.loadtxt(fname)
+                print('loaded path')
+                print(path.shape)
 				path=path.reshape(len(path)//7,7)
 				for k in range(0,len(path)):
 					paths[i][j][k]=path[k]
@@ -82,6 +84,12 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
 					dataset.append(data)
 					env_indices.append(i)
 			path_data.append([dataset, targets, env_indices])
+    print('after loading.')
+    print('shape:')
+    print('obstacle')
+    print(obs.shape)
+    print('path')
+    print(len(path_data))
 	# only return raw data (in order), follow below to randomly shuffle
 	return obs, path_data
 	# data=list(zip(dataset,targets))
@@ -143,4 +151,9 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
 				for k in range(0,len(path)):
 					paths[i][j][k]=path[k]
 
+    print("after loading...")
+    print("obstacle")
+    print(obs.shape)
+    print('paths:')
+    print(paths.shape)
 	return 	obc,obs,paths,path_lengths
