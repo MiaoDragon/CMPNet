@@ -10,7 +10,7 @@ class Encoder(nn.Module):
 	def __init__(self):
 		super(Encoder, self).__init__()
 		print('using deep encoder')
-		self.encoder = nn.Sequential(nn.Linear(50000*3, 512),nn.PReLU(),
+		self.encoder = nn.Sequential(nn.Linear(49998*3, 512),nn.PReLU(),
 					   nn.Linear(512, 512),nn.PReLU(),
 					   nn.Linear(512, 256),nn.PReLU(),
 					   nn.Linear(256, 256),nn.PReLU(),
