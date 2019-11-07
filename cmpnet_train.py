@@ -15,22 +15,23 @@ from __future__ import print_function
 from Model.GEM_end2end_model import End2EndMPNet
 import Model.model as model
 import Model.model_c2d as model_c2d
+import Model.model_home as model_home
 import Model.AE.CAE_r3d as CAE_r3d
 import Model.AE.CAE as CAE_2d
-
 import Model.AE.CAE_simple as CAE_simple
+import Model.AE.CAE_home as CAE_home
 import Model.model_c2d_simple as model_c2d_simple
 import numpy as np
 import argparse
 import os
 import torch
-import data_loader_2d, data_loader_r3d, data_loader_r2d
+import data_loader_2d, data_loader_r3d, data_loader_r2d, data_loader_home
 from torch.autograd import Variable
 import copy
 import os
 import random
 from utility import *
-import utility_s2d, utility_c2d, utility_r3d, utility_r2d
+import utility_s2d, utility_c2d, utility_r3d, utility_r2d, utility_home
 def main(args):
     # set seed
     torch_seed = np.random.randint(low=0, high=1000)

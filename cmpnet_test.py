@@ -15,10 +15,11 @@ from __future__ import print_function
 from Model.GEM_end2end_model import End2EndMPNet
 import Model.model as model
 import Model.model_c2d as model_c2d
+import Model.model_home as model_home
 import Model.AE.CAE_r3d as CAE_r3d
 import Model.AE.CAE as CAE_2d
-
 import Model.AE.CAE_simple as CAE_simple
+import Model.AE.CAE_home as CAE_home
 import Model.model_c2d_simple as model_c2d_simple
 import numpy as np
 import argparse
