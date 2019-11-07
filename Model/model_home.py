@@ -8,7 +8,7 @@ from torch.autograd import Variable
 class MLP(nn.Module):
     def __init__(self, input_size, output_size):
         super(MLP, self).__init__()
-		self.fc = nn.Sequential(
+        self.fc = nn.Sequential(
                     nn.Linear(input_size, 2560), nn.PReLU(), nn.Dropout(),
                     nn.Linear(2560, 1792), nn.PReLU(), nn.Dropout(),
                     nn.Linear(1792, 1024), nn.PReLU(), nn.Dropout(),
