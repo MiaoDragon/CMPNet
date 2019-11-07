@@ -143,9 +143,6 @@ def main(args):
                 continue
             # record
             data_all += list(zip(dataset,targets,env_indices))
-            print('printing shape before concat')
-            print(obs[env_indices].shape)
-            print(dataset.shape)
             bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
             bt = targets
             bi = torch.FloatTensor(bi)
