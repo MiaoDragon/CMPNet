@@ -11,6 +11,8 @@ def normalize(x, bound, time_flag=False):
     higher = np.array([325, 337.89, 142.33, 1, 1, 1, 1])
     bound = (higher - lower) / 2
     bound = torch.from_numpy(bound)
+    lower = torch.from_numpy(lower)
+    higher = torch.from_numpy(higher)
     print('before normalizing...')
     print(x)
     if len(x[0]) != len(bound):
@@ -37,6 +39,8 @@ def unnormalize(x, bound, time_flag=False):
     higher = np.array([325, 337.89, 142.33, 1, 1, 1, 1])
     bound = (higher - lower) / 2
     bound = torch.from_numpy(bound)
+    lower = torch.from_numpy(lower)
+    higher = torch.from_numpy(higher)
     print('before unnormalizing...')
     print(x)
     if len(x) != len(bound):
