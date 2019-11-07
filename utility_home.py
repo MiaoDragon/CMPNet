@@ -10,9 +10,9 @@ def normalize(x, bound, time_flag=False):
     lower = np.array([-383.8, -371.47, -0.2, -1, -1, -1, -1])
     higher = np.array([325, 337.89, 142.33, 1, 1, 1, 1])
     bound = (higher - lower) / 2
-    bound = torch.from_numpy(bound)
-    lower = torch.from_numpy(lower)
-    higher = torch.from_numpy(higher)
+    bound = torch.from_numpy(bound).astype(torch.FloatTensor)
+    lower = torch.from_numpy(lower).astype(torch.FloatTensor)
+    higher = torch.from_numpy(higher).astype(torch.FloatTensor)
     print('before normalizing...')
     print(x)
     if len(x[0]) != len(bound):
@@ -38,9 +38,9 @@ def unnormalize(x, bound, time_flag=False):
     lower = np.array([-383.8, -371.47, -0.2, -1, -1, -1, -1])
     higher = np.array([325, 337.89, 142.33, 1, 1, 1, 1])
     bound = (higher - lower) / 2
-    bound = torch.from_numpy(bound)
-    lower = torch.from_numpy(lower)
-    higher = torch.from_numpy(higher)
+    bound = torch.from_numpy(bound).astype(torch.FloatTensor)
+    lower = torch.from_numpy(lower).astype(torch.FloatTensor)
+    higher = torch.from_numpy(higher).astype(torch.FloatTensor)
     print('before unnormalizing...')
     print(x)
     if len(x) != len(bound):
