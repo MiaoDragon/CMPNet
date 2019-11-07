@@ -42,6 +42,7 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
     obs = (obs - lower) / bound - 1.0
     print('after normalization:')
     print(obs)
+    obs = obs.flatten()
 
 
     ## calculating length of the longest trajectory
@@ -127,7 +128,7 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
     obs = (obs - lower) / bound - 1.0
     print('after normalization:')
     print(obs)
-
+    obs = obs.flatten()
     ## calculating length of the longest trajectory
     max_length=0
     path_lengths=np.zeros((N,NP),dtype=np.int8)
@@ -160,4 +161,4 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
     print(obs.shape)
     print('paths:')
     print(paths.shape)
-    return     obc,obs,paths,path_lengths
+    return obc,obs,paths,path_lengths
