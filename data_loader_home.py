@@ -36,7 +36,7 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
     print('loading...')
     print('original obstacle:')
     print(obs)
-    lower = np.array([-383.8, -371,47, -0.2])
+    lower = np.array([-383.8, -371.47, -0.2])
     higher = np.array([325, 337.89, 142.33])
     bound = (higher - lower) / 2
     obs = (obs - lower) / bound - 1.0
@@ -121,7 +121,7 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
     print('loading...')
     print('original obstacle:')
     print(obs)
-    lower = np.array([-383.8, -371,47, -0.2])
+    lower = np.array([-383.8, -371.47, -0.2])
     higher = np.array([325, 337.89, 142.33])
     bound = (higher - lower) / 2
     obs = (obs - lower) / bound - 1.0
