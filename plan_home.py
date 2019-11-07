@@ -6,7 +6,7 @@ from os.path import join
 from ompl import base as ob
 from ompl import app as oa
 from ompl import geometric as og
-ompl_app_root = "FILL IN PATH"
+ompl_app_root = "/home/arclabdl1/ompl/omplapp-1.4.2-Source/"
 ompl_resources_dir = join(ompl_app_root, 'resources/3D')
 
 setup = oa.SE3RigidBodyPlanning()
