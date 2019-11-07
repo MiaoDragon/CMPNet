@@ -1,6 +1,6 @@
 cd ..
 # End-2-End learning (randomly shuffle path)
-python3 cmpnet_train.py --model_path ../CMPnet_res/home/ \
+python cmpnet_train.py --model_path ../CMPnet_res/home/ \
 --no_env 1 --no_motion_paths 20 --grad_step 1 --learning_rate 0.001 \
 --num_epochs 2 --memory_strength 0.5 --n_memories 10000 \
 --n_tasks 1 --device 0 --freq_rehersal 10 --batch_rehersal 10 \
