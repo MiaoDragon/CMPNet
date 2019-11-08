@@ -167,7 +167,7 @@ def main(args):
         f = open(os.path.join(args.model_path,'seen_accuracy_epoch_%d.txt' % (args.start_epoch)), 'w')
         f.write(str(seen_test_suc_rate))
         f.close()
-    if args.unseen_N > 0;
+    if args.unseen_N > 0:
         unseen_test_suc_rate = unseen_test_suc_rate / T    # Save the models
         f = open(os.path.join(args.model_path,'unseen_accuracy_epoch_%d.txt' % (args.start_epoch)), 'w')
         f.write(str(unseen_test_suc_rate))
