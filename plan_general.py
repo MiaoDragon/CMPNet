@@ -6,9 +6,15 @@ DEFAULT_STEP = 2.
 def removeCollision(path, obc, IsInCollision):
     new_path = []
     # rule out nodes that are already in collision
+    print('##########')
+    print('inside removeCollision:')
     for i in range(0,len(path)):
+        print('%d-th node checking...')
         if not IsInCollision(path[i].numpy(),obc):
             new_path.append(path[i])
+            print('not removed.')
+        else:
+            print('removed.')
     return new_path
 
 def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
