@@ -128,7 +128,7 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
     obs = (obs - lower) / bound - 1.0
     print('after normalization:')
     print(obs)
-    obs = obs.reshape(NP, -1)
+    obs = obs.reshape(N, -1)
     ## calculating length of the longest trajectory
     max_length=0
     path_lengths=np.zeros((N,NP),dtype=np.int8)
