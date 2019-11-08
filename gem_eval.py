@@ -37,8 +37,10 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
             if path_lengths[i][j]>0:
                 fp = 0
                 valid_path.append(1)
+                print('path %d: start and goal' % (j))
                 path = [torch.from_numpy(paths[i][j][0]).type(torch.FloatTensor),\
                         torch.from_numpy(paths[i][j][path_lengths[i][j]-1]).type(torch.FloatTensor)]
+                print(path)
                 step_sz = DEFAULT_STEP
                 MAX_NEURAL_REPLAN = 11
                 for t in range(MAX_NEURAL_REPLAN):
