@@ -53,7 +53,7 @@ def QtoAxisAngle(Q):
 
 
 def IsInCollision(stateIn,obc):
-    lower = np.array([-383.8, -371,47, -0.2, -1, -1, -1, -1])
+    lower = np.array([-383.8, -371.47, -0.2, -1, -1, -1, -1])
     higher = np.array([325, 337.89, 142.33, 1, 1, 1, 1])
     for i in range(len(lower)):
         if stateIn[i] < lower[i] or stateIn[i] > higher[i]:
