@@ -6,6 +6,28 @@ from os.path import join
 from ompl import base as ob
 from ompl import app as oa
 from ompl import geometric as og
+
+def allocatePlanner(si, plannerType):
+    if plannerType.lower() == "bfmtstar":
+        return og.BFMT(si)
+    elif plannerType.lower() == "bitstar":
+        return og.BITstar(si)
+    elif plannerType.lower() == "fmtstar":
+        return og.FMT(si)
+    elif plannerType.lower() == "informedrrtstar":
+        return og.InformedRRTstar(si)
+    elif plannerType.lower() == "prmstar":
+        return og.PRMstar(si)
+    elif plannerType.lower() == "rrtstar":
+        return og.RRTstar(si)
+    elif plannerType.lower() == "sorrtstar":
+        return og.SORRTstar(si)
+    else:
+        ou.OMPL_ERROR("Planner-type is not implemented in allocation function.")
+
+
+
+
 ompl_app_root = "/home/arclabdl1/ompl/omplapp-1.4.2-Source/"
 ompl_resources_dir = join(ompl_app_root, 'resources/3D')
 
@@ -13,10 +35,9 @@ setup = oa.SE3RigidBodyPlanning()
 setup.setRobotMesh(join(ompl_resources_dir, 'Home_robot.dae'))
 setup.setEnvironmentMesh(join(ompl_resources_dir, 'Home_env.dae'))
 setup.getSpaceInformation().setStateValidityCheckingResolution(0.01)
-setup.getSpaceInformation().setup()
-val = setup.getSpaceInformation().getStateValidityChecker()
-#setup.setup()
-#val = setup.getStateValidityChecker()
+setup.setPlanner(allocatePlanner(setup.getSpaceInformation(), 'rrtstar'))
+setup.setup()
+val = setup.getStateValidityChecker()
 print(val)
 
 def QtoAxisAngle(Q):
