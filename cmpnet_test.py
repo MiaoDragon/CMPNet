@@ -156,7 +156,7 @@ def main(args):
             fes_path = fes_path_.flatten()   # notice different environments are involved
             seen_test_suc_rate += fes_path.sum() / valid_path.sum()
         # unseen
-        if args.unseen_N > 0;
+        if args.unseen_N > 0:
             time_file = os.path.join(args.model_path,'time_unseen_epoch_%d_mlp.p' % (args.start_epoch))
             fes_path_, valid_path_ = eval_tasks(mpNet, unseen_test_data, time_file, IsInCollision, normalize_func, unnormalize_func, True)
             valid_path = valid_path_.flatten()
