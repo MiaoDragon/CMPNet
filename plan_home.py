@@ -44,6 +44,8 @@ def QtoAxisAngle(Q):
     #x = qx / sqrt(1-qw*qw)
     #y = qy / sqrt(1-qw*qw)
     #z = qz / sqrt(1-qw*qw)
+    # to unit quarternion
+    Q = Q / np.linalg.norm(Q)
     angle = 2 * np.arccos(Q[0])
     x = Q[1] / np.sqrt(1-Q[0]*Q[0])
     y = Q[2] / np.sqrt(1-Q[0]*Q[0])
