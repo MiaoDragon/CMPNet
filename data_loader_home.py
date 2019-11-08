@@ -122,13 +122,14 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
     print('loading...')
     print('original obstacle:')
     print(obs)
-    lower = np.array([-383.8, -371.47, -0.2])
-    higher = np.array([325, 337.89, 142.33])
-    bound = (higher - lower) / 2
-    obs = (obs - lower) / bound - 1.0
-    print('after normalization:')
-    print(obs)
-    obs = obs.reshape(N, -1)
+    if N > 0:
+        lower = np.array([-383.8, -371.47, -0.2])
+        higher = np.array([325, 337.89, 142.33])
+        bound = (higher - lower) / 2
+        obs = (obs - lower) / bound - 1.0
+        print('after normalization:')
+        print(obs)
+        obs = obs.reshape(N, -1)
     ## calculating length of the longest trajectory
     max_length=0
     path_lengths=np.zeros((N,NP),dtype=np.int8)
