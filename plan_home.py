@@ -65,5 +65,5 @@ def IsInCollision(stateIn,obc):
     # the output of RRT* quarternion seems to be in the order w, x, y, z
     angle = np.array([stateIn[6].item(), stateIn[3].item(), stateIn[4].item(), stateIn[5].item()])
     angle = QtoAxisAngle(angle)
-    state().rotation().setAxisAngle(angle)
+    state().rotation().setAxisAngle(angle[0], angle[1], angle[2], angle[3])
     return val.isValid(state())
