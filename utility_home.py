@@ -15,7 +15,7 @@ def normalize(x, bound, time_flag=False):
     higher = torch.from_numpy(higher).type(torch.FloatTensor)
     print('before normalizing...')
     print(x)
-    if len(x[0]) != len(bound):
+    if len(x[0].size()) != 1:
         # then the proceding is obstacle
         # don't normalize obstacles
         # we assume the obstacle pcd has been normalized
@@ -23,7 +23,11 @@ def normalize(x, bound, time_flag=False):
         x[:,-2*len(bound):-len(bound)] = (x[:,-2*len(bound):-len(bound)]-lower) / bound - 1.0
         x[:,-len(bound):] = (x[:,-len(bound):]-lower) / bound - 1.0
     else:
-        x = (x - lower) / bound - 1.0
+        if len(x) == len(bound):
+            x = (x - lower) / bound - 1.0
+        else:
+            x[-2*len(bound):-len(bound)] = (x[-2*len(bound):-len(bound)]-lower) / bound - 1.0
+            x[-len(bound):] = (x[-len(bound):]-lower) / bound - 1.0
     print('after normalizing...')
     print(x)
     if time_flag:
@@ -43,14 +47,18 @@ def unnormalize(x, bound, time_flag=False):
     higher = torch.from_numpy(higher).type(torch.FloatTensor)
     print('before unnormalizing...')
     print(x)
-    if len(x) != len(bound):
+    if len(x[0].size()) != 1:
         # then the proceding is obstacle
         # don't normalize obstacles
         #x[:,:-2*len(bound)] = x[:,:-2*len(bound)] * bound[0]
         x[:,-2*len(bound):-len(bound)] = (x[:,-2*len(bound):-len(bound)] + 1.0) * bound + lower
         x[:,-len(bound):] = (x[:,-len(bound):] + 1.0) * bound + lower
     else:
-        x = (x + 1.0) * bound + lower
+        if len(x) == len(bound):
+            x = (x + 1.0) * bound + lower
+        else:
+            x[-2*len(bound):-len(bound)] = (x[-2*len(bound):-len(bound)] + 1.0) * bound + lower
+            x[-len(bound):] = (x[-len(bound):] + 1.0) * bound + lower
     print('after unnormalizing...')
     print(x)
     if time_flag:
