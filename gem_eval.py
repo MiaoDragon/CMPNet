@@ -55,8 +55,8 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                     else:
                         path = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
                                             normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag=time_flag)
-                    print('after neural replan:')
-                    print(path)
+                    #print('after neural replan:')
+                    #print(path)
                     path = lvc(path, obc[i], IsInCollision, step_sz=step_sz)
                     #print('after lvc:')
                     #print(path)
@@ -77,12 +77,13 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                 #path = np.array(path)
                 #np.savetxt('path_%d.txt' % (j), path)
             fes_path.append(fp)
+
         time_env.append(time_path)
         time_total += time_path
         print('average test time up to now: %f' % (np.mean(time_total)))
         fes_env.append(fes_path)
         valid_env.append(valid_path)
-        print('accuracy up to now: %f' % (np.sum(fes_env) / np.sum(valid_env)))
+        print('accuracy up to now: %f' % (float(np.sum(fes_env)) / np.sum(valid_env)))
     if filename is not None:
         pickle.dump(time_env, open(filename, "wb" ))
         #print(fp/tp)
