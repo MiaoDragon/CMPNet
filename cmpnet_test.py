@@ -134,8 +134,10 @@ def main(args):
 
     # load train and test data
     print('loading...')
-    seen_test_data = load_test_dataset(N=args.seen_N, NP=args.seen_NP, s=args.seen_s, sp=args.seen_sp, folder=args.data_path)
-    unseen_test_data = load_test_dataset(N=args.unseen_N, NP=args.unseen_NP, s=args.unseen_s, sp=args.unseen_sp, folder=args.data_path)
+    if args.seen_N > 0:
+        seen_test_data = load_test_dataset(N=args.seen_N, NP=args.seen_NP, s=args.seen_s, sp=args.seen_sp, folder=args.data_path)
+    if args.unseen_N > 0:
+        unseen_test_data = load_test_dataset(N=args.unseen_N, NP=args.unseen_NP, s=args.unseen_s, sp=args.unseen_sp, folder=args.data_path)
     # test
     # testing
     print('testing...')
@@ -147,25 +149,29 @@ def main(args):
         normalize_func=lambda x: normalize(x, args.world_size)
         unnormalize_func=lambda x: unnormalize(x, args.world_size)
         # seen
-        time_file = os.path.join(args.model_path,'time_seen_epoch_%d_mlp.p' % (args.start_epoch))
-        fes_path_, valid_path_ = eval_tasks(mpNet, seen_test_data, time_file, IsInCollision, normalize_func, unnormalize_func, True)
-        valid_path = valid_path_.flatten()
-        fes_path = fes_path_.flatten()   # notice different environments are involved
-        seen_test_suc_rate += fes_path.sum() / valid_path.sum()
+        if args.seen_N > 0:
+            time_file = os.path.join(args.model_path,'time_seen_epoch_%d_mlp.p' % (args.start_epoch))
+            fes_path_, valid_path_ = eval_tasks(mpNet, seen_test_data, time_file, IsInCollision, normalize_func, unnormalize_func, True)
+            valid_path = valid_path_.flatten()
+            fes_path = fes_path_.flatten()   # notice different environments are involved
+            seen_test_suc_rate += fes_path.sum() / valid_path.sum()
         # unseen
-        time_file = os.path.join(args.model_path,'time_unseen_epoch_%d_mlp.p' % (args.start_epoch))
-        fes_path_, valid_path_ = eval_tasks(mpNet, unseen_test_data, time_file, IsInCollision, normalize_func, unnormalize_func, True)
-        valid_path = valid_path_.flatten()
-        fes_path = fes_path_.flatten()   # notice different environments are involved
-        unseen_test_suc_rate += fes_path.sum() / valid_path.sum()
-    seen_test_suc_rate = seen_test_suc_rate / T
-    unseen_test_suc_rate = unseen_test_suc_rate / T    # Save the models
-    f = open(os.path.join(args.model_path,'seen_accuracy_epoch_%d.txt' % (args.start_epoch)), 'w')
-    f.write(str(seen_test_suc_rate))
-    f.close()
-    f = open(os.path.join(args.model_path,'unseen_accuracy_epoch_%d.txt' % (args.start_epoch)), 'w')
-    f.write(str(unseen_test_suc_rate))
-    f.close()
+        if args.unseen_N > 0;
+            time_file = os.path.join(args.model_path,'time_unseen_epoch_%d_mlp.p' % (args.start_epoch))
+            fes_path_, valid_path_ = eval_tasks(mpNet, unseen_test_data, time_file, IsInCollision, normalize_func, unnormalize_func, True)
+            valid_path = valid_path_.flatten()
+            fes_path = fes_path_.flatten()   # notice different environments are involved
+            unseen_test_suc_rate += fes_path.sum() / valid_path.sum()
+    if args.seen_N > 0:
+        seen_test_suc_rate = seen_test_suc_rate / T
+        f = open(os.path.join(args.model_path,'seen_accuracy_epoch_%d.txt' % (args.start_epoch)), 'w')
+        f.write(str(seen_test_suc_rate))
+        f.close()
+    if args.unseen_N > 0;
+        unseen_test_suc_rate = unseen_test_suc_rate / T    # Save the models
+        f = open(os.path.join(args.model_path,'unseen_accuracy_epoch_%d.txt' % (args.start_epoch)), 'w')
+        f.write(str(unseen_test_suc_rate))
+        f.close()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
