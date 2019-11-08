@@ -21,7 +21,7 @@ def normalize(x, bound, time_flag=False):
         # we assume the obstacle pcd has been normalized
         #x[:,:-2*len(bound)] = x[:,:-2*len(bound)] / bound[0]
         print('before normalizing...')
-        print(x[:,-2*len(bound:)])
+        print(x[:,-2*len(bound):])
         x[:,-2*len(bound):-len(bound)] = (x[:,-2*len(bound):-len(bound)]-lower) / bound - 1.0
         x[:,-len(bound):] = (x[:,-len(bound):]-lower) / bound - 1.0
     else:
