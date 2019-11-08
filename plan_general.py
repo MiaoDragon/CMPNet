@@ -6,17 +6,9 @@ DEFAULT_STEP = 2.
 def removeCollision(path, obc, IsInCollision):
     new_path = []
     # rule out nodes that are already in collision
-    print('##########')
-    print('inside removeCollision:')
     for i in range(0,len(path)):
-        print('%d-th node checking...' % (i))
-        print('node: ')
-        print(path[i])
         if not IsInCollision(path[i].numpy(),obc):
             new_path.append(path[i])
-            print('not removed.')
-        else:
-            print('removed.')
     return new_path
 
 def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
@@ -167,8 +159,7 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             new_path.append(pA[p1])
         for p2 in range(len(pB)-1,-1,-1):
             new_path.append(pB[p2])
-    print('replanned new path:')
-    print(new_path)
+
     return new_path, time_norm
 
 

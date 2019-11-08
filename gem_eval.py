@@ -37,10 +37,8 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
             if path_lengths[i][j]>0:
                 fp = 0
                 valid_path.append(1)
-                print('path %d: start and goal' % (j))
                 path = [torch.from_numpy(paths[i][j][0]).type(torch.FloatTensor),\
                         torch.from_numpy(paths[i][j][path_lengths[i][j]-1]).type(torch.FloatTensor)]
-                print(path)
                 step_sz = DEFAULT_STEP
                 MAX_NEURAL_REPLAN = 11
                 for t in range(MAX_NEURAL_REPLAN):
@@ -57,11 +55,11 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                     else:
                         path = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
                                             normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag=time_flag)
-                    print('after neural replan:')
-                    print(path)
+                    #print('after neural replan:')
+                    #print(path)
                     path = lvc(path, obc[i], IsInCollision, step_sz=step_sz)
-                    print('after lvc:')
-                    print(path)
+                    #print('after lvc:')
+                    #print(path)
                     if feasibility_check(path, obc[i], IsInCollision, step_sz=0.01):
                         fp = 1
                         print('feasible, ok!')
@@ -73,8 +71,8 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                 time_path.append(time1)
                 print('test time: %f' % (time1))
                 # write the path
-                print('planned path:')
-                print(path)
+                #print('planned path:')
+                #print(path)
                 path = [p.numpy() for p in path]
                 path = np.array(path)
                 np.savetxt('path_%d.txt' % (j), path)
