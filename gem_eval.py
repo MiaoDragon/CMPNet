@@ -69,6 +69,8 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                 time_path.append(time1)
                 print('test time: %f' % (time1))
                 # write the path
+                print('planned path:')
+                print(path)
                 path = [p.numpy() for p in path]
                 path = np.array(path)
                 np.savetxt('path_%d.txt' % (j), path)
