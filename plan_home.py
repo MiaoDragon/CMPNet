@@ -38,7 +38,6 @@ setup.getSpaceInformation().setStateValidityCheckingResolution(0.01)
 setup.setPlanner(allocatePlanner(setup.getSpaceInformation(), 'rrtstar'))
 setup.setup()
 val = setup.getStateValidityChecker()
-print(val)
 
 def QtoAxisAngle(Q):
     # angle = 2 * acos(qw)
