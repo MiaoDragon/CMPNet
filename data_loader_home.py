@@ -105,7 +105,7 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
 #Unseen_environments==> N=10, NP=2000,s=100, sp=0
 #seen_environments==> N=100, NP=200,s=0, sp=4000
 def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
-    obc = None
+    obc = [None for i in range(N)]
     obs = []
     # add start s
     for i in range(0,N):
