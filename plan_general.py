@@ -10,6 +10,8 @@ def removeCollision(path, obc, IsInCollision):
     print('inside removeCollision:')
     for i in range(0,len(path)):
         print('%d-th node checking...' % (i))
+        print('node: ')
+        print(path[i])
         if not IsInCollision(path[i].numpy(),obc):
             new_path.append(path[i])
             print('not removed.')
