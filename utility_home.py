@@ -13,8 +13,8 @@ def normalize(x, bound, time_flag=False):
     bound = torch.from_numpy(bound).type(torch.FloatTensor)
     lower = torch.from_numpy(lower).type(torch.FloatTensor)
     higher = torch.from_numpy(higher).type(torch.FloatTensor)
-    print('before normalizing...')
-    print(x)
+    #print('before normalizing...')
+    #print(x)
     if len(x[0]) != len(bound):
         # then the proceding is obstacle
         # don't normalize obstacles
@@ -24,8 +24,8 @@ def normalize(x, bound, time_flag=False):
         x[:,-len(bound):] = (x[:,-len(bound):]-lower) / bound - 1.0
     else:
         x = (x - lower) / bound - 1.0
-    print('after normalizing...')
-    print(x)
+    #print('after normalizing...')
+    #print(x)
     if time_flag:
         return x, time.time() - time_0
     else:
@@ -41,8 +41,8 @@ def unnormalize(x, bound, time_flag=False):
     bound = torch.from_numpy(bound).type(torch.FloatTensor)
     lower = torch.from_numpy(lower).type(torch.FloatTensor)
     higher = torch.from_numpy(higher).type(torch.FloatTensor)
-    print('before unnormalizing...')
-    print(x)
+    #print('before unnormalizing...')
+    #print(x)
     if len(x) != len(bound):
         # then the proceding is obstacle
         # don't normalize obstacles
@@ -51,8 +51,8 @@ def unnormalize(x, bound, time_flag=False):
         x[:,-len(bound):] = (x[:,-len(bound):] + 1.0) * bound + lower
     else:
         x = (x + 1.0) * bound + lower
-    print('after unnormalizing...')
-    print(x)
+    #print('after unnormalizing...')
+    #print(x)
     if time_flag:
         return x, time.time() - time_0
     else:
