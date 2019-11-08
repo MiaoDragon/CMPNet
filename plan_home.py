@@ -76,4 +76,4 @@ def IsInCollision(stateIn,obc):
     angle = np.array([stateIn[6].item(), stateIn[3].item(), stateIn[4].item(), stateIn[5].item()])
     angle = QtoAxisAngle(angle)
     state().rotation().setAxisAngle(angle[0], angle[1], angle[2], angle[3])
-    return val.isValid(state())
+    return not val.isValid(state())
