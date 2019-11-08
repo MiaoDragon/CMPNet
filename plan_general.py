@@ -159,6 +159,8 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             new_path.append(pA[p1])
         for p2 in range(len(pB)-1,-1,-1):
             new_path.append(pB[p2])
+    print('replanned new path:')
+    print(new_path)
     return new_path, time_norm
 
 

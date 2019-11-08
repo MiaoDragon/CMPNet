@@ -24,6 +24,8 @@ def normalize(x, bound, time_flag=False):
         print(x[:,-2*len(bound):])
         x[:,-2*len(bound):-len(bound)] = (x[:,-2*len(bound):-len(bound)]-lower) / bound - 1.0
         x[:,-len(bound):] = (x[:,-len(bound):]-lower) / bound - 1.0
+        print('after normalizing...')
+        print(x[:,-2*len(bound):])
     else:
         print('before normalizing...')
         print(x)
@@ -32,8 +34,8 @@ def normalize(x, bound, time_flag=False):
         else:
             x[-2*len(bound):-len(bound)] = (x[-2*len(bound):-len(bound)]-lower) / bound - 1.0
             x[-len(bound):] = (x[-len(bound):]-lower) / bound - 1.0
-    print('after normalizing...')
-    print(x)
+        print('after normalizing...')
+        print(x)
     if time_flag:
         return x, time.time() - time_0
     else:
@@ -58,6 +60,8 @@ def unnormalize(x, bound, time_flag=False):
         print(x[:, -2*len(bound):])
         x[:,-2*len(bound):-len(bound)] = (x[:,-2*len(bound):-len(bound)] + 1.0) * bound + lower
         x[:,-len(bound):] = (x[:,-len(bound):] + 1.0) * bound + lower
+        print('after unnormalizing...')
+        print(x[:, -2*len(bound):])
     else:
         print('before unnormalizing...')
         print(x)
@@ -66,8 +70,8 @@ def unnormalize(x, bound, time_flag=False):
         else:
             x[-2*len(bound):-len(bound)] = (x[-2*len(bound):-len(bound)] + 1.0) * bound + lower
             x[-len(bound):] = (x[-len(bound):] + 1.0) * bound + lower
-    print('after unnormalizing...')
-    print(x)
+        print('after unnormalizing...')
+        print(x)
     if time_flag:
         return x, time.time() - time_0
     else:
