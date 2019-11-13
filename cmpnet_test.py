@@ -27,8 +27,8 @@ import argparse
 import os
 import torch
 from gem_eval import eval_tasks
-import plan_s2d, plan_c2d, plan_r3d, plan_r2d, plan_home
-import data_loader_2d, data_loader_r3d, data_loader_r2d, data_loader_home
+import plan_s2d, plan_c2d, plan_r3d, plan_r2d
+import data_loader_2d, data_loader_r3d, data_loader_r2d
 from torch.autograd import Variable
 import copy
 import os
@@ -94,6 +94,7 @@ def main(args):
         MLP = model_c2d_simple.MLP
         args.world_size = [20., 20., np.pi]
     elif args.env_type == 'home':
+        import plan_home, data_loader_home
         IsInCollision = plan_home.IsInCollision
         load_test_dataset = data_loader_home.load_test_dataset
         normalize = utility_home.normalize
