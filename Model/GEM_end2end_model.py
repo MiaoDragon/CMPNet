@@ -9,7 +9,7 @@ class End2EndMPNet(nn.Module):
                  n_tasks, n_memories, memory_strength, grad_step, CAE, MLP):
         super(End2EndMPNet, self).__init__()
         self.encoder = CAE.Encoder()
-        self.mlp = MLP(mlp_input_size, output_size)
+        self.mlp = MLP(output_size*2, output_size)
         self.mse = nn.MSELoss()
         self.opt = torch.optim.Adagrad(list(self.encoder.parameters())+list(self.mlp.parameters()))
         '''
@@ -23,7 +23,7 @@ class End2EndMPNet(nn.Module):
         #self.memory_data = torch.FloatTensor(
         #    n_tasks, self.n_memories, total_input_size)
         self.memory_input = torch.FloatTensor(
-            n_tasks, self.n_memories, mlp_input_size)
+            n_tasks, self.n_memories, output_size*2)
         obs_size = [n_tasks, self.n_memories] + AE_input_size
         obs_size = tuple(obs_size)
         self.memory_obs = torch.zeros(obs_size).type(torch.FloatTensor)
