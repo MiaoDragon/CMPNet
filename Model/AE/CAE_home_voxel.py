@@ -13,26 +13,26 @@ class Encoder(nn.Module):
         super(Encoder, self).__init__()
         input_size = [input_size, input_size, input_size]
         self.encoder1 = nn.Sequential(
-            nn.Conv2d(in_channels=input_size[0], out_channels=24, kernel_size=[5,5], stride=[1,1]),
+            nn.Conv2d(in_channels=input_size[0], out_channels=24, kernel_size=5, stride=1),
             nn.PReLU(),
             nn.MaxPool2d(2, stride=2),
-            nn.Conv2d(in_channels=24, out_channels=64, kernel_size=[5,5], stride=[1,1]),
+            nn.Conv2d(in_channels=24, out_channels=64, kernel_size=5, stride=1),
             nn.PReLU(),
             nn.MaxPool2d(2, stride=2)
         )
         self.encoder2 = nn.Sequential(
-            nn.Conv2d(in_channels=input_size[0], out_channels=24, kernel_size=[5,5], stride=[1,1]),
+            nn.Conv2d(in_channels=input_size[0], out_channels=24, kernel_size=5, stride=1),
             nn.PReLU(),
             nn.MaxPool2d(2, stride=2),
-            nn.Conv2d(in_channels=24, out_channels=64, kernel_size=[5,5], stride=[1,1]),
+            nn.Conv2d(in_channels=24, out_channels=64, kernel_size=5, stride=1),
             nn.PReLU(),
             nn.MaxPool2d(2, stride=2)
         )
         self.encoder3 = nn.Sequential(
-            nn.Conv2d(in_channels=input_size[0], out_channels=24, kernel_size=[5,5], stride=[1,1]),
+            nn.Conv2d(in_channels=input_size[0], out_channels=24, kernel_size=5, stride=1),
             nn.PReLU(),
             nn.MaxPool2d(2, stride=2),
-            nn.Conv2d(in_channels=24, out_channels=64, kernel_size=[5,5], stride=[1,1]),
+            nn.Conv2d(in_channels=24, out_channels=64, kernel_size=5, stride=1),
             nn.PReLU(),
             nn.MaxPool2d(2, stride=2)
         )
