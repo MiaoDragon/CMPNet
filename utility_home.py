@@ -19,9 +19,11 @@ def normalize(x, bound, time_flag=False):
         # then the proceding is obstacle
         # don't normalize obstacles
         # we assume the obstacle pcd has been normalized
-        print(x.size())
-        x[:,:-len(bound)] = (x[:,:-len(bound)]-lower) / bound - 1.0
-        x[:,-len(bound):] = (x[:,-len(bound):]-lower) / bound - 1.0
+        if len(x[0]) != len(bound):
+            x[:,:-len(bound)] = (x[:,:-len(bound)]-lower) / bound - 1.0
+            x[:,-len(bound):] = (x[:,-len(bound):]-lower) / bound - 1.0
+        else:
+            x = (x-lower) / bound - 1.0
         #print('after normalizing...')
         #print(x[:,-2*len(bound):])
     else:
@@ -53,13 +55,11 @@ def unnormalize(x, bound, time_flag=False):
     if len(x.size()) != 1:
         # then the proceding is obstacle
         # don't normalize obstacles
-        #x[:,:-2*len(bound)] = x[:,:-2*len(bound)] * bound[0]
-        #print('before unnormalizing...')
-        #print(x[:, -2*len(bound):])
-        x[:,:-len(bound)] = (x[:,:-len(bound)] + 1.0) * bound + lower
-        x[:,-len(bound):] = (x[:,-len(bound):] + 1.0) * bound + lower
-        #print('after unnormalizing...')
-        #print(x[:, -2*len(bound):])
+        if len(x[0]) != len(bound):
+            x[:,:-len(bound)] = (x[:,:-len(bound)] + 1.0) * bound + lower
+            x[:,-len(bound):] = (x[:,-len(bound):] + 1.0) * bound + lower
+        else:
+            x = (x + 1.0) * bound + lower
     else:
         #print('before unnormalizing...')
         #print(x)
