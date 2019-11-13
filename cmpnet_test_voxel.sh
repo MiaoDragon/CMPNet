@@ -5,7 +5,7 @@
 #--start_epoch 1 --memory_type res --env_type c2d --world_size 20
 python cmpnet_test.py --model_path /media/arclabdl1/HD1/YLmiao/results/CMPnet_res/baxter_voxel/ \
 --grad_step 1 --learning_rate 0.01 \
---memory_strength 0.5 --n_memories 1000 \
+--memory_strength 0.5 --n_memories 1 \
 --n_tasks 1 --device 1 --data_path ../data/test_100/ \
 --start_epoch 1 --memory_type res --env_type baxter --world_size 20 \
 --total_input_size 16067 --AE_input_size 1 32 32 32 --mlp_input_size 74 --output_size 7 \
