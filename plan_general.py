@@ -1,6 +1,7 @@
 import torch
 import numpy as np
 from utility import *
+import time
 DEFAULT_STEP = 0.05
 def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
     # test if there is a collision free path from start to end, with step size
@@ -35,7 +36,9 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
     dists=np.zeros(dof,dtype=np.float32)
     for i in range(0,dof):
         dists[i] = end[i] - start[i]
-
+        # check if NaN value exists
+        if np.isnan(end[i]) or np.isnan(start[i]):
+            return 0
     distTotal = 0.0
     for i in range(0,dof):
         distTotal =distTotal+ dists[i]*dists[i]
@@ -43,11 +46,15 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
     distTotal = np.sqrt(distTotal)
     if distTotal>0:
         incrementTotal = distTotal/DISCRETIZATION_STEP
+        if incrementTotal > 2000000:
+            # the distance is too large, just assume they can't connect to each other
+            #print("increment too large")
+            return 0
         for i in range(0,dof):
             dists[i] =dists[i]/incrementTotal
 
         numSegments = int(np.floor(incrementTotal))
-
+        #print('number of segments in SteerTo: %d' % (numSegments))
         stateCurr = np.zeros(7,dtype=np.float32)
         for i in range(0,dof):
             stateCurr[i] = start[i]
@@ -69,10 +76,15 @@ def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
 def feasibility_check(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
     # checks the feasibility of entire path including the path edges
     # by checking for each adjacent vertices
+    print('feasibility check')
+    print(path)
     for i in range(0,len(path)-1):
+        print('index: %d' % (i))
         if not steerTo(path[i],path[i+1],obc,IsInCollision,step_sz=step_sz):
             # collision occurs from adjacent vertices
+            print('infeasible')
             return 0
+    print('feasible')
     return 1
 
 def lvc(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
@@ -143,8 +155,11 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, unnormalize, M
     target_reached=0
     tree=0
     new_path = []
+    time_start = time.time()
     while target_reached==0 and itr<MAX_LENGTH:
         itr=itr+1  # prevent the path from being too long
+        #print('replanning...')
+        #print('iteration: %d' % (itr))
         if tree==0:
             ip1=torch.cat((obs,start,goal)).unsqueeze(0)
             ip1=to_var(ip1)

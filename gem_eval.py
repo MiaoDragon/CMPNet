@@ -69,6 +69,8 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, envs_load, envDict, sc
                         step_sz = 0.02
                     path = neural_replan(mpNet, path, obc, obs[i], IsInCollision, \
                                          unnormalize_func, t==0, step_sz=step_sz)
+                    print('%d-th replan' % (t))
+                    print(path)
                     path = lvc(path, obc, IsInCollision, step_sz=step_sz)
                     if feasibility_check(path, obc, IsInCollision, step_sz=0.01):
                         fp = 1

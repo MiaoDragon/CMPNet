@@ -97,33 +97,67 @@ def main(args):
         load_test_dataset = data_loader_baxter.load_test_dataset
         CAE = CAE_baxter
         # MLP = model_baxter.MLP
-        MLP = model_baxter.MLP_Path
+        MLP = model_baxter.MLP_2
         IsInCollision = BaxterIsInCollision #TODO
-
         importer = fileImport()
         # env_data_path = '/baxter_mpnet_docker/data/full_dataset_sample/'
-        env_data_path = '/home/anthony/catkin_workspaces/baxter_ws/src/baxter_mpnet/data/full_dataset_sample/'
+        env_data_path = '/media/arclabdl1/HD1/Anthony/baxter_mpnet_data/data/full_dataset_sample/' #uncomment this if running on local
         pcd_data_path = env_data_path+'pcd/'
         envs_file = 'trainEnvironments_GazeboPatch.pkl'
 
         envs = importer.environments_import(env_data_path + envs_file)
-        envs_load = [envs[0]]
+        envs_load = envs
         print("Loading environments: ")
         print(envs_load)
         with open(env_data_path+envs_file, 'rb') as env_f:
             envDict = pickle.load(env_f)
+        #print(envDict)
+        #home_path = '/baxter_mpnet_docker/'
+        home_path = '/media/arclabdl1/HD1/Anthony/repos/baxter_mpnet/'
 
-        # home_path = '/baxter_mpnet_docker/'
+        for i, key in enumerate(envDict['obsData'].keys()):
+            fname = envDict['obsData'][key]['mesh_file']
+
+            if fname is not None:
+                keep = fname.split('/baxter_mpnet/')[1]
+                new = home_path + keep
+                print(new)
+                envDict['obsData'][key]['mesh_file'] = new
 
 
-        # for i, key in enumerate(envDict['obsData'].keys()):
-        #     fname = envDict['obsData'][key]['mesh_file']
 
-        #     if fname is not None:
-        #         keep = fname.split('/baxter_mpnet/')[1]
-        #         new = home_path + keep
-        #         print(new)
-        #         envDict['obsData'][key]['mesh_file'] = new
+    elif args.env_type == 'baxter_shallow':
+        load_test_dataset = data_loader_baxter.load_test_dataset
+        CAE = CAE_baxter
+        # MLP = model_baxter.MLP
+        MLP = model_baxter.MLP_2_shallow
+        IsInCollision = BaxterIsInCollision #TODO
+
+
+        importer = fileImport()
+        # env_data_path = '/baxter_mpnet_docker/data/full_dataset_sample/'
+        env_data_path = '/media/arclabdl1/HD1/Anthony/baxter_mpnet_data/data/full_dataset_sample/' #uncomment this if running on local
+        pcd_data_path = env_data_path+'pcd/'
+        envs_file = 'trainEnvironments_GazeboPatch.pkl'
+
+        envs = importer.environments_import(env_data_path + envs_file)
+        envs_load = envs
+        print("Loading environments: ")
+        print(envs_load)
+        with open(env_data_path+envs_file, 'rb') as env_f:
+            envDict = pickle.load(env_f)
+        #print(envDict)
+        #home_path = '/baxter_mpnet_docker/'
+        home_path = '/media/arclabdl1/HD1/Anthony/repos/baxter_mpnet/'
+
+        for i, key in enumerate(envDict['obsData'].keys()):
+            fname = envDict['obsData'][key]['mesh_file']
+
+            if fname is not None:
+                keep = fname.split('/baxter_mpnet/')[1]
+                new = home_path + keep
+                print(new)
+                envDict['obsData'][key]['mesh_file'] = new
 
 
     if args.memory_type == 'res':

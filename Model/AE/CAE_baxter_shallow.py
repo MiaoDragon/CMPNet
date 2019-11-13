@@ -10,11 +10,7 @@ class Encoder(nn.Module):
 	def __init__(self):
 		super(Encoder, self).__init__()
 		print('using simple encoder')
-		self.encoder = nn.Sequential(nn.Linear(16053, 512),nn.PReLU(),
-                                             nn.Linear(512, 512),nn.PReLU(),
-                                             nn.Linear(512, 256),nn.PReLU(),
-                                             nn.Linear(256, 256),nn.PReLU(),
-                                             nn.Linear(256, 60))
+		self.encoder = nn.Sequential(nn.Linear(16053, 256),nn.PReLU(),nn.Linear(256, 256),nn.PReLU(),nn.Linear(256, 60))
 
 	def net_loss(self, out_D, D):
 	    # given a net, obtain the loss

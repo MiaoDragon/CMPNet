@@ -71,8 +71,8 @@ class End2EndMPNet(nn.Module):
 
         # else:
         # hacky dimension fix       
-        z = self.encoder(x[:self.AE_input_size])
-        mlp_in = torch.cat((z, x[self.AE_input_size:]))
+        z = self.encoder(x[:,:self.AE_input_size])
+        mlp_in = torch.cat((z, x[:,self.AE_input_size:]), dim=1)
 
         return self.mlp(mlp_in)
     def loss(self, pred, truth):

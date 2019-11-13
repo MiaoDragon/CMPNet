@@ -52,7 +52,7 @@ class MLP_15(nn.Module):
 # DMLP Model-Path Generator (x2)
 class MLP_2(nn.Module):
 	def __init__(self, input_size, output_size):
-		super(MLP, self).__init__()
+		super(MLP_2, self).__init__()
 		self.fc = nn.Sequential(
                     nn.Linear(input_size, 2560), nn.PReLU(), nn.Dropout(),
                     nn.Linear(2560, 1792), nn.PReLU(), nn.Dropout(),
@@ -69,6 +69,26 @@ class MLP_2(nn.Module):
 		out = self.fc(x)
 		# out = torch.clamp(out, -1, 1)
 		return out
+# DMLP Model-Path Generator (x2) depth decreases by 2
+class MLP_2_shallow(nn.Module):
+	def __init__(self, input_size, output_size):
+		super(MLP_2_shallow, self).__init__()
+		self.fc = nn.Sequential(
+                    nn.Linear(input_size, 2560), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(2560, 1024), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(1024, 512), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(512, 256), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(256, 128), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(128, 64), nn.PReLU(),
+                    nn.Linear(64, output_size)
+                )
+
+	def forward(self, x):
+		out = self.fc(x)
+		# out = torch.clamp(out, -1, 1)
+		return out
+
+
 
 # DMLP Model-Path Generator (x3)
 class MLP_3(nn.Module):

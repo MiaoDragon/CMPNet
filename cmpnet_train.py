@@ -81,7 +81,12 @@ def main(args):
         load_dataset = data_loader_baxter.load_dataset
         CAE = CAE_baxter
         # MLP = model_baxter.MLP
-        MLP = model_baxter.MLP_Path #testing small model on single environment
+        MLP = model_baxter.MLP_2 #testing small model on single environment
+    elif args.env_type == 'baxter_shallow':
+        load_dataset = data_loader_baxter.load_dataset
+        CAE = CAE_baxter
+        MLP = model_baxter.MLP_2_shallow
+
 
     if args.memory_type == 'res':
         mpNet = End2EndMPNet(args.total_input_size, args.AE_input_size, args.mlp_input_size, \
@@ -106,14 +111,14 @@ def main(args):
         mpNet.cuda()
         mpNet.mlp.cuda()
         mpNet.encoder.cuda()
-        mpNet.set_opt(torch.optim.Adagrad, lr=1e-2)
+        mpNet.set_opt(torch.optim.Adagrad, lr=args.learning_rate)
 
     if args.start_epoch > 0:
         load_opt_state(mpNet, os.path.join(args.model_path, model_path))
 
     # load train and test data
     print('loading...')
-    if args.env_type != 'baxter':
+    if args.env_type != 'baxter' and args.env_type != 'baxter_shallow':
         obs, path_data = load_dataset(N=args.no_env, NP=args.no_motion_paths, folder=args.data_path)
     else:
         importer = fileImport()
@@ -132,7 +137,8 @@ def main(args):
         envs_file = 'trainEnvironments_GazeboPatch.pkl'
 
         envs = importer.environments_import(env_data_path + envs_file)
-        envs_load = [envs[0]]
+        #envs_load = [envs[0]]
+        envs_load = envs
 
         obs, path_data = load_dataset(env_names=envs_load, data_path=env_data_path, pcd_path=pcd_data_path, importer=importer)
         # obs, dataset, targets, env_indices = load_dataset(env_names=envs_load, data_path=env_data_path, pcd_path=pcd_data_path, importer=importer)
@@ -146,7 +152,8 @@ def main(args):
         print('epoch' + str(epoch))
         for i in range(0,len(path_data)):
         # for i in range(0, len(dataset)):
-            # print('epoch: %d, training... path: %d' % (epoch, i+1))
+            print('epoch: %d, training... path: %d' % (epoch, i+1))
+            print('remaining paths: %d' % (len(path_data)-i))
             dataset, targets, env_indices = path_data[i]
             # data = list(zip(dataset, targets, env_indices))
             # random.shuffle(data)
@@ -163,6 +170,7 @@ def main(args):
             bt = targets
             bi = torch.FloatTensor(bi)
             bt = torch.FloatTensor(bt)
+            #print(bi.size())
             # if args.env_type != 'baxter':
             #    bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
             #print(mpNet.loss(mpNet(bi), bt))
@@ -175,8 +183,11 @@ def main(args):
             if (i == 0):
                 print("start epoch loss: ")
                 print(mpNet.loss(mpNet(bi), bt).data.cpu())
-            if (i == len(path_data) - 1):
+            elif (i == len(path_data) - 1):
                 print("end epoch loss: ")
+                print(mpNet.loss(mpNet(bi), bt).data.cpu())
+            else:
+                print('path %d loss: ' % (i))
                 print(mpNet.loss(mpNet(bi), bt).data.cpu())
             # print("input: \n")
             # print(bi[0:2, -14:])
@@ -198,7 +209,7 @@ def main(args):
                 bt = targets
                 bi = torch.FloatTensor(bi)
                 bt = torch.FloatTensor(bt)
-                if args.env_type != 'baxter':
+                if args.env_type != 'baxter' and args.env_type != 'baxter_shallow':
                     bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
                 mpNet.zero_grad()
                 bi=to_var(bi)
