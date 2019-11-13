@@ -20,6 +20,7 @@ import Model.model_baxter as model_baxter
 import Model.AE.CAE_r3d as CAE_r3d
 import Model.AE.CAE as CAE_2d
 import Model.AE.CAE_baxter as CAE_baxter
+import Model.AE.CAE_baxter_voxel as CAE_baxter_voxel
 import numpy as np
 import argparse
 import os
@@ -95,7 +96,8 @@ def main(args):
         MLP = model.MLP
     elif args.env_type == 'baxter':
         load_test_dataset = data_loader_baxter.load_test_dataset
-        CAE = CAE_baxter
+        #CAE = CAE_baxter
+        CAE = CAE_baxter_voxel
         # MLP = model_baxter.MLP
         MLP = model_baxter.MLP_2
         IsInCollision = BaxterIsInCollision #TODO
@@ -277,7 +279,7 @@ parser.add_argument('--n_memories', type=int, default=256, help='number of memor
 parser.add_argument('--memory_strength', type=float, default=0.5, help='memory strength (meaning depends on memory)')
 # Model parameters
 parser.add_argument('--total_input_size', type=int, default=2800+4, help='dimension of total input')
-parser.add_argument('--AE_input_size', type=int, default=2800, help='dimension of input to AE')
+parser.add_argument('--AE_input_size', nargs='+', type=int, default=2800, help='dimension of input to AE')
 parser.add_argument('--mlp_input_size', type=int , default=28+4, help='dimension of the input vector')
 parser.add_argument('--output_size', type=int , default=2, help='dimension of the input vector')
 parser.add_argument('--learning_rate', type=float, default=0.01)

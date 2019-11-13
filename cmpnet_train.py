@@ -20,6 +20,7 @@ import Model.model_c2d as model_c2d
 import Model.AE.CAE_r3d as CAE_r3d
 import Model.AE.CAE as CAE_2d
 import Model.AE.CAE_baxter as CAE_baxter
+import Model.AE.CAE_baxter_voxel as CAE_baxter_voxel
 
 import numpy as np
 import argparse
@@ -79,7 +80,8 @@ def main(args):
         MLP = model.MLP
     elif args.env_type == 'baxter':
         load_dataset = data_loader_baxter.load_dataset
-        CAE = CAE_baxter
+        #CAE = CAE_baxter
+        CAE = CAE_baxter_voxel
         # MLP = model_baxter.MLP
         MLP = model_baxter.MLP_2 #testing small model on single environment
 
@@ -159,25 +161,29 @@ def main(args):
                 continue
             # record
             data_all += list(zip(dataset,targets,env_indices))
-            bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32) #passing in the full path, not batches...?
+            bi = np.array(dataset).astype(np.float32)
+            bobs = np.array(obs[env_indices]).astype(np.float32)
+            #bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32) #passing in the full path, not batches...?
             bt = targets
             bi = torch.FloatTensor(bi)
+            bobs = torch.FloatTensor(bobs)
             bt = torch.FloatTensor(bt)
             # if args.env_type != 'baxter':
             #    bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
             #print(mpNet.loss(mpNet(bi), bt))
             mpNet.zero_grad()
             bi=to_var(bi)
+            bobs = to_var(bobs)
             bt=to_var(bt)
             # print("before training loss:\n")
             # print(mpNet.loss(mpNet(bi), bt).data.cpu())
-            mpNet.observe(bi, 0, bt)
+            mpNet.observe(0, bi, bobs, bt)
             if (i == 0):
                 print("start epoch loss: ")
-                print(mpNet.loss(mpNet(bi), bt).data.cpu())
+                print(mpNet.loss(mpNet(bi, bobs), bt).data.cpu())
             if (i == len(path_data) - 1):
                 print("end epoch loss: ")
-                print(mpNet.loss(mpNet(bi), bt).data.cpu())
+                print(mpNet.loss(mpNet(bi, bobs), bt).data.cpu())
             # print("input: \n")
             # print(bi[0:2, -14:])
             # print("mpnet output: \n")
@@ -194,16 +200,20 @@ def main(args):
                 sample = random.sample(data_all, args.batch_rehersal)
                 dataset, targets, env_indices = list(zip(*sample))
                 dataset, targets, env_indices = list(dataset), list(targets), list(env_indices)
-                bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
+                #bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
+                bi = np.array(dataset).astype(np.float32)
+                bobs = np.array(obs[env_indices]).astype(np.float32)
                 bt = targets
                 bi = torch.FloatTensor(bi)
+                bobs = torch.FloatTensor(bobs)
                 bt = torch.FloatTensor(bt)
                 if args.env_type != 'baxter':
                     bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
                 mpNet.zero_grad()
                 bi=to_var(bi)
+                bobs = to_var(bobs)
                 bt=to_var(bt)
-                mpNet.observe(bi, 0, bt, False)  # train but don't remember
+                mpNet.observe(0, bi, bobs, bt, False)  # train but don't remember
 
         # Save the models
         if epoch > 0:
@@ -223,7 +233,7 @@ parser.add_argument('--n_memories', type=int, default=256, help='number of memor
 parser.add_argument('--memory_strength', type=float, default=0.5, help='memory strength (meaning depends on memory)')
 # Model parameters
 parser.add_argument('--total_input_size', type=int, default=2800+4, help='dimension of total input')
-parser.add_argument('--AE_input_size', type=int, default=2800, help='dimension of input to AE')
+parser.add_argument('--AE_input_size', nargs='+', type=int, default=2800, help='dimension of input to AE')
 parser.add_argument('--mlp_input_size', type=int , default=28+4, help='dimension of the input vector')
 parser.add_argument('--output_size', type=int , default=2, help='dimension of the input vector')
 
