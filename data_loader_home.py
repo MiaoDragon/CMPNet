@@ -14,6 +14,7 @@ import gc
 from pypcd import pypcd
 import numpy as np
 import torch
+import sys
 #N=number of environments; NP=Number of Paths
 def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
     # load data as [path]
