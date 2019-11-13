@@ -99,7 +99,7 @@ def main(args):
         load_test_dataset = data_loader_home.load_test_dataset
         normalize = utility_home.normalize
         unnormalize = utility_home.unnormalize
-        CAE = CAE_home
+        CAE = CAE_home_voxel
         MLP = model_home.MLP
         args.world_size = [20., 20., np.pi]
 
