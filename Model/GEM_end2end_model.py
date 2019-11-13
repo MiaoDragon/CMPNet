@@ -26,7 +26,7 @@ class End2EndMPNet(nn.Module):
             n_tasks, self.n_memories, mlp_input_size)
         obs_size = [n_tasks, self.n_memories] + AE_input_size
         obs_size = tuple(obs_size)
-        self.memory_obs = torch.FloatTensor(obs_size)
+        self.memory_obs = torch.zeros(obs_size).type(torch.FloatTensor)
         print('size of memory_obs:')
         print(self.memory_obs.size())
         self.memory_labs = torch.FloatTensor(n_tasks, self.n_memories, output_size)
