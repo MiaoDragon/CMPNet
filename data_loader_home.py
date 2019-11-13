@@ -200,6 +200,8 @@ def voxelize(points, voxel_size=(24, 24, 24), padding_size=(32, 32, 32), resolut
     """
     here the point cloud is centerized, and each dimension uses a different resolution
     """
+    OCCUPIED = 1
+    FREE = 0
     resolution = [(points[:,i].max() - points[:,i].min()) / voxel_size[i] for i in range(3)]
     resolution = np.array(resolution)
     #resolution = np.max(res)
