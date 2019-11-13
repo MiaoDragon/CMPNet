@@ -33,7 +33,8 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
         temp = np.array(temp).T # N*3
         obs.append(temp)
     obs = np.array(obs)
-    obs = pointcloud_to_voxel(obs, voxel_size=[32,32,32])
+    # add channel dim after batch dim
+    obs = pointcloud_to_voxel(obs, voxel_size=[32,32,32]).reshape(-1,32,32,32,1)
     # normalize obstacle into -1~1
     #print('loading...')
     #print('original obstacle:')
@@ -122,7 +123,7 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
         temp = np.array(temp).T # N*3
         obs.append(temp)
     obs = np.array(obs)
-    obs = pointcloud_to_voxel(obs, voxel_size=[32,32,32])
+    obs = pointcloud_to_voxel(obs, voxel_size=[32,32,32]).reshape(-1,32,32,32,1)
 
     #print('loading...')
     #print('original obstacle:')

@@ -146,8 +146,6 @@ def main(args):
             data_all += list(zip(dataset,targets,env_indices))
             bi = np.array(dataset).astype(np.float32)
             bobs = np.array(obs[env_indices]).astype(np.float32)
-            print('obs input size:')
-            print(bobs.shape)
             #bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
             bt = targets
             bi = torch.FloatTensor(bi)
