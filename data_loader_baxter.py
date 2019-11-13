@@ -135,10 +135,10 @@ def load_raw_dataset(env_names, data_path, pcd_path, importer, NP=940, min_lengt
 
 def load_test_dataset(env_names, data_path, pcd_path, importer, NP=100, min_length=5351*3):
 	N = len(env_names)
-	obstacles = load_normalized_dataset(env_names, pcd_path, importer)
-	obs = obs.reshape(len(obstacles),-1,3)
+	obs = load_normalized_dataset(env_names, pcd_path, importer)
+	obs = obs.reshape(len(obs),-1,3)
 	obs = importer.pointcloud_to_voxel(obs,
-			voxel_size=(32,32,32), padding_size=(32,32,32)).reshape(len(obstacles),1,32,32,32)
+			voxel_size=(32,32,32), padding_size=(32,32,32)).reshape(len(obs),1,32,32,32)
 
 	### obtain path length data ###
 	# paths_file = 'trainEnvironments_testPaths_GoalsCorrect_RRTSTAR_trainEnv_4.pkl'
