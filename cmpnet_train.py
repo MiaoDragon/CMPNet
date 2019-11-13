@@ -175,8 +175,8 @@ def main(args):
             bi=to_var(bi)
             bobs = to_var(bobs)
             bt=to_var(bt)
-            # print("before training loss:\n")
-            # print(mpNet.loss(mpNet(bi), bt).data.cpu())
+            print("before training loss:\n")
+            print(mpNet.loss(mpNet(bi, bobs), bt).data.cpu())
             mpNet.observe(0, bi, bobs, bt)
             if (i == 0):
                 print("start epoch loss: ")
@@ -190,8 +190,8 @@ def main(args):
             # print(mpNet(bi)[0:2])
             # print("target: \n")
             # print(bt[0:2])
-            # print("after training loss:\n")
-            # print(mpNet.loss(mpNet(bi), bt).data.cpu())
+            print("after training loss:\n")
+            print(mpNet.loss(mpNet(bi, bobs), bt).data.cpu())
             # print("\n\n\n")
             num_path_trained += 1
             # perform rehersal when certain number of batches have passed
