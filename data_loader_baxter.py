@@ -173,7 +173,7 @@ def load_test_dataset(env_names, data_path, pcd_path, importer, NP=100, min_leng
 	paths_new = paths[:, :, 1:, :]
 	path_lengths_new = path_lengths - 1
 
-	return obstacles, paths_new, path_lengths_new
+	return obs, paths_new, path_lengths_new
 
 if __name__ == "__main__":
 	from mpnet_lib.import_tool import fileImport
