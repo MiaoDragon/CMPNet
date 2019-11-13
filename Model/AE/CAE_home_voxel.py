@@ -6,7 +6,7 @@ import torchvision
 from torch import nn
 from torch.autograd import Variable
 
-Encoder(nn.Module):
+class Encoder(nn.Module):
     # ref: https://github.com/lxxue/voxnet-pytorch/blob/master/models/voxnet.py
     # adapted from SingleView 2
     def __init__(self, input_size, output_size):
