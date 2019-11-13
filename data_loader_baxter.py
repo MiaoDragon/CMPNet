@@ -22,9 +22,9 @@ def load_dataset(env_names, data_path, pcd_path, importer, NP=940, min_length=53
 
 	obs = load_normalized_dataset(env_names, pcd_path, importer)
 	# convert into voxel
-	obs = obs.reshape(len(obstacles),-1,3)
+	obs = obs.reshape(len(obs),-1,3)
 	obs = importer.pointcloud_to_voxel(obs,
-			voxel_size=(32,32,32), padding_size=(32,32,32)).reshape(len(obstacles),1,32,32,32)
+			voxel_size=(32,32,32), padding_size=(32,32,32)).reshape(len(obs),1,32,32,32)
 	### obtain path length data ###
 	# paths_file = 'trainPathsLarge.pkl'
 	# paths_file = 'trainPathsLarge_RRTSTAR_Fix.pkl'
@@ -92,9 +92,9 @@ def load_dataset(env_names, data_path, pcd_path, importer, NP=940, min_length=53
 def load_raw_dataset(env_names, data_path, pcd_path, importer, NP=940, min_length=5351*3):
 	N = len(env_names)
 	obs = load_normalized_dataset(env_names, pcd_path, importer)
-	obs = obs.reshape(len(obstacles),-1,3)
+	obs = obs.reshape(len(obs),-1,3)
 	obs = importer.pointcloud_to_voxel(obs,
-			voxel_size=(32,32,32), padding_size=(32,32,32)).reshape(len(obstacles),1,32,32,32)
+			voxel_size=(32,32,32), padding_size=(32,32,32)).reshape(len(obs),1,32,32,32)
 
 	### obtain path length data ###
 	# paths_file = 'trainPathsLarge.pkl'
