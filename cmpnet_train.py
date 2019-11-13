@@ -169,7 +169,7 @@ def main(args):
                 sample = random.sample(data_all, args.batch_rehersal)
                 dataset, targets, env_indices = list(zip(*sample))
                 dataset, targets, env_indices = list(dataset), list(targets), list(env_indices)
-                bi = np,array(dataset).astype(np.float32)
+                bi = np.array(dataset).astype(np.float32)
                 bobs = np.array(obs[env_indices]).astype(np.float32)
                 bt = targets
                 bi = torch.FloatTensor(bi)
