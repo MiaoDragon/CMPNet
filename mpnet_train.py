@@ -104,17 +104,21 @@ def main(args):
             # randomly pick 100 data
             print('epoch: %d, training... path: %d' % (epoch, i+1))
             # record
-            bi = np.concatenate( (obstacles[env_indices[i:i+100]], dataset[i:i+100]), axis=1).astype(np.float32)
+            #bi = np.concatenate( (obstacles[env_indices[i:i+100]], dataset[i:i+100]), axis=1).astype(np.float32)
+            bi = np.array(dataset[i:i+100]).astype(np.float32)
+            bobs = np.array(obstacles[env_indices[i:i+100]]).astype(np.float32)
             bt = targets[i:i+100]
             bi = torch.FloatTensor(bi)
+            bobs = torch.FloatTensor(bobs)
             bt = torch.FloatTensor(bt)
             bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
             mpNet.zero_grad()
             bi=to_var(bi)
+            bobs=to_var(bobs)
             bt=to_var(bt)
-            mpNet.observe(bi, 0, bt, False)
+            mpNet.observe(0, bi, bobs, bt, False)
             print('losses:')
-            print(mpNet.loss(mpNet(bi), bt))
+            print(mpNet.loss(mpNet(bi, bobs), bt))
             #num_path_trained += 1
         # Save the models
         if epoch > 0:
@@ -134,7 +138,7 @@ parser.add_argument('--n_memories', type=int, default=256, help='number of memor
 parser.add_argument('--memory_strength', type=float, default=0.5, help='memory strength (meaning depends on memory)')
 # Model parameters
 parser.add_argument('--total_input_size', type=int, default=2800+4, help='dimension of total input')
-parser.add_argument('--AE_input_size', type=int, default=2800, help='dimension of input to AE')
+parser.add_argument('--AE_input_size', nargs='+', type=int, default=2800, help='dimension of input to AE')
 parser.add_argument('--mlp_input_size', type=int , default=28+4, help='dimension of the input vector')
 parser.add_argument('--output_size', type=int , default=2, help='dimension of the input vector')
 

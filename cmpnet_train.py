@@ -82,7 +82,7 @@ def main(args):
         load_dataset = data_loader_home.load_dataset
         normalize = utility_home.normalize
         unnormalize = utility_home.unnormalize
-        CAE = CAE_home
+        CAE = CAE_home_voxel
         MLP = model_home.MLP
 
 
@@ -143,19 +143,23 @@ def main(args):
                 continue
             # record
             data_all += list(zip(dataset,targets,env_indices))
-            bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
+            bi = np.array(dataset).astype(np.float32)
+            bobs = np.array(obs[env_indices]).astype(np.float32)
+            #bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
             bt = targets
             bi = torch.FloatTensor(bi)
+            bobs = torch.FloatTensor(bobs)
             bt = torch.FloatTensor(bt)
             bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
             mpNet.zero_grad()
             bi=to_var(bi)
+            bobs = to_var(bobs)
             bt=to_var(bt)
             print('before training losses:')
-            print(mpNet.loss(mpNet(bi), bt))
-            mpNet.observe(bi, 0, bt)
+            print(mpNet.loss(mpNet(bi, bobs), bt))
+            mpNet.observe(0, bi, bobs, bt)
             print('after training losses:')
-            print(mpNet.loss(mpNet(bi), bt))
+            print(mpNet.loss(mpNet(bi, bobs), bt))
             num_path_trained += 1
             # perform rehersal when certain number of batches have passed
             if args.freq_rehersal and num_path_trained % args.freq_rehersal == 0:
@@ -163,15 +167,18 @@ def main(args):
                 sample = random.sample(data_all, args.batch_rehersal)
                 dataset, targets, env_indices = list(zip(*sample))
                 dataset, targets, env_indices = list(dataset), list(targets), list(env_indices)
-                bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
+                bi = np,array(dataset).astype(np.float32)
+                bobs = np.array(obs[env_indices]).astype(np.float32)
                 bt = targets
                 bi = torch.FloatTensor(bi)
+                bobs = torch.FloatTensor(bobs)
                 bt = torch.FloatTensor(bt)
                 bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
                 mpNet.zero_grad()
                 bi=to_var(bi)
+                bobs = to_var(bobs)
                 bt=to_var(bt)
-                mpNet.observe(bi, 0, bt, False)  # train but don't remember
+                mpNet.observe(0, bi, bobs, bt, False)  # train but don't remember
             dataset, targets, env_indices = [], [], []
             path_ct = 0
 
@@ -193,7 +200,7 @@ parser.add_argument('--n_memories', type=int, default=256, help='number of memor
 parser.add_argument('--memory_strength', type=float, default=0.5, help='memory strength (meaning depends on memory)')
 # Model parameters
 parser.add_argument('--total_input_size', type=int, default=2800+4, help='dimension of total input')
-parser.add_argument('--AE_input_size', type=int, default=2800, help='dimension of input to AE')
+parser.add_argument('--AE_input_size', nargs='+', type=int, default=2800, help='dimension of input to AE')
 parser.add_argument('--mlp_input_size', type=int , default=28+4, help='dimension of the input vector')
 parser.add_argument('--output_size', type=int , default=2, help='dimension of the input vector')
 

@@ -20,11 +20,19 @@ class End2EndMPNet(nn.Module):
         self.margin = memory_strength
         self.n_memories = n_memories
         # allocate episodic memory
-        self.memory_data = torch.FloatTensor(
-            n_tasks, self.n_memories, total_input_size)
+        #self.memory_data = torch.FloatTensor(
+        #    n_tasks, self.n_memories, total_input_size)
+        self.memory_input = torch.FloatTensor(
+            n_tasks, self.n_memories, mlp_input_size)
+        obs_size = [n_tasks, self.n_memories] + AE_input_size
+        obs_size = tuple(obs_size)
+        self.memory_obs = torch.FloatTensor(obs_size)
+        print('size of memory_obs:')
+        print(self.memory_obs.size())
         self.memory_labs = torch.FloatTensor(n_tasks, self.n_memories, output_size)
         if torch.cuda.is_available():
-            self.memory_data = self.memory_data.cuda()
+            self.memory_input = self.memory_input.cuda()
+            self.memory_obs = self.memory_obs.cuda()
             self.memory_labs = self.memory_labs.cuda()
 
         # allocate temporary synaptic memory
@@ -56,11 +64,12 @@ class End2EndMPNet(nn.Module):
             self.opt = opt(list(self.encoder.parameters())+list(self.mlp.parameters()), lr=lr)
         else:
             self.opt = opt(list(self.encoder.parameters())+list(self.mlp.parameters()), lr=lr, momentum=momentum)
-    def forward(self, x):
+    def forward(self, x, obs):
         # xobs is the input to encoder
         # x is the input to mlp
-        z = self.encoder(x[:,:self.AE_input_size])
-        mlp_in = torch.cat((z,x[:,self.AE_input_size:]), 1)    # keep the first dim the same (# samples)
+        #z = self.encoder(x[:,:self.AE_input_size])
+        z = self.encoder(obs)
+        mlp_in = torch.cat((z,x), 1)    # keep the first dim the same (# samples)
         return self.mlp(mlp_in)
     def loss(self, pred, truth):
         return self.mse(pred, truth)
@@ -82,7 +91,7 @@ class End2EndMPNet(nn.Module):
                 y = y.cuda()
             self.remember(x, tasks[i], y)
 
-    def remember(self, x, t, y):
+    def remember(self, t, x, obs, y):
         # follow reservoir sampling
         # i-th item is remembered with probability min(B/i, 1)
         for i in range(len(x)):
@@ -92,14 +101,16 @@ class End2EndMPNet(nn.Module):
             if rand_num < prob_thre:
                 # keep the new item
                 if self.mem_cnt[t] < self.n_memories:
-                    self.memory_data[t, self.mem_cnt[t]].copy_(x.data[i])
+                    self.memory_input[t, self.mem_cnt[t]].copy_(x.data[i])
+                    self.memory_obs[t, self.mem_cnt[t]].copy_(obs.data[i])
                     self.memory_labs[t, self.mem_cnt[t]].copy_(y.data[i])
                     self.mem_cnt[t] += 1
                 else:
                     # randomly choose one to rewrite
                     idx = np.random.choice(self.n_memories, size=1)
                     idx = idx[0]
-                    self.memory_data[t, idx].copy_(x.data[i])
+                    self.memory_input[t, idx].copy_(x.data[i])
+                    self.memory_obs[t, idx].copy_(obs.data[i])
                     self.memory_labs[t, idx].copy_(y.data[i])
 
     '''
@@ -107,7 +118,7 @@ class End2EndMPNet(nn.Module):
     reference: https://arxiv.org/abs/1706.08840
     code from: https://github.com/facebookresearch/GradientEpisodicMemory
     '''
-    def observe(self, x, t, y, remember=True):
+    def observe(self, t, x, obs, y, remember=True):
         # remember: remember this data or not
         # update memory
         # everytime we treat the new data as a new task
@@ -126,12 +137,14 @@ class End2EndMPNet(nn.Module):
                     if tt == len(self.observed_tasks) - 1:
                         ptloss = self.loss(
                             self.forward(
-                            self.memory_data[past_task][:self.mem_cnt[past_task]]),   # TODO
+                            self.memory_input[past_task][:self.mem_cnt[past_task]],
+                            self.memory_obs[past_task][:self.mem_cnt[past_task]]),   # TODO
                             self.memory_labs[past_task][:self.mem_cnt[past_task]])   # up to current
                     else:
                         ptloss = self.loss(
                             self.forward(
-                            self.memory_data[past_task]),   # TODO
+                            self.memory_input[past_task],
+                            self.memory_obs[past_task]),   # TODO
                             self.memory_labs[past_task])
                     ptloss.backward()
                     store_grad(self.parameters, self.grads, self.grad_dims,
@@ -139,7 +152,7 @@ class End2EndMPNet(nn.Module):
 
             # now compute the grad on the current minibatch
             self.zero_grad()
-            loss = self.loss(self.forward(x), y)
+            loss = self.loss(self.forward(x, obs), y)
             loss.backward()
 
             # check if gradient violates constraints
@@ -181,4 +194,4 @@ class End2EndMPNet(nn.Module):
                 self.observed_tasks.append(t)
                 self.old_task = t
                 self.mem_cnt[t] = 0
-            self.remember(x, t, y)
+            self.remember(t, x, obs, y)

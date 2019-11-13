@@ -123,12 +123,15 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
     while target_reached==0 and itr<MAX_LENGTH:
         itr=itr+1  # prevent the path from being too long
         if tree==0:
-            ip1=torch.cat((obs,start,goal)).unsqueeze(0)
+            ip1 = torch.cat((start, goal)).unsqueeze(0)
+            ob1 = torch.FloatTensor(obs).unsqueeze(0)
+            #ip1=torch.cat((obs,start,goal)).unsqueeze(0)
             time0 = time.time()
             ip1=normalize(ip1)
             time_norm += time.time() - time0
             ip1=to_var(ip1)
-            start=mpNet(ip1).squeeze(0)
+            ob1=to_var(ob1)
+            start=mpNet(ip1,ob1).squeeze(0)
             # unnormalize to world size
             start=start.data.cpu()
             time0 = time.time()
@@ -137,12 +140,15 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             pA.append(start)
             tree=1
         else:
-            ip2=torch.cat((obs,goal,start)).unsqueeze(0)
+            ip2 = torch.cat((goal, start)).unsqueeze(0)
+            ob2 = torch.FloatTensor(obs).unsqueeze(0)
+            #ip2=torch.cat((obs,goal,start)).unsqueeze(0)
             time0 = time.time()
             ip2=normalize(ip2)
             time_norm += time.time() - time0
             ip2=to_var(ip2)
-            goal=mpNet(ip2).squeeze(0)
+            ob2=to_var(ob2)
+            goal=mpNet(ip2,ob2).squeeze(0)
             # unnormalize to world size
             goal=goal.data.cpu()
             time0 = time.time()
@@ -171,15 +177,18 @@ def complete_replan_global(mpNet, path, true_path, true_path_length, obc, obs, o
     demo_path = true_path[:true_path_length]
     dataset, targets, env_indices = transformToTrain(demo_path, len(demo_path), obs, obs_i)
     added_data = list(zip(dataset,targets,env_indices))
-    bi = np.concatenate( (obs.numpy().reshape(1,-1).repeat(len(dataset),axis=0), dataset), axis=1).astype(np.float32)
+    bi = np.array(dataset).astype(np.float32)
+    bobs = obs.numpy().reshape(1,-1).repeat(len(dataset),axis=0).astype(np.float32)
     bi = torch.FloatTensor(bi)
+    bobs = torch.FloatTensor(bobs)
     bt = torch.FloatTensor(targets)
     # normalize first
     bi, bt = normalize(bi), normalize(bt)
     mpNet.zero_grad()
     bi=to_var(bi)
+    bobs=to_var(bobs)
     bt=to_var(bt)
-    mpNet.observe(bi, 0, bt)
+    mpNet.observe(0, bi, bobs, bt)
     demo_path = [torch.from_numpy(p).type(torch.FloatTensor) for p in demo_path]
     return demo_path, added_data
 
