@@ -9,8 +9,8 @@ from torch.autograd import Variable
 class Encoder(nn.Module):
     # ref: https://github.com/lxxue/voxnet-pytorch/blob/master/models/voxnet.py
     # adapted from SingleView 2
-    def __init__(self, input_size, output_size):
-        super(MultiViewVoxelEncoder, self).__init__()
+    def __init__(self, input_size=[32,32,32], output_size=128):
+        super(Encoder, self).__init__()
         input_size = [input_size, input_size, input_size]
         self.encoder1 = nn.Sequential(
             nn.Conv2d(in_channels=input_size[0], out_channels=24, kernel_size=[5,5], stride=[1,1]),
