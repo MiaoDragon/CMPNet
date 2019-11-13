@@ -19,10 +19,7 @@ def normalize(x, bound, time_flag=False):
         # then the proceding is obstacle
         # don't normalize obstacles
         # we assume the obstacle pcd has been normalized
-        #x[:,:-2*len(bound)] = x[:,:-2*len(bound)] / bound[0]
-        #print('before normalizing...')
-        #print(x[:,-2*len(bound):])
-        x[:,-2*len(bound):-len(bound)] = (x[:,-2*len(bound):-len(bound)]-lower) / bound - 1.0
+        x[:,:-len(bound)] = (x[:,:-len(bound)]-lower) / bound - 1.0
         x[:,-len(bound):] = (x[:,-len(bound):]-lower) / bound - 1.0
         #print('after normalizing...')
         #print(x[:,-2*len(bound):])
@@ -32,7 +29,7 @@ def normalize(x, bound, time_flag=False):
         if len(x) == len(bound):
             x = (x - lower) / bound - 1.0
         else:
-            x[-2*len(bound):-len(bound)] = (x[-2*len(bound):-len(bound)]-lower) / bound - 1.0
+            x[:-len(bound)] = (x[:-len(bound)]-lower) / bound - 1.0
             x[-len(bound):] = (x[-len(bound):]-lower) / bound - 1.0
         #print('after normalizing...')
         #print(x)
@@ -58,7 +55,7 @@ def unnormalize(x, bound, time_flag=False):
         #x[:,:-2*len(bound)] = x[:,:-2*len(bound)] * bound[0]
         #print('before unnormalizing...')
         #print(x[:, -2*len(bound):])
-        x[:,-2*len(bound):-len(bound)] = (x[:,-2*len(bound):-len(bound)] + 1.0) * bound + lower
+        x[:,:-len(bound)] = (x[:,:-len(bound)] + 1.0) * bound + lower
         x[:,-len(bound):] = (x[:,-len(bound):] + 1.0) * bound + lower
         #print('after unnormalizing...')
         #print(x[:, -2*len(bound):])
@@ -68,7 +65,7 @@ def unnormalize(x, bound, time_flag=False):
         if len(x) == len(bound):
             x = (x + 1.0) * bound + lower
         else:
-            x[-2*len(bound):-len(bound)] = (x[-2*len(bound):-len(bound)] + 1.0) * bound + lower
+            x[:-len(bound)] = (x[:-len(bound)] + 1.0) * bound + lower
             x[-len(bound):] = (x[-len(bound):] + 1.0) * bound + lower
         #print('after unnormalizing...')
         #print(x)
