@@ -20,6 +20,7 @@ import Model.AE.CAE_r3d as CAE_r3d
 import Model.AE.CAE as CAE_2d
 import Model.AE.CAE_simple as CAE_simple
 import Model.AE.CAE_home as CAE_home
+import Model.AE.CAE_home_voxel as CAE_home_voxel
 import Model.model_c2d_simple as model_c2d_simple
 import numpy as np
 import argparse
