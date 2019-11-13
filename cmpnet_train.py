@@ -26,7 +26,7 @@ import numpy as np
 import argparse
 import os
 import torch
-import data_loader_2d, data_loader_r3d, data_loader_r2d, data_loader_home
+import data_loader_2d, data_loader_r3d, data_loader_r2d
 from torch.autograd import Variable
 import copy
 import os
@@ -80,6 +80,7 @@ def main(args):
         MLP = model_c2d_simple.MLP
         args.world_size = [20., 20., np.pi]
     elif args.env_type == 'home':
+        import data_loader_home
         load_dataset = data_loader_home.load_dataset
         normalize = utility_home.normalize
         unnormalize = utility_home.unnormalize
