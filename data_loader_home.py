@@ -31,9 +31,9 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
         temp.append(pc.pc_data['y'][~np.isnan(pc.pc_data['x'])])
         temp.append(pc.pc_data['z'][~np.isnan(pc.pc_data['x'])])
         temp = np.array(temp).T # N*3
-        temp = pointcloud_to_voxel(temp, voxel_size=[32, 32, 32])
         obs.append(temp)
     obs = np.array(obs)
+    obs = pointcloud_to_voxel(obs, voxel_size=[32,32,32])
     # normalize obstacle into -1~1
     #print('loading...')
     #print('original obstacle:')
@@ -120,9 +120,10 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
         temp.append(pc.pc_data['y'][~np.isnan(pc.pc_data['x'])])
         temp.append(pc.pc_data['z'][~np.isnan(pc.pc_data['x'])])
         temp = np.array(temp).T # N*3
-        temp = pointcloud_to_voxel(temp, voxel_size=[32, 32, 32])
         obs.append(temp)
     obs = np.array(obs)
+    obs = pointcloud_to_voxel(obs, voxel_size=[32,32,32])
+
     #print('loading...')
     #print('original obstacle:')
     #print(obs)
@@ -199,7 +200,6 @@ def voxelize(points, voxel_size=(24, 24, 24), padding_size=(32, 32, 32), resolut
     """
     here the point cloud is centerized, and each dimension uses a different resolution
     """
-    print(points.shape)
     resolution = [(points[:,i].max() - points[:,i].min()) / voxel_size[i] for i in range(3)]
     resolution = np.array(resolution)
     #resolution = np.max(res)
