@@ -89,9 +89,14 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
                     for n in range(m+1, path_lengths[i][j]):
                         #data = np.concatenate( (paths[i][j][m], paths[i][j][path_lengths[i][j]-1]) ).astype(np.float32)
                         #targets.append(paths[i][j][m+1])
+                        #dataset.append(data)
+                        #env_indices.append(i)
                         # forward
                         data = np.concatenate( (paths[i][j][m], paths[i][j][n]) ).astype(np.float32)
                         targets.append(paths[i][j][m+1])
+
+                        dataset.append(data)
+                        env_indices.append(i)
                         # backward
                         data = np.concatenate( (paths[i][j][n], paths[i][j][m]) ).astype(np.float32)
                         targets.append(paths[i][j][n-1])
