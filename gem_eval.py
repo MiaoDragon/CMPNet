@@ -11,6 +11,7 @@ from plan_general import *
 
 def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambda x:x, unnormalize_func=lambda x: x, time_flag=False):
     obc, obs, paths, path_lengths = test_data
+    obs = obs.astype(np.float32)
     obs = torch.from_numpy(obs)
     fes_env = []   # list of list
     valid_env = []
