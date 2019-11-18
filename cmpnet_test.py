@@ -20,6 +20,9 @@ import Model.AE.CAE_r3d as CAE_r3d
 import Model.AE.CAE as CAE_2d
 import Model.AE.CAE_simple as CAE_simple
 import Model.AE.CAE_home as CAE_home
+import Model.AE.CAE_home_voxel_2 as CAE_home_voxel_2
+import Model.AE.CAE_home_voxel_3 as CAE_home_voxel_3
+
 import Model.AE.CAE_home_voxel as CAE_home_voxel
 import Model.model_c2d_simple as model_c2d_simple
 import numpy as np
@@ -102,7 +105,38 @@ def main(args):
         CAE = CAE_home_voxel
         MLP = model_home.MLP
         args.world_size = [20., 20., np.pi]
-
+    elif args.env_type == 'home_mlp2':
+        import data_loader_home
+        IsInCollision = plan_home.IsInCollision
+        load_test_dataset = data_loader_home.load_test_dataset
+        normalize = utility_home.normalize
+        unnormalize = utility_home.unnormalize
+        CAE = CAE_home_voxel
+        MLP = model_home.MLP2
+    elif args.env_type == 'home_mlp3':
+        import data_loader_home
+        IsInCollision = plan_home.IsInCollision
+        load_test_dataset = data_loader_home.load_test_dataset
+        normalize = utility_home.normalize
+        unnormalize = utility_home.unnormalize
+        CAE = CAE_home_voxel
+        MLP = model_home.MLP3
+    elif args.env_type == 'home_mlp4':
+        import data_loader_home
+        IsInCollision = plan_home.IsInCollision
+        load_test_dataset = data_loader_home.load_test_dataset
+        normalize = utility_home.normalize
+        unnormalize = utility_home.unnormalize
+        CAE = CAE_home_voxel_2
+        MLP = model_home.MLP
+    elif args.env_type == 'home_mlp5':
+        import data_loader_home
+        IsInCollision = plan_home.IsInCollision
+        load_test_dataset = data_loader_home.load_test_dataset
+        normalize = utility_home.normalize
+        unnormalize = utility_home.unnormalize
+        CAE = CAE_home_voxel_3
+        MLP = model_home.MLP
 
 
     if args.memory_type == 'res':
