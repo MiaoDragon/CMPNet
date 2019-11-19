@@ -102,7 +102,7 @@ def main(args):
         load_test_dataset = data_loader_home.load_test_dataset
         normalize = utility_home.normalize
         unnormalize = utility_home.unnormalize
-        CAE = CAE_home_voxel
+        CAE = CAE_home_voxel_3
         MLP = model_home.MLP
         args.world_size = [20., 20., np.pi]
     elif args.env_type == 'home_mlp2':
@@ -111,7 +111,7 @@ def main(args):
         load_test_dataset = data_loader_home.load_test_dataset
         normalize = utility_home.normalize
         unnormalize = utility_home.unnormalize
-        CAE = CAE_home_voxel
+        CAE = CAE_home_voxel_3
         MLP = model_home.MLP2
     elif args.env_type == 'home_mlp3':
         import data_loader_home
@@ -119,7 +119,7 @@ def main(args):
         load_test_dataset = data_loader_home.load_test_dataset
         normalize = utility_home.normalize
         unnormalize = utility_home.unnormalize
-        CAE = CAE_home_voxel
+        CAE = CAE_home_voxel_3
         MLP = model_home.MLP3
     elif args.env_type == 'home_mlp4':
         import data_loader_home
