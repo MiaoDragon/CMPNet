@@ -104,7 +104,6 @@ def main(args):
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_3
         MLP = model_home.MLP
-        args.world_size = [20., 20., np.pi]
     elif args.env_type == 'home_mlp2':
         import data_loader_home
         IsInCollision = plan_home.IsInCollision
