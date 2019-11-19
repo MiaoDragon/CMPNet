@@ -8,13 +8,14 @@ from torch.autograd import Variable
 
 class Encoder(nn.Module):
     # ref: https://github.com/lxxue/voxnet-pytorch/blob/master/models/voxnet.py
-    def __init__(self, input_size=32, output_size=128):
+    def __init__(self, input_size=32, output_size=64):
         super(VoxelEncoder3, self).__init__()
         input_size = [input_size, input_size, input_size]
         self.encoder = nn.Sequential(
-            nn.Conv3d(in_channels=1, out_channels=8, kernel_size=[5,5,5], stride=[1,1,1]),
+            nn.Conv3d(in_channels=1, out_channels=16, kernel_size=[6,6,6], stride=[2,2,2]),
             nn.PReLU(),
-            nn.Conv3d(in_channels=8, out_channels=16, kernel_size=[5,5,5], stride=[2,2,2]),
+            nn.MaxPool3d(2, stride=2),
+            nn.Conv3d(in_channels=16, out_channels=8, kernel_size=[3,3,3], stride=[2,2,2]),
             nn.PReLU()
         )
         x = self.encoder(torch.autograd.Variable(torch.rand([1, 1] + input_size)))

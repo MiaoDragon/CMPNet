@@ -9,32 +9,29 @@ from torch.autograd import Variable
 class Encoder(nn.Module):
     # ref: https://github.com/lxxue/voxnet-pytorch/blob/master/models/voxnet.py
     # adapted from SingleView 2
-    def __init__(self, input_size=32, output_size=128):
+    def __init__(self, input_size=32, output_size=64):
         super(Encoder, self).__init__()
         input_size = [input_size, input_size, input_size]
         self.encoder1 = nn.Sequential(
-            nn.Conv2d(in_channels=input_size[0], out_channels=8, kernel_size=[5,5], stride=[1,1]),
+            nn.Conv2d(in_channels=input_size[0], out_channels=8, kernel_size=[6,6], stride=[2,2]),
             nn.PReLU(),
             nn.MaxPool2d(2, stride=2),
-            nn.Conv2d(in_channels=8, out_channels=16, kernel_size=[5,5], stride=[1,1]),
+            nn.Conv2d(in_channels=8, out_channels=16, kernel_size=[3,3], stride=[2,2]),
             nn.PReLU(),
-            nn.MaxPool2d(2, stride=2)
         )
         self.encoder2 = nn.Sequential(
-            nn.Conv2d(in_channels=input_size[0], out_channels=8, kernel_size=[5,5], stride=[1,1]),
+            nn.Conv2d(in_channels=input_size[0], out_channels=8, kernel_size=[6,6], stride=[2,2]),
             nn.PReLU(),
             nn.MaxPool2d(2, stride=2),
-            nn.Conv2d(in_channels=8, out_channels=16, kernel_size=[5,5], stride=[1,1]),
+            nn.Conv2d(in_channels=8, out_channels=16, kernel_size=[3,3], stride=[2,2]),
             nn.PReLU(),
-            nn.MaxPool2d(2, stride=2)
         )
         self.encoder3 = nn.Sequential(
-            nn.Conv2d(in_channels=input_size[0], out_channels=8, kernel_size=[5,5], stride=[1,1]),
+            nn.Conv2d(in_channels=input_size[0], out_channels=8, kernel_size=[6,6], stride=[2,2]),
             nn.PReLU(),
             nn.MaxPool2d(2, stride=2),
-            nn.Conv2d(in_channels=8, out_channels=16, kernel_size=[5,5], stride=[1,1]),
+            nn.Conv2d(in_channels=8, out_channels=16, kernel_size=[3,3], stride=[2,2]),
             nn.PReLU(),
-            nn.MaxPool2d(2, stride=2)
         )
         x = self.encoder1(torch.autograd.Variable(torch.rand([1] + input_size)))
         first_fc_in_features = 1
