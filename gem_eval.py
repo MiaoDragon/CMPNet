@@ -44,20 +44,25 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                 MAX_NEURAL_REPLAN = 11
                 for t in range(MAX_NEURAL_REPLAN):
                 # adaptive step size on replanning attempts
+                # 1.2, 0.5, 0.1 are for simple env
+                # 0.04, 0.03, 0.02 are for home env
                     if (t == 2):
-                        step_sz = 1.2
+                        #step_sz = 1.2
+                        step_sz = 0.04
                     elif (t == 3):
-                        step_sz = 0.5
+                        #step_sz = 0.5
+                        step_sz = 0.03
                     elif (t > 3):
-                        step_sz = 0.1
+                        #step_sz = 0.1
+                        step_sz = 0.02
                     if time_flag:
                         path, time_norm = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
                                             normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag=time_flag)
                     else:
                         path = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
                                             normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag=time_flag)
-                    #print('after neural replan:')
-                    #print(path)
+                    print('after neural replan:')
+                    print(path)
                     path = lvc(path, obc[i], IsInCollision, step_sz=step_sz)
                     #print('after lvc:')
                     #print(path)
