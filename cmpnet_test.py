@@ -105,7 +105,7 @@ def main(args):
         CAE = CAE_home_voxel_3
         MLP = model_home.MLP
     elif args.env_type == 'home_mlp2':
-        import data_loader_home
+        import plan_home, data_loader_home
         IsInCollision = plan_home.IsInCollision
         load_test_dataset = data_loader_home.load_test_dataset
         normalize = utility_home.normalize
@@ -113,7 +113,7 @@ def main(args):
         CAE = CAE_home_voxel_3
         MLP = model_home.MLP2
     elif args.env_type == 'home_mlp3':
-        import data_loader_home
+        import plan_home, data_loader_home
         IsInCollision = plan_home.IsInCollision
         load_test_dataset = data_loader_home.load_test_dataset
         normalize = utility_home.normalize
@@ -121,7 +121,7 @@ def main(args):
         CAE = CAE_home_voxel_3
         MLP = model_home.MLP3
     elif args.env_type == 'home_mlp4':
-        import data_loader_home
+        import plan_home, data_loader_home
         IsInCollision = plan_home.IsInCollision
         load_test_dataset = data_loader_home.load_test_dataset
         normalize = utility_home.normalize
@@ -129,7 +129,7 @@ def main(args):
         CAE = CAE_home_voxel_2
         MLP = model_home.MLP
     elif args.env_type == 'home_mlp5':
-        import data_loader_home
+        import plan_home, data_loader_home
         IsInCollision = plan_home.IsInCollision
         load_test_dataset = data_loader_home.load_test_dataset
         normalize = utility_home.normalize
