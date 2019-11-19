@@ -9,7 +9,7 @@ from torch.autograd import Variable
 class Encoder(nn.Module):
     # ref: https://github.com/lxxue/voxnet-pytorch/blob/master/models/voxnet.py
     def __init__(self, input_size=32, output_size=64):
-        super(VoxelEncoder3, self).__init__()
+        super(Encoder, self).__init__()
         input_size = [input_size, input_size, input_size]
         self.encoder = nn.Sequential(
             nn.Conv3d(in_channels=1, out_channels=16, kernel_size=[6,6,6], stride=[2,2,2]),
