@@ -83,7 +83,7 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
             path = np.array(path)
             np.savetxt('path_%d.txt' % (j), path, fmt='%f')
             fes_path.append(fp)
-
+            print('env %d accuracy up to now: %f' % (i, (float(np.sum(fes_path))/ np.sum(valid_path))))
         time_env.append(time_path)
         time_total += time_path
         print('average test time up to now: %f' % (np.mean(time_total)))
