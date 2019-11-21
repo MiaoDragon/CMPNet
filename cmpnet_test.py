@@ -29,7 +29,8 @@ import numpy as np
 import argparse
 import os
 import torch
-from gem_eval import eval_tasks
+import gem_eval, gem_eval_ompl
+#from gem_eval import eval_tasks
 import plan_s2d, plan_c2d, plan_r3d, plan_r2d
 import data_loader_2d, data_loader_r3d, data_loader_r2d
 from torch.autograd import Variable
@@ -64,6 +65,7 @@ def main(args):
         unnormalize = utility_s2d.unnormalize
         CAE = CAE_2d
         MLP = model.MLP
+        eval_tasks = gem_eval.eval_tasks
     elif args.env_type == 'c2d':
         IsInCollision = plan_c2d.IsInCollision
         load_test_dataset = data_loader_2d.load_test_dataset
@@ -71,6 +73,7 @@ def main(args):
         unnormalize = utility_c2d.unnormalize
         CAE = CAE_2d
         MLP = model_c2d_simple.MLP
+        eval_tasks = gem_eval.eval_tasks
     elif args.env_type == 'r3d':
         IsInCollision = plan_r3d.IsInCollision
         load_test_dataset = data_loader_r3d.load_test_dataset
@@ -78,6 +81,7 @@ def main(args):
         unnormalize = utility_r3d.unnormalize
         CAE = CAE_r3d
         MLP = model.MLP
+        eval_tasks = gem_eval.eval_tasks
     elif args.env_type == 'r2d':
         IsInCollision = plan_r2d.IsInCollision
         load_test_dataset = data_loader_r2d.load_test_dataset
@@ -86,6 +90,7 @@ def main(args):
         CAE = CAE_2d
         #MLP = model.MLP
         MLP = model_c2d.MLP
+        eval_tasks = gem_eval.eval_tasks
         args.world_size = [20., 20., np.pi]
     elif args.env_type == 'r2d_simple':
         IsInCollision = plan_r2d.IsInCollision
@@ -95,6 +100,7 @@ def main(args):
         CAE = CAE_2d
         #MLP = model.MLP
         MLP = model_c2d_simple.MLP
+        eval_tasks = gem_eval.eval_tasks
         args.world_size = [20., 20., np.pi]
     elif args.env_type == 'home':
         import plan_home, data_loader_home
@@ -104,6 +110,7 @@ def main(args):
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_3
         MLP = model_home.MLP
+        eval_tasks = gem_eval_ompl.eval_tasks
     elif args.env_type == 'home_mlp2':
         import plan_home, data_loader_home
         IsInCollision = plan_home.IsInCollision
@@ -112,6 +119,7 @@ def main(args):
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_3
         MLP = model_home.MLP2
+        eval_tasks = gem_eval_ompl.eval_tasks
     elif args.env_type == 'home_mlp3':
         import plan_home, data_loader_home
         IsInCollision = plan_home.IsInCollision
@@ -120,6 +128,7 @@ def main(args):
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_3
         MLP = model_home.MLP3
+        eval_tasks = gem_eval_ompl.eval_tasks
     elif args.env_type == 'home_mlp4':
         import plan_home, data_loader_home
         IsInCollision = plan_home.IsInCollision
@@ -128,6 +137,7 @@ def main(args):
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_2
         MLP = model_home.MLP
+        eval_tasks = gem_eval_ompl.eval_tasks
     elif args.env_type == 'home_mlp5':
         import plan_home, data_loader_home
         IsInCollision = plan_home.IsInCollision
@@ -136,7 +146,7 @@ def main(args):
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_3
         MLP = model_home.MLP
-
+        eval_tasks = gem_eval_ompl.eval_tasks
 
     if args.memory_type == 'res':
         mpNet = End2EndMPNet(args.total_input_size, args.AE_input_size, args.mlp_input_size, \
