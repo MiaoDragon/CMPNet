@@ -242,8 +242,6 @@ def main(args):
             dataset = val_dataset
             targets = val_targets
             env_indices = val_env_indices
-            # record
-            data_all += list(zip(dataset,targets,env_indices))
             bi = np.array(dataset).astype(np.float32)
             bobs = np.array(obs[env_indices]).astype(np.float32)
             #bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
