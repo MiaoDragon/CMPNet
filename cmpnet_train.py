@@ -53,18 +53,21 @@ def main(args):
         unnormalize = utility_s2d.unnormalize
         CAE = CAE_2d
         MLP = model.MLP
+        loss_f = mpnet.loss
     elif args.env_type == 'c2d':
         load_dataset = data_loader_2d.load_dataset
         normalize = utility_c2d.normalize
         unnormalize = utility_c2d.unnormalize
         CAE = CAE_2d
         MLP = model_c2d_simple.MLP
+        loss_f = mpnet.loss
     elif args.env_type == 'r3d':
         load_dataset = data_loader_r3d.load_dataset
         normalize = utility_r3d.normalize
         unnormalize = utility_r3d.unnormalize
         CAE = CAE_r3d
         MLP = model.MLP
+        loss_f = mpnet.loss
     elif args.env_type == 'r2d':
         load_dataset = data_loader_r2d.load_dataset
         normalize = utility_r2d.normalize
@@ -73,6 +76,7 @@ def main(args):
         #MLP = model.MLP
         MLP = model_c2d.MLP
         args.world_size = [20., 20., np.pi]
+        loss_f = mpnet.loss
     elif args.env_type == 'r2d_simple':
         load_dataset = data_loader_r2d.load_dataset
         normalize = utility_r2d.normalize
@@ -81,6 +85,7 @@ def main(args):
         #MLP = model.MLP
         MLP = model_c2d_simple.MLP
         args.world_size = [20., 20., np.pi]
+        loss_f = mpnet.loss
     elif args.env_type == 'home':
         import data_loader_home
         load_dataset = data_loader_home.load_dataset
@@ -88,6 +93,7 @@ def main(args):
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_3
         MLP = model_home.MLP
+        loss_f = mpnet.pose_loss
     elif args.env_type == 'home_mlp2':
         import data_loader_home
         load_dataset = data_loader_home.load_dataset
@@ -95,6 +101,8 @@ def main(args):
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_3
         MLP = model_home.MLP2
+        loss_f = mpnet.pose_loss
+
     elif args.env_type == 'home_mlp3':
         import data_loader_home
         load_dataset = data_loader_home.load_dataset
@@ -102,6 +110,8 @@ def main(args):
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_3
         MLP = model_home.MLP3
+        loss_f = mpnet.pose_loss
+
     elif args.env_type == 'home_mlp4':
         import data_loader_home
         load_dataset = data_loader_home.load_dataset
@@ -109,6 +119,8 @@ def main(args):
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_2
         MLP = model_home.MLP
+        loss_f = mpnet.pose_loss
+
     elif args.env_type == 'home_mlp5':
         import data_loader_home
         load_dataset = data_loader_home.load_dataset
@@ -116,6 +128,7 @@ def main(args):
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_3
         MLP = model_home.MLP
+        loss_f = mpnet.pose_loss
 
     if args.memory_type == 'res':
         mpNet = End2EndMPNet(args.total_input_size, args.AE_input_size, args.mlp_input_size, \
@@ -187,10 +200,10 @@ def main(args):
             bobs = to_var(bobs)
             bt=to_var(bt)
             print('before training losses:')
-            print(mpNet.loss(mpNet(bi, bobs), bt))
-            mpNet.observe(0, bi, bobs, bt)
+            print(loss_f(mpNet(bi, bobs), bt))
+            mpNet.observe(0, bi, bobs, bt, loss_f=loss_f)
             print('after training losses:')
-            print(mpNet.loss(mpNet(bi, bobs), bt))
+            print(loss_f(mpNet(bi, bobs), bt))
             num_path_trained += 1
             # perform rehersal when certain number of batches have passed
             if args.freq_rehersal and num_path_trained % args.freq_rehersal == 0:
@@ -209,7 +222,7 @@ def main(args):
                 bi=to_var(bi)
                 bobs = to_var(bobs)
                 bt=to_var(bt)
-                mpNet.observe(0, bi, bobs, bt, False)  # train but don't remember
+                mpNet.observe(0, bi, bobs, bt, False, loss_f=loss_f)  # train but don't remember
             dataset, targets, env_indices = [], [], []
             path_ct = 0
 

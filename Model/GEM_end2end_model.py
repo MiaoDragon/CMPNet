@@ -73,6 +73,20 @@ class End2EndMPNet(nn.Module):
         return self.mlp(mlp_in)
     def loss(self, pred, truth):
         return self.mse(pred, truth)
+    def pose_loss(self, pred, truth):
+        # in 3d space
+        pos_loss = self.mse(pred[:,:3], truth[:,:3])
+        eps = 1e-4 # for numerical stability
+        pred_ori = pred[:,3:]
+        print('orientation:')
+        print(pred_ori)
+        pred_ori = pred_ori / pred_ori.norm(2, 2, True).clamp(min=eps).expand_as(pred_ori)
+        print('normalized orientation:')
+        print(pred_ori)
+        ori_loss = self.mse(pred_ori, truth[:,3:])
+        # weighted sum
+        return pos_loss + ori_loss
+
 
     def load_memory(self, data):
         # data: (tasks, xs, ys)
@@ -118,7 +132,7 @@ class End2EndMPNet(nn.Module):
     reference: https://arxiv.org/abs/1706.08840
     code from: https://github.com/facebookresearch/GradientEpisodicMemory
     '''
-    def observe(self, t, x, obs, y, remember=True):
+    def observe(self, t, x, obs, y, remember=True, loss_f=self.loss):
         # remember: remember this data or not
         # update memory
         # everytime we treat the new data as a new task
@@ -135,13 +149,13 @@ class End2EndMPNet(nn.Module):
                     # fwd/bwd on the examples in the memory
                     past_task = self.observed_tasks[tt]
                     if tt == len(self.observed_tasks) - 1:
-                        ptloss = self.loss(
+                        ptloss = loss_f(
                             self.forward(
                             self.memory_input[past_task][:self.mem_cnt[past_task]],
                             self.memory_obs[past_task][:self.mem_cnt[past_task]]),   # TODO
                             self.memory_labs[past_task][:self.mem_cnt[past_task]])   # up to current
                     else:
-                        ptloss = self.loss(
+                        ptloss = loss_f(
                             self.forward(
                             self.memory_input[past_task],
                             self.memory_obs[past_task]),   # TODO
@@ -152,7 +166,7 @@ class End2EndMPNet(nn.Module):
 
             # now compute the grad on the current minibatch
             self.zero_grad()
-            loss = self.loss(self.forward(x, obs), y)
+            loss = loss_f(self.forward(x, obs), y)
             loss.backward()
 
             # check if gradient violates constraints

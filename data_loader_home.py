@@ -73,8 +73,15 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
                 print('loaded path')
                 print(path.shape)
                 #path=path.reshape(len(path)//7,7)
-                for k in range(0,len(path)):
+                # make sure the quarternion stays at one direction
+                for k in range(0,3):
                     paths[i][j][k]=path[k]
+                if path[-1] >= 0:
+                    for k in range(3,7):
+                        paths[i][j][k]=path[k]
+                else:
+                    for k in range(3,7):
+                        paths[i][j][k]=-path[k]
 
 
 
@@ -175,8 +182,14 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
                 print('loading path...')
                 print(path.shape)
                 #path=path.reshape(len(path)//7,7)
-                for k in range(0,len(path)):
+                for k in range(0,3):
                     paths[i][j][k]=path[k]
+                if path[-1] >= 0:
+                    for k in range(3,7):
+                        paths[i][j][k]=path[k]
+                else:
+                    for k in range(3,7):
+                        paths[i][j][k]=-path[k]
 
     print("after loading...")
     print("obstacle")
