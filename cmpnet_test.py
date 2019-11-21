@@ -145,7 +145,7 @@ def main(args):
         normalize = utility_home.normalize
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_3
-        MLP = model_home.MLP
+        MLP = model_home.MLP4
         eval_tasks = gem_eval_ompl.eval_tasks
 
     if args.memory_type == 'res':
