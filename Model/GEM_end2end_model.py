@@ -78,11 +78,11 @@ class End2EndMPNet(nn.Module):
         pos_loss = self.mse(pred[:,:3], truth[:,:3])
         eps = 1e-4 # for numerical stability
         pred_ori = pred[:,3:]
-        print('orientation:')
-        print(pred_ori)
+        #print('orientation:')
+        #print(pred_ori)
         pred_ori = pred_ori / pred_ori.norm(2, 1, True).clamp(min=eps).expand_as(pred_ori)
-        print('normalized orientation:')
-        print(pred_ori)
+        #print('normalized orientation:')
+        #print(pred_ori)
         ori_loss = self.mse(pred_ori, truth[:,3:])
         # weighted sum
         return pos_loss + ori_loss
