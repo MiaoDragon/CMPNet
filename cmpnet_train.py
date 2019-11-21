@@ -35,6 +35,9 @@ import os
 import random
 from utility import *
 import utility_s2d, utility_c2d, utility_r3d, utility_r2d, utility_home
+
+
+from tensorboardX import SummaryWriter
 def main(args):
     # set seed
     torch_seed = np.random.randint(low=0, high=1000)
@@ -147,7 +150,7 @@ def main(args):
         loss_f = mpNet.pose_loss
     elif args.env_type == 'home_mlp5':
         loss_f = mpNet.pose_loss
-        
+
     # load previously trained model if start epoch > 0
     model_path='cmpnet_epoch_%d.pkl' %(args.start_epoch)
     if args.start_epoch > 0:
@@ -176,8 +179,17 @@ def main(args):
     # load train and test data
     print('loading...')
     obs, path_data = load_dataset(N=args.no_env, NP=args.no_motion_paths, folder=args.data_path)
+    # use some path data as validation set
+    val_path_data = path_data[-100:]
+
+
     # Train the Models
     print('training...')
+    writer = SummaryWriter('./runs/'+args.env_type)
+    record_loss = 0.
+    record_i = 0
+    val_record_loss = 0.
+    val_record_i = 0
     for epoch in range(args.start_epoch+1,args.num_epochs+1):
         data_all = []
         num_path_trained = 0
@@ -214,8 +226,46 @@ def main(args):
             print(loss_f(mpNet(bi, bobs), bt))
             mpNet.observe(0, bi, bobs, bt, loss_f=loss_f)
             print('after training losses:')
-            print(loss_f(mpNet(bi, bobs), bt))
+            loss = loss_f(mpNet(bi, bobs), bt)
+            print(loss)
+
             num_path_trained += 1
+            record_loss += loss.data
+            record_i += 1
+            if record_i % 100 == 0:
+                writer.add_scalar('train_loss', record_loss / 100, record_i)
+                record_loss = 0.
+
+            ######################################
+            # loss on validation set
+            val_dataset, val_targets, val_env_indices = val_path_data[i]
+            dataset = val_dataset
+            targets = val_targets
+            env_indices = val_env_indices
+            # record
+            data_all += list(zip(dataset,targets,env_indices))
+            bi = np.array(dataset).astype(np.float32)
+            bobs = np.array(obs[env_indices]).astype(np.float32)
+            #bi = np.concatenate( (obs[env_indices], dataset), axis=1).astype(np.float32)
+            bt = targets
+            bi = torch.FloatTensor(bi)
+            bobs = torch.FloatTensor(bobs)
+            bt = torch.FloatTensor(bt)
+            bi, bt = normalize(bi, args.world_size), normalize(bt, args.world_size)
+            bi=to_var(bi)
+            bobs = to_var(bobs)
+            bt=to_var(bt)
+            print('validation losses:')
+            loss = loss_f(mpNet(bi, bobs), bt)
+            print(loss)
+
+            val_record_loss += loss.data
+            val_record_i += 1
+            if val_record_i % 100 == 0:
+                writer.add_scalar('val_loss', val_record_loss / 100, val_record_i)
+                val_record_loss = 0.
+
+            ######################################
             # perform rehersal when certain number of batches have passed
             if args.freq_rehersal and num_path_trained % args.freq_rehersal == 0:
                 print('rehersal...')
@@ -242,6 +292,8 @@ def main(args):
             model_path='cmpnet_epoch_%d.pkl' %(epoch)
             save_state(mpNet, torch_seed, np_seed, py_seed, os.path.join(args.model_path,model_path))
             # test
+    writer.export_scalars_to_json("./all_scalars.json")
+    writer.close()
 
 parser = argparse.ArgumentParser()
 # for training
