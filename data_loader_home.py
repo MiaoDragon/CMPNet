@@ -78,7 +78,7 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
                     path[k][3:7] = -path[k][3:7]
                 for k in range(0,len(path)):
                     paths[i][j][k]=path[k]
-
+                print(path[k])
 
     path_data = []
     for i in range(0,N):
