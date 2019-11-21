@@ -77,7 +77,7 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
                 for k in range(0,len(path)):
                     if path[k][-1] < 0:
                         path[k][3:7] = -path[k][3:7]
-                    print(path[k])
+                    #print(path[k])
                     paths[i][j][k]=path[k]
 
     path_data = []
@@ -180,9 +180,9 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
                 for k in range(0,len(path)):
                     if path[k][-1] < 0:
                         path[k][3:7] = -path[k][3:7]
-                    print(path[k])
+                    #print(path[k])
                     paths[i][j][k]=path[k]
-                    
+
     print("after loading...")
     print("obstacle")
     print(obs.shape)
