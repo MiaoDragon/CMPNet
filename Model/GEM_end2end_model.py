@@ -132,12 +132,14 @@ class End2EndMPNet(nn.Module):
     reference: https://arxiv.org/abs/1706.08840
     code from: https://github.com/facebookresearch/GradientEpisodicMemory
     '''
-    def observe(self, t, x, obs, y, remember=True, loss_f=self.loss):
+    def observe(self, t, x, obs, y, remember=True, loss_f=None):
         # remember: remember this data or not
         # update memory
         # everytime we treat the new data as a new task
         # compute gradient on all tasks
         # (prevent forgetting previous experience of same task, too)
+        if loss_f is None:
+            loss_f = self.loss
         for _ in range(self.grad_step):
 
             if len(self.observed_tasks) >= 1:
