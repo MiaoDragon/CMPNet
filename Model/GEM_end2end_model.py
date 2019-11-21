@@ -80,7 +80,7 @@ class End2EndMPNet(nn.Module):
         pred_ori = pred[:,3:]
         print('orientation:')
         print(pred_ori)
-        pred_ori = pred_ori / pred_ori.norm(2, 2, True).clamp(min=eps).expand_as(pred_ori)
+        pred_ori = pred_ori / pred_ori.norm(2, 1, True).clamp(min=eps).expand_as(pred_ori)
         print('normalized orientation:')
         print(pred_ori)
         ori_loss = self.mse(pred_ori, truth[:,3:])
