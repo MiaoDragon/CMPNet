@@ -181,6 +181,14 @@ def main(args):
     obs, path_data = load_dataset(N=args.no_env, NP=args.no_motion_paths, folder=args.data_path)
     # use some path data as validation set
     val_path_data = path_data[-100:]
+    # set training data again
+    path_data = path_data[:-100]
+
+    # print out data length:
+    print('length of validation data:')
+    print(len(val_path_data))
+    print('length of path data:')
+    print(len(path_data))
 
 
     # Train the Models
@@ -238,7 +246,7 @@ def main(args):
 
             ######################################
             # loss on validation set
-            val_dataset, val_targets, val_env_indices = val_path_data[i]
+            val_dataset, val_targets, val_env_indices = val_path_data[i % len(val_path_data)]
             dataset = val_dataset
             targets = val_targets
             env_indices = val_env_indices
