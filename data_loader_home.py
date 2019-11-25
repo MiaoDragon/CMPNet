@@ -88,6 +88,16 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
             env_indices=[]
             if path_lengths[i][j]>0:
                 for m in range(0, path_lengths[i][j]-1):
+                    data = np.concatenate( (paths[i][j][m], paths[i][j][path_lengths[i][j]-1]) ).astype(np.float32)
+                    targets.append(paths[i][j][m+1])
+                    dataset.append(data)
+                    env_indices.append(i)
+                for m in range(1, path_lengthss[i][j]):
+                    data = np.concatenate( (paths[i][j][m], paths[i][j][0]) ).astype(np.float32)
+                    targets.append(paths[i][j][m-1])
+                    dataset.append(data)
+                    env_indices.append(i)
+                    """
                     for n in range(m+1, path_lengths[i][j]):
                         #data = np.concatenate( (paths[i][j][m], paths[i][j][path_lengths[i][j]-1]) ).astype(np.float32)
                         #targets.append(paths[i][j][m+1])
@@ -105,6 +115,7 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
 
                         dataset.append(data)
                         env_indices.append(i)
+                    """
             path_data.append([dataset, targets, env_indices])
     print('after loading.')
     print('shape:')
