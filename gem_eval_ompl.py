@@ -43,14 +43,14 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
 
 
                 # Collision check the original path
-                if feasibility_check(paths[i][j], obc[i], IsInCollision, step_sz=0.01):
+                if feasibility_check(paths[i][j][:path_lengths[i][j]], obc[i], IsInCollision, step_sz=0.01):
                     print('original path succeed.')
                 else:
                     print('original path in colliions. something must be wrong')
 
                 # print out the noramlized form of original path
                 print('#########normalize original path#######')
-                for k in range(len(paths[i][j])):
+                for k in range(path_lengths[i][j]):
                     print('%d-th node:' % (k))
                     print('before normalizing:')
                     print(paths[i][j][k])
