@@ -144,6 +144,126 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
     # dataset and targets are both list
     # here the first item of data is index in obs
     # return obs, list(zip(*data))
+def load_train_dataset(N=100,NP=4000,folder='../data/simple/',s=0):
+    # load data as [path]
+    # for each path, it is
+    # [[input],[target],[env_id]]
+    obs = []
+    # add start s
+    for i in range(0,N):
+        #load obstacle point cloud
+        pc = pypcd.PointCloud.from_path(folder+'home_env.pcd')
+        # flatten into vector
+        temp = []
+        temp.append(pc.pc_data['x'][~np.isnan(pc.pc_data['x'])])
+        temp.append(pc.pc_data['y'][~np.isnan(pc.pc_data['x'])])
+        temp.append(pc.pc_data['z'][~np.isnan(pc.pc_data['x'])])
+        temp = np.array(temp).T # N*3
+        obs.append(temp)
+    obs = np.array(obs)
+    # add channel dim after batch dim
+    obs = pointcloud_to_voxel(obs, voxel_size=[32,32,32]).reshape(-1,1,32,32,32)
+    # normalize obstacle into -1~1
+    #print('loading...')
+    #print('original obstacle:')
+    #print(obs)
+    """
+    lower = np.array([-383.8, -371.47, -0.2])
+    higher = np.array([325, 337.89, 142.33])
+    bound = (higher - lower) / 2
+    obs = (obs - lower) / bound - 1.0
+    print('after normalization:')
+    print(obs)
+    obs = obs.reshape(N,-1).astype(np.float32)
+    """
+
+    ## calculating length of the longest trajectory
+    max_length=0
+    path_lengths=np.zeros((N,NP),dtype=np.int8)
+    for i in range(0,N):
+        #for j in range(0,NP):
+        j = 0
+        fname_j = 0
+        while j < NP:
+            fname=folder+'paths/'+'path_'+str(fname_j)+'.txt'
+            fname_j += 1
+            if os.path.isfile(fname):
+                path=np.loadtxt(fname)
+                #path=path.reshape(len(path)//7,7)
+                if len(path) < 2:
+                    # invalid path, don't add to training data
+                    continue
+                path_lengths[i][j]=len(path)
+                if len(path)> max_length:
+                    max_length=len(path)
+                j += 1
+
+    paths=np.zeros((N,NP,max_length,7), dtype=np.float32)   ## padded paths
+
+    for i in range(0,N):
+        j = 0
+        fname_j = 0
+        while j < NP:
+            fname=folder+'paths/'+'path_'+str(fname_j)+'.txt'
+            fname_j += 1
+            if os.path.isfile(fname):
+                path=np.loadtxt(fname)
+                print('loaded path')
+                print(path.shape)
+                #path=path.reshape(len(path)//7,7)
+                # make sure the quarternion stays at one direction
+                if len(path) < 2:
+                    continue
+                for k in range(0,len(path)):
+                    if path[k][-1] < 0:
+                        path[k][3:7] = -path[k][3:7]
+                    #print(path[k])
+                    paths[i][j][k]=path[k]
+                j += 1
+
+    dataset = []
+    targets = []
+    env_indices = []
+    for i in range(0,N):
+        for j in range(0,NP):
+            if path_lengths[i][j]>=2:
+                for m in range(0, path_lengths[i][j]-1):
+                    data = np.concatenate( (paths[i][j][m], paths[i][j][path_lengths[i][j]-1]) ).astype(np.float32)
+                    targets.append(paths[i][j][m+1])
+                    dataset.append(data)
+                    env_indices.append(i)
+                for m in range(1, path_lengths[i][j]):
+                    data = np.concatenate( (paths[i][j][m], paths[i][j][0]) ).astype(np.float32)
+                    targets.append(paths[i][j][m-1])
+                    dataset.append(data)
+                    env_indices.append(i)
+                    """
+                    for n in range(m+1, path_lengths[i][j]):
+                        #data = np.concatenate( (paths[i][j][m], paths[i][j][path_lengths[i][j]-1]) ).astype(np.float32)
+                        #targets.append(paths[i][j][m+1])
+                        #dataset.append(data)
+                        #env_indices.append(i)
+                        # forward
+                        data = np.concatenate( (paths[i][j][m], paths[i][j][n]) ).astype(np.float32)
+                        targets.append(paths[i][j][m+1])
+
+                        dataset.append(data)
+                        env_indices.append(i)
+                        # backward
+                        data = np.concatenate( (paths[i][j][n], paths[i][j][m]) ).astype(np.float32)
+                        targets.append(paths[i][j][n-1])
+
+                        dataset.append(data)
+                        env_indices.append(i)
+                    """
+	# only return raw data (in order), follow below to randomly shuffle
+	data=list(zip(dataset,targets,env_indices))
+	random.shuffle(data)
+	dataset,targets,env_indices=list(zip(*data))
+	dataset = list(dataset)
+	targets = list(targets)
+	env_indices = list(env_indices)
+	return obs, dataset, targets, env_indices
 #N=number of environments; NP=Number of Paths; s=starting environment no.; sp=starting_path_no
 #Unseen_environments==> N=10, NP=2000,s=100, sp=0
 #seen_environments==> N=100, NP=200,s=0, sp=4000
