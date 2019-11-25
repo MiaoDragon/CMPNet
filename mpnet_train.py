@@ -77,14 +77,14 @@ def main(args):
         args.world_size = [20., 20., np.pi]
     elif args.env_type == 'home':
         import data_loader_home
-        load_dataset = data_loader_home.load_dataset
+        load_train_dataset = data_loader_home.load_train_dataset
         normalize = utility_home.normalize
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_3
         MLP = model_home.MLP
     elif args.env_type == 'home_mlp2':
         import data_loader_home
-        load_dataset = data_loader_home.load_dataset
+        load_train_dataset = data_loader_home.load_train_dataset
         normalize = utility_home.normalize
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_3
@@ -92,7 +92,7 @@ def main(args):
 
     elif args.env_type == 'home_mlp3':
         import data_loader_home
-        load_dataset = data_loader_home.load_dataset
+        load_train_dataset = data_loader_home.load_train_dataset
         normalize = utility_home.normalize
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_3
@@ -100,7 +100,7 @@ def main(args):
 
     elif args.env_type == 'home_mlp4':
         import data_loader_home
-        load_dataset = data_loader_home.load_dataset
+        load_train_dataset = data_loader_home.load_train_dataset
         normalize = utility_home.normalize
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_2
@@ -108,7 +108,7 @@ def main(args):
 
     elif args.env_type == 'home_mlp5':
         import data_loader_home
-        load_dataset = data_loader_home.load_dataset
+        load_train_dataset = data_loader_home.load_train_dataset
         normalize = utility_home.normalize
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_3
