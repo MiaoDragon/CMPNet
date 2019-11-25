@@ -50,6 +50,7 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
 
                 # print out the noramlized form of original path
                 print('#########normalize original path#######')
+                unnorm_path = []
                 for k in range(path_lengths[i][j]):
                     print('%d-th node:' % (k))
                     print('before normalizing:')
@@ -57,7 +58,14 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                     norm_path = normalize_func(paths[i][j][k])
                     print(norm_path)
                     print('after unnormalizing:')
-                    print(unnormalize_func(norm_path))
+                    unnorm_node = unnormalize_func(norm_path)
+                    print(unnorm_node)
+                    unnorm_path.append(unnorm_node)
+                # check if the unnormalized path is in collision
+                if feasibility_check(unnorm_path, obc[i], IsInCollision, step_sz=0.01):
+                    print('unnormalized original path succeed.')
+                else:
+                    print('unnormalized original path in colliions. something must be wrong')
 
                 step_sz = DEFAULT_STEP
                 MAX_NEURAL_REPLAN = 11
