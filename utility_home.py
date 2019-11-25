@@ -10,12 +10,16 @@ def normalize(x, bound, time_flag=False):
     lower = np.array([-383.8, -371.47, -0.2, -1, -1, -1, -1])
     higher = np.array([325, 337.89, 142.33, 1, 1, 1, 1])
     bound = (higher - lower) / 2
-    bound = torch.from_numpy(bound).type(torch.FloatTensor)
-    lower = torch.from_numpy(lower).type(torch.FloatTensor)
-    higher = torch.from_numpy(higher).type(torch.FloatTensor)
     #print('before normalizing...')
     #print(x)
-    if len(x.size()) != 1:
+    if type(x) is not np.ndarray:
+        bound = torch.from_numpy(bound).type(torch.FloatTensor)
+        lower = torch.from_numpy(lower).type(torch.FloatTensor)
+        higher = torch.from_numpy(higher).type(torch.FloatTensor)
+        x_shape = x.size()
+    else:
+        x_shape = x.shape
+    if len(x_shape) != 1:
         # then the proceding is obstacle
         # don't normalize obstacles
         # we assume the obstacle pcd has been normalized
@@ -48,11 +52,14 @@ def unnormalize(x, bound, time_flag=False):
     lower = np.array([-383.8, -371.47, -0.2, -1, -1, -1, -1])
     higher = np.array([325, 337.89, 142.33, 1, 1, 1, 1])
     bound = (higher - lower) / 2
-    bound = torch.from_numpy(bound).type(torch.FloatTensor)
-    lower = torch.from_numpy(lower).type(torch.FloatTensor)
-    higher = torch.from_numpy(higher).type(torch.FloatTensor)
-
-    if len(x.size()) != 1:
+    if type(x) is not np.ndarray:
+        bound = torch.from_numpy(bound).type(torch.FloatTensor)
+        lower = torch.from_numpy(lower).type(torch.FloatTensor)
+        higher = torch.from_numpy(higher).type(torch.FloatTensor)
+        x_shape = x.size()
+    else:
+        x_shape = x.shape
+    if len(x_shape) != 1:
         # then the proceding is obstacle
         # don't normalize obstacles
         if len(x[0]) != len(bound):
