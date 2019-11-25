@@ -222,7 +222,6 @@ def main(args):
         for i in range(0,len(path_data)):
             print('epoch: %d, training... path: %d' % (epoch, i+1))
             p_dataset, p_targets, p_env_indices = path_data[i]
-            print(p_dataset)
             if len(p_dataset) == 0:
                 # empty path
                 continue
