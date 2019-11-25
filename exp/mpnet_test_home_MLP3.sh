@@ -1,5 +1,5 @@
 cd ..
-python cmpnet_test.py --model_path /media/arclabdl1/HD1/YLmiao/results/MPnet_res/home_mlp3/ \
+python mpnet_test.py --model_path /media/arclabdl1/HD1/YLmiao/results/MPnet_res/home_mlp3/ \
 --grad_step 1 --learning_rate 0.001 \
 --memory_strength 0.5 --n_memories 1 \
 --n_tasks 1 --device 2 --data_path /media/arclabdl1/HD1/YLmiao/data/home/ \
