@@ -154,6 +154,8 @@ def main(args):
                     CAE, MLP)
     elif args.memory_type == 'rand':
         pass
+    if not os.path.exists(args.model_path):
+        os.makedirs(args.model_path)
     # load previously trained model if start epoch > 0
     model_path='mpnet_epoch_%d.pkl' %(args.start_epoch)
     if args.start_epoch > 0:

@@ -85,7 +85,8 @@ class End2EndMPNet(nn.Module):
         #print(pred_ori)
         ori_loss = self.mse(pred_ori, truth[:,3:])
         # weighted sum
-        return pos_loss + ori_loss
+        beta = 0.4
+        return (1-beta)*pos_loss + beta*ori_loss
 
 
     def load_memory(self, data):

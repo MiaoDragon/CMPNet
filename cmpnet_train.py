@@ -150,7 +150,8 @@ def main(args):
         loss_f = mpNet.pose_loss
     elif args.env_type == 'home_mlp5':
         loss_f = mpNet.pose_loss
-
+    if not os.path.exists(args.model_path):
+        os.makedirs(args.model_path)
     # load previously trained model if start epoch > 0
     model_path='cmpnet_epoch_%d.pkl' %(args.start_epoch)
     if args.start_epoch > 0:
@@ -208,7 +209,8 @@ def main(args):
 
     # Train the Models
     print('training...')
-    writer = SummaryWriter('./runs/'+args.env_type)
+    writer_fname = '%s_%f_%s' % (args.env_type, args.learning_rate, args.opt)
+    writer = SummaryWriter('./runs/'+writer_fname)
     record_loss = 0.
     record_i = 0
     val_record_loss = 0.
