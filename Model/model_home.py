@@ -73,6 +73,7 @@ class MLP4(nn.Module):
                     nn.Linear(768, 512), nn.PReLU(), nn.Dropout(),
                     nn.Linear(512, 256), nn.PReLU(), nn.Dropout(),
                     nn.Linear(256, 256), nn.PReLU(), nn.Dropout(),
+                    nn.Linear(256, 256), nn.PReLU(), nn.Dropout(),
                     nn.Linear(256, 128), nn.PReLU(), nn.Dropout(),
                     nn.Linear(128, 64), nn.PReLU(),
                     nn.Linear(64, output_size)
