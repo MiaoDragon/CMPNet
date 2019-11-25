@@ -55,8 +55,10 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
     for i in range(0,N):
         #for j in range(0,NP):
         j = 0
+        fname_j = 0
         while j < NP:
-            fname=folder+'paths/'+'path_'+str(j)+'.txt'
+            fname=folder+'paths/'+'path_'+str(fname_j)+'.txt'
+            fname_j += 1
             if os.path.isfile(fname):
                 path=np.loadtxt(fname)
                 #path=path.reshape(len(path)//7,7)
@@ -72,8 +74,10 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
 
     for i in range(0,N):
         j = 0
+        fname_j = 0
         while j < NP:
-            fname=folder+'paths/'+'path_'+str(j)+'.txt'
+            fname=folder+'paths/'+'path_'+str(fname_j)+'.txt'
+            fname_j += 1
             if os.path.isfile(fname):
                 path=np.loadtxt(fname)
                 print('loaded path')
@@ -180,8 +184,10 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
     for i in range(0,N):
         #for j in range(0,NP):
         j = 0
+        fname_j = 0
         while j < NP:
-            fname=folder+'paths/'+'path_'+str(j+sp)+'.txt'
+            fname=folder+'paths/'+'path_'+str(fname_j+sp)+'.txt'
+            fname_j += 1
             if os.path.isfile(fname):
                 path=np.loadtxt(fname)
                 if len(path) < 2:
@@ -196,8 +202,10 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
 
     for i in range(0,N):
         j = 0
+        fname_j = 0
         while j < NP:
-            fname=folder+'paths/'+'path_'+str(j+sp)+'.txt'
+            fname=folder+'paths/'+'path_'+str(fname_j+sp)+'.txt'
+            fname_j += 1
             if os.path.isfile(fname):
                 path=np.loadtxt(fname)
                 if len(path) < 2:
