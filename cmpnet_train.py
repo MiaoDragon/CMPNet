@@ -180,7 +180,22 @@ def main(args):
     print('loading...')
     obs, path_data = load_dataset(N=args.no_env, NP=args.no_motion_paths, folder=args.data_path)
     # use some path data as validation set
-    val_path_data = path_data[-100:]
+    val_single_path_data = path_data[-100:]
+    # for each batch of validation dataset, use 10 paths
+    val_path_data = []
+    for i in range(len(val_single_path_data)):
+        j = 0
+        dataset = []
+        targets = []
+        env_indices = []
+        while j < 10:
+            idx = (i+j) % len(val_single_path_data)
+            p_dataset, p_targets, p_env_indices = val_single_path_data[idx]
+            dataset += p_dataset
+            targets += p_targets
+            env_indices += p_env_indices
+            j += 1
+        val_path_data.append([dataset, targets, env_indices])
     # set training data again
     path_data = path_data[:-100]
 
@@ -248,7 +263,7 @@ def main(args):
             ######################################
             # loss on validation set
             # use 10 paths in validation dataset to calculate val loss
-            val_dataset, val_targets, val_env_indices = val_path_data[i % len(val_path_data):i % len(val_path_data)+10]
+            val_dataset, val_targets, val_env_indices = val_path_data[i % len(val_path_data)]
             dataset = val_dataset
             targets = val_targets
             env_indices = val_env_indices
