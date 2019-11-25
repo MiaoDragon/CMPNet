@@ -53,20 +53,26 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
     max_length=0
     path_lengths=np.zeros((N,NP),dtype=np.int8)
     for i in range(0,N):
-        for j in range(0,NP):
+        #for j in range(0,NP):
+        j = 0
+        while j < NP:
             fname=folder+'paths/'+'path_'+str(j)+'.txt'
             if os.path.isfile(fname):
                 path=np.loadtxt(fname)
                 #path=path.reshape(len(path)//7,7)
+                if len(path) < 2:
+                    # invalid path, don't add to training data
+                    continue
                 path_lengths[i][j]=len(path)
                 if len(path)> max_length:
                     max_length=len(path)
-
+                j += 1
 
     paths=np.zeros((N,NP,max_length,7), dtype=np.float32)   ## padded paths
 
     for i in range(0,N):
-        for j in range(0,NP):
+        j = 0
+        while j < NP:
             fname=folder+'paths/'+'path_'+str(j)+'.txt'
             if os.path.isfile(fname):
                 path=np.loadtxt(fname)
@@ -74,11 +80,14 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
                 print(path.shape)
                 #path=path.reshape(len(path)//7,7)
                 # make sure the quarternion stays at one direction
+                if len(path) < 2:
+                    continue
                 for k in range(0,len(path)):
                     if path[k][-1] < 0:
                         path[k][3:7] = -path[k][3:7]
                     #print(path[k])
                     paths[i][j][k]=path[k]
+                j += 1
 
     path_data = []
     for i in range(0,N):
@@ -169,22 +178,30 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
     max_length=0
     path_lengths=np.zeros((N,NP),dtype=np.int8)
     for i in range(0,N):
-        for j in range(0,NP):
+        #for j in range(0,NP):
+        j = 0
+        while j < NP:
             fname=folder+'paths/'+'path_'+str(j+sp)+'.txt'
             if os.path.isfile(fname):
                 path=np.loadtxt(fname)
+                if len(path) < 2:
+                    continue
                 #path=path.reshape(len(path)//7,7)
                 path_lengths[i][j]=len(path)
                 if len(path)> max_length:
                     max_length=len(path)
+                j += 1
 
     paths=np.zeros((N,NP,max_length,7), dtype=np.float32)   ## padded paths
 
     for i in range(0,N):
-        for j in range(0,NP):
+        j = 0
+        while j < NP:
             fname=folder+'paths/'+'path_'+str(j+sp)+'.txt'
             if os.path.isfile(fname):
                 path=np.loadtxt(fname)
+                if len(path) < 2:
+                    continue
                 print('loading path...')
                 print(path.shape)
                 #path=path.reshape(len(path)//7,7)
@@ -193,6 +210,7 @@ def load_test_dataset(N=100,NP=200, s=0,sp=4000, folder='../data/simple/'):
                         path[k][3:7] = -path[k][3:7]
                     #print(path[k])
                     paths[i][j][k]=path[k]
+                j += 1
 
     print("after loading...")
     print("obstacle")

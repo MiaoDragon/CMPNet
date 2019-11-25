@@ -247,7 +247,8 @@ def main(args):
 
             ######################################
             # loss on validation set
-            val_dataset, val_targets, val_env_indices = val_path_data[i % len(val_path_data)]
+            # use 10 paths in validation dataset to calculate val loss
+            val_dataset, val_targets, val_env_indices = val_path_data[i % len(val_path_data):i % len(val_path_data)+10]
             dataset = val_dataset
             targets = val_targets
             env_indices = val_env_indices
