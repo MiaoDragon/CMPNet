@@ -40,6 +40,25 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                 valid_path.append(1)
                 path = [torch.from_numpy(paths[i][j][0]).type(torch.FloatTensor),\
                         torch.from_numpy(paths[i][j][path_lengths[i][j]-1]).type(torch.FloatTensor)]
+
+
+                # Collision check the original path
+                if feasibility_check(paths[i][j], obc[i], IsInCollision, step_sz=0.01):
+                    print('original path succeed.')
+                else:
+                    print('original path in colliions. something must be wrong')
+
+                # print out the noramlized form of original path
+                print('#########normalize original path#######')
+                for k in range(len(paths[i][j])):
+                    print('%d-th node:' % (k))
+                    print('before normalizing:')
+                    print(paths[i][j][k])
+                    norm_path = normalize_func(paths[i][j][k])
+                    print(norm_path)
+                    print('after unnormalizing:')
+                    print(unnormalize_func(norm_path))
+
                 step_sz = DEFAULT_STEP
                 MAX_NEURAL_REPLAN = 11
                 for t in range(MAX_NEURAL_REPLAN):
