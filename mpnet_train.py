@@ -199,7 +199,6 @@ def main(args):
             print('after training losses:')
             loss = loss_f(mpNet(bi, bobs), bt)
             print(loss)
-            num_path_trained += 1
             record_loss += loss.data
             record_i += 1
             if record_i % 100 == 0:
