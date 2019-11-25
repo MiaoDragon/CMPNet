@@ -31,11 +31,11 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
             p1_ind=0
             p2_ind=0
             p_ind=0
-            if path_lengths[i][j]==0:
+            if path_lengths[i][j]<2:
                 # invalid, feasible = 0, and path count = 0
                 fp = 0
                 valid_path.append(0)
-            if path_lengths[i][j]>0:
+            if path_lengths[i][j]>=2:
                 fp = 0
                 valid_path.append(1)
                 path = [torch.from_numpy(paths[i][j][0]).type(torch.FloatTensor),\
