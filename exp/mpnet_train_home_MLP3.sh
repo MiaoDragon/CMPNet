@@ -1,6 +1,6 @@
 cd ..
 # End-2-End learning (randomly shuffle path)
-python cmpnet_train.py --model_path /media/arclabdl1/HD1/YLmiao/results/MPnet_res/home_mlp3/ \
+python mpnet_train.py --model_path /media/arclabdl1/HD1/YLmiao/results/MPnet_res/home_mlp3/ \
 --no_env 1 --no_motion_paths 1800 --grad_step 1 --learning_rate 0.005 \
 --num_epochs 100 --memory_strength 0.5 --n_memories 1 \
 --n_tasks 1 --device 2 --freq_rehersal 100 --batch_rehersal 100 --batch_size 100 \
