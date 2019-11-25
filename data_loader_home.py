@@ -92,7 +92,7 @@ def load_dataset(N=1,NP=4000,folder='../data/simple/',s=0):
                     targets.append(paths[i][j][m+1])
                     dataset.append(data)
                     env_indices.append(i)
-                for m in range(1, path_lengthss[i][j]):
+                for m in range(1, path_lengths[i][j]):
                     data = np.concatenate( (paths[i][j][m], paths[i][j][0]) ).astype(np.float32)
                     targets.append(paths[i][j][m-1])
                     dataset.append(data)
