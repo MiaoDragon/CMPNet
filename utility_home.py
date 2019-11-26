@@ -49,19 +49,19 @@ def normalize(x, bound, time_flag=False):
         if len(x) == len(bound):
             x = (x - lower) / bound - 1.0
             if type(x) is not np.ndarray:
-                x[3:] = x[3:] / torch.norm(x[3:], dim=1, keepdim=True)
+                x[3:] = x[3:] / torch.norm(x[3:], dim=0, keepdim=True)
             else:
-                x[3:] = x[3:] / np.linalg.norm(x[3:], axis=1, keepdims=True)
+                x[3:] = x[3:] / np.linalg.norm(x[3:], axis=0, keepdims=True)
 
         else:
             x[:-len(bound)] = (x[:-len(bound)]-lower) / bound - 1.0
             x[-len(bound):] = (x[-len(bound):]-lower) / bound - 1.0
             if type(x) is not np.ndarray:
-                x[3:7] = x[3:7] / torch.norm(x[3:7], dim=1, keepdim=True)
-                x[len(bound)+3:] = x[len(bound)+3:] / torch.norm(x[len(bound)+3:], dim=1, keepdim=True)
+                x[3:7] = x[3:7] / torch.norm(x[3:7], dim=0, keepdim=True)
+                x[len(bound)+3:] = x[len(bound)+3:] / torch.norm(x[len(bound)+3:], dim=0, keepdim=True)
             else:
-                x[3:7] = x[3:7] / np.linalg.norm(x[3:7], axis=1, keepdims=True)
-                x[len(bound)+3:] = x[len(bound)+3:] / np.linalg.norm(x[len(bound)+3:], axis=1, keepdims=True)
+                x[3:7] = x[3:7] / np.linalg.norm(x[3:7], axis=0, keepdims=True)
+                x[len(bound)+3:] = x[len(bound)+3:] / np.linalg.norm(x[len(bound)+3:], axis=0, keepdims=True)
 
         #print('after normalizing...')
         #print(x)
@@ -112,19 +112,19 @@ def unnormalize(x, bound, time_flag=False):
         if len(x) == len(bound):
             x = (x + 1.0) * bound + lower
             if type(x) is not np.ndarray:
-                x[3:] = x[3:] / torch.norm(x[3:], dim=1, keepdim=True)
+                x[3:] = x[3:] / torch.norm(x[3:], dim=0, keepdim=True)
             else:
-                x[3:] = x[3:] / np.linalg.norm(x[3:], axis=1, keepdims=True)
+                x[3:] = x[3:] / np.linalg.norm(x[3:], axis=0, keepdims=True)
         else:
             x[:-len(bound)] = (x[:-len(bound)] + 1.0) * bound + lower
             x[-len(bound):] = (x[-len(bound):] + 1.0) * bound + lower
             # normalize quarternion
             if type(x) is not np.ndarray:
-                x[3:7] = x[3:7] / torch.norm(x[3:7], dim=1, keepdim=True)
-                x[len(bound)+3:] = x[len(bound)+3:] / torch.norm(x[len(bound)+3:], dim=1, keepdim=True)
+                x[3:7] = x[3:7] / torch.norm(x[3:7], dim=0, keepdim=True)
+                x[len(bound)+3:] = x[len(bound)+3:] / torch.norm(x[len(bound)+3:], dim=0, keepdim=True)
             else:
-                x[3:7] = x[3:7] / np.linalg.norm(x[3:7], axis=1, keepdims=True)
-                x[len(bound)+3:] = x[len(bound)+3:] / np.linalg.norm(x[len(bound)+3:], axis=1, keepdims=True)
+                x[3:7] = x[3:7] / np.linalg.norm(x[3:7], axis=0, keepdims=True)
+                x[len(bound)+3:] = x[len(bound)+3:] / np.linalg.norm(x[len(bound)+3:], axis=0, keepdims=True)
         #print('after unnormalizing...')
         #print(x)
     if time_flag:
