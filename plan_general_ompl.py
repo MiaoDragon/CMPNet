@@ -66,7 +66,10 @@ def removeCollision(path, obc, IsInCollision):
     # rule out nodes that are already in collision
     for i in range(0,len(path)):
         if not IsInCollision(path[i].numpy(),obc):
+            print('point not in collision')
             new_path.append(path[i])
+        else:
+            print('point in collision')
     return new_path
 
 def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
@@ -126,7 +129,7 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
     if init_plan_flag:
         # if it is the initial plan, then we just do neural_replan
         #MAX_LENGTH = 80
-        MAX_LENGTH = 500
+        MAX_LENGTH = 80
         mini_path, time_d = neural_replanner(mpNet, path[0], path[-1], obc, obs, IsInCollision, \
                                             normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
         if mini_path:
@@ -143,7 +146,7 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
             else:
                 return path
     #MAX_LENGTH = 50
-    MAX_LENGTH = 500
+    MAX_LENGTH = 50
     # replan segments of paths
     new_path = [path[0]]
     time_norm = 0.
@@ -185,11 +188,11 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
     #tree=1  # turn this off for bidirectional
     new_path = []
     time_norm = 0.
-    print('neural replan:')
-    print('start:')
-    print(start)
-    print('goal:')
-    print(goal)
+    #print('neural replan:')
+    #print('start:')
+    #print(start)
+    #print('goal:')
+    #print(goal)
     vis_start = start
     vis_goal = goal
     while target_reached==0 and itr<MAX_LENGTH:
