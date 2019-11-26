@@ -222,15 +222,16 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             tree=0
         target_reached=steerTo(start, goal, obc, IsInCollision, step_sz=step_sz)
 
-    vis_path = []
-    for p1 in range(len(pA)):
-        vis_path.append(pA[p1])
-    for p2 in range(len(pB)-1,-1,-1):
-        vis_path.append(pB[p2])
-    vis_path = [p.numpy() for p in vis_path]
-    vis_path = np.array(vis_path)
-    np.savetxt('path_%f_%f_%f_to_%f_%f_%f.txt' % (start[0].item(),start[1].item(),start[2].item(),
-                                                  goal[0].item(),goal[1].item(),goal[2].item()), vis_path, fmt='%f')
+    vis_path_pA = [p.numpy() for p in pA]
+    vis_path_pA = np.array(vis_path_pA)
+    vis_path_pB = [p.numpy() for p in pB]
+    vis_path_pB = np.array(vis_path_pB)
+
+    np.savetxt('path_%f_%f_%f_to_%f_%f_%f_pA.txt' % (start[0].item(),start[1].item(),start[2].item(),
+                                                  goal[0].item(),goal[1].item(),goal[2].item()), vis_path_pA, fmt='%f')
+    np.savetxt('path_%f_%f_%f_to_%f_%f_%f_pB.txt' % (start[0].item(),start[1].item(),start[2].item(),
+                                                  goal[0].item(),goal[1].item(),goal[2].item()), vis_path_pB, fmt='%f')
+
 
     if target_reached==0:
         return 0, time_norm
