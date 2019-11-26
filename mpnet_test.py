@@ -135,8 +135,8 @@ def main(args):
         load_test_dataset = data_loader_home.load_test_dataset
         normalize = utility_home.normalize
         unnormalize = utility_home.unnormalize
-        CAE = CAE_home_voxel_2
-        MLP = model_home.MLP
+        CAE = CAE_home_voxel_3
+        MLP = model_home.MLP4
         eval_tasks = gem_eval_ompl.eval_tasks
     elif args.env_type == 'home_mlp5':
         import plan_home, data_loader_home
@@ -145,7 +145,7 @@ def main(args):
         normalize = utility_home.normalize
         unnormalize = utility_home.unnormalize
         CAE = CAE_home_voxel_3
-        MLP = model_home.MLP4
+        MLP = model_home.MLP5
         eval_tasks = gem_eval_ompl.eval_tasks
 
     if args.memory_type == 'res':
