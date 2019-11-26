@@ -210,6 +210,7 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             time_norm += time.time() - time0
             pA.append(start)
             tree=1
+            tree=0  # turn this off to use bidirectional
         else:
             ip2 = torch.cat((goal, start)).unsqueeze(0)
             ob2 = torch.FloatTensor(obs).unsqueeze(0)
