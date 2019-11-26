@@ -139,6 +139,8 @@ def dist_lvc(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
                 min_dist = dist
                 min_j = j
         new_path_idx.append(min_j)
+        # now we are finding path from min_j
+        prev_idx = min_j
     # append the goal node at the end
     new_path_idx.append(len(path)-1)
     new_path = [path[i] for i in new_path_idx]
