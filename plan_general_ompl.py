@@ -229,7 +229,8 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
         vis_path.append(pB[p2])
     vis_path = [p.numpy() for p in vis_path]
     vis_path = np.array(vis_path)
-    np.savetxt('path_%f_to_%f.txt' % (start, goal), vis_path, fmt='%f')
+    np.savetxt('path_%f_%f_%f_to_%f_%f_%f.txt' % (start[0].item(),start[1].item(),start[2].item(),
+                                                  goal[0].item(),goal[1].item(),goal[2].item()), vis_path, fmt='%f')
 
     if target_reached==0:
         return 0, time_norm
