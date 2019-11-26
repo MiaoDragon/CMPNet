@@ -147,7 +147,7 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
             else:
                 return path
     #MAX_LENGTH = 50
-    MAX_LENGTH = 50
+    MAX_LENGTH = 200
     # replan segments of paths
     new_path = [path[0]]
     time_norm = 0.
@@ -211,7 +211,7 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
     pB.append(goal)
     target_reached=0
     tree=0
-    #tree=1  # turn this off for bidirectional
+    tree=1  # turn this off for bidirectional
     new_path = []
     time_norm = 0.
     #print('neural replan:')
@@ -240,7 +240,7 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             time_norm += time.time() - time0
             pA.append(start)
             tree=1
-            tree=0  # turn this off to use bidirectional
+            #tree=0  # turn this off to use bidirectional
         else:
             ip2 = torch.cat((goal, start)).unsqueeze(0)
             ob2 = torch.FloatTensor(obs).unsqueeze(0)
@@ -258,7 +258,7 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             time_norm += time.time() - time0
             pB.append(goal)
             tree=0
-            #tree=1  # turn this off for bidirectional
+            tree=1  # turn this off for bidirectional
         target_reached=steerTo(start, goal, obc, IsInCollision, step_sz=step_sz)
 
     vis_path_pA = [p.numpy() for p in pA]
