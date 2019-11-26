@@ -156,44 +156,22 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
         # assume start is already in new path
         start = path[i]
         goal = path[i+1]
-        track_point = torch.FloatTensor([103.449738, 136.603973, 110.633064, -0.578767, 0.476814, -0.128298, 0.649012])
-        tracking = False
-        if torch.norm(start - track_point) < 1.0:
-            # at that point
-            print('start at the tracking point.')
-            tracking = True
-        if torch.norm(goal - track_point) < 1.0:
-            # at that point
-            print('goal at the tracking point.')
-            tracking = True
 
         steer = steerTo(start, goal, obc, IsInCollision, step_sz=step_sz)
         if steer:
             new_path.append(goal)
-            if tracking:
-                print('can steer to.')
         else:
             # plan mini path
             mini_path, time_d = neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, \
                                                 normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
             time_norm += time_d
-            if tracking:
-                print('resulting mini_path')
-                print(mini_path)
             if mini_path:
                 path_to_add = removeCollision(mini_path[1:], obc, IsInCollision)
                 new_path += path_to_add
                 #new_path += removeCollision(mini_path[1:], obc, IsInCollision)  # take out start point
                 #new_path += mini_path[1:]
-                if tracking:
-                    print('mini path found.')
-                    print('path to add:')
-                    print(path_to_add)
             else:
                 new_path += path[i+1:]     # just take in the rest of the path
-                if tracking:
-                    print('replanning failed, use remaining path and break.')
-                    print(path[i+1:])
                 break
     if time_flag:
         return new_path, time_norm
@@ -266,10 +244,10 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
     vis_path_pB = [p.numpy() for p in pB]
     vis_path_pB = np.array(vis_path_pB)
 
-    np.savetxt('path_%f_%f_%f_to_%f_%f_%f_pA.txt' % (vis_start[0].item(),vis_start[1].item(),vis_start[2].item(),
-                                                  vis_goal[0].item(),vis_goal[1].item(),vis_goal[2].item()), vis_path_pA, fmt='%f')
-    np.savetxt('path_%f_%f_%f_to_%f_%f_%f_pB.txt' % (vis_start[0].item(),vis_start[1].item(),vis_start[2].item(),
-                                                  vis_goal[0].item(),vis_goal[1].item(),vis_goal[2].item()), vis_path_pB, fmt='%f')
+    #np.savetxt('path_%f_%f_%f_to_%f_%f_%f_pA.txt' % (vis_start[0].item(),vis_start[1].item(),vis_start[2].item(),
+    #                                              vis_goal[0].item(),vis_goal[1].item(),vis_goal[2].item()), vis_path_pA, fmt='%f')
+    #np.savetxt('path_%f_%f_%f_to_%f_%f_%f_pB.txt' % (vis_start[0].item(),vis_start[1].item(),vis_start[2].item(),
+    #                                              vis_goal[0].item(),vis_goal[1].item(),vis_goal[2].item()), vis_path_pB, fmt='%f')
 
 
     if target_reached==0:
