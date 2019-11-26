@@ -62,8 +62,8 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                     else:
                         path = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
                                             normalize_func, unnormalize_func, t==0, step_sz=step_sz, time_flag=time_flag)
-                    print('after neural replan %d:' % (t))
-                    print(path)
+                    #print('after neural replan %d:' % (t))
+                    #print(path)
 
                     path_vis = [p.numpy() for p in path]
                     path_vis = np.array(path_vis)
