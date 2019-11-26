@@ -181,7 +181,7 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
                 print(mini_path)
             if mini_path:
                 path_to_add = removeCollision(mini_path[1:], obc, IsInCollision)
-                new_path = path_to_add
+                new_path += path_to_add
                 #new_path += removeCollision(mini_path[1:], obc, IsInCollision)  # take out start point
                 #new_path += mini_path[1:]
                 if tracking:
