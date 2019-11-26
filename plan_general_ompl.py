@@ -117,7 +117,10 @@ def dist_lvc(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
     this function first reorder the path by distance,
     then use lvc to smooth the path
     detail:
-        reorder the path except the goal node, then append the goal node at the end
+        1) reorder the path except the goal node, then append the goal node at the end
+        |
+        v
+        2) also check if goal is the possible next state, if so, ignore other nodes
     """
 
     # reorder by distance
@@ -125,11 +128,11 @@ def dist_lvc(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
     #new_path = [path[0]]
     new_path_idx = [0]
     prev_idx = 0
-    for i in range(len(path)-2):
+    for i in range(len(path)-1):
         # obtain the nearest neighbor in the path not picked
         min_dist = 1e8
         min_j = -1
-        for j in range(1, len(path)-1):
+        for j in range(1, len(path)):
             # we ignore the goal node so that we can make sure the goal is always the last node
             if j in new_path_idx:
                 continue
@@ -141,8 +144,9 @@ def dist_lvc(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
         new_path_idx.append(min_j)
         # now we are finding path from min_j
         prev_idx = min_j
-    # append the goal node at the end
-    new_path_idx.append(len(path)-1)
+        if min_j == len(path)-1:
+            # goal node
+            break
     new_path = [path[i] for i in new_path_idx]
     return new_path
     #return lvc(new_path, obc, IsInCollision, step_sz)
