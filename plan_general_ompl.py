@@ -272,7 +272,7 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
                                                   vis_goal[0].item(),vis_goal[1].item(),vis_goal[2].item()), vis_path_pB, fmt='%f')
 
 
-    if target_reached==-1:
+    if target_reached==0:
         return 0, time_norm
     else:
         for p1 in range(len(pA)):
