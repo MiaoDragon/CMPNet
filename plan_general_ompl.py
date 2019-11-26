@@ -126,7 +126,7 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
     if init_plan_flag:
         # if it is the initial plan, then we just do neural_replan
         #MAX_LENGTH = 80
-        MAX_LENGTH = 200
+        MAX_LENGTH = 500
         mini_path, time_d = neural_replanner(mpNet, path[0], path[-1], obc, obs, IsInCollision, \
                                             normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
         if mini_path:
@@ -143,7 +143,7 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
             else:
                 return path
     #MAX_LENGTH = 50
-    MAX_LENGTH = 200
+    MAX_LENGTH = 500
     # replan segments of paths
     new_path = [path[0]]
     time_norm = 0.
