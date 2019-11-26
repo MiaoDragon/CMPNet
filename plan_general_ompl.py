@@ -184,6 +184,11 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
     tree=0
     new_path = []
     time_norm = 0.
+    print('neural replan:')
+    print('start:')
+    print(start)
+    print('goal:')
+    print(goal)
     while target_reached==0 and itr<MAX_LENGTH:
         itr=itr+1  # prevent the path from being too long
         if tree==0:
