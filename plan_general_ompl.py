@@ -111,6 +111,40 @@ def feasibility_check(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
             return 0
     return 1
 
+
+def dist_lvc(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
+    """
+    this function first reorder the path by distance,
+    then use lvc to smooth the path
+    detail:
+        reorder the path except the goal node, then append the goal node at the end
+    """
+
+    # reorder by distance
+    #- simple algorithm: linear search all remaining nodes
+    #new_path = [path[0]]
+    new_path_idx = [0]
+    prev_idx = 0
+    for i in range(len(path)-2):
+        # obtain the nearest neighbor in the path not picked
+        min_dist = 1e8
+        min_j = -1
+        for j in range(1, len(path)-1):
+            # we ignore the goal node so that we can make sure the goal is always the last node
+            if j in new_path_idx:
+                continue
+            # calculate the distance
+            dist = torch.norm(path[prev_idx]-path[j])
+            if dist < min_dist:
+                min_dist = dist
+                min_j = j
+        new_path_idx.append(min_j)
+    # append the goal node at the end
+    new_path_idx.append(len(path)-1)
+    new_path = [path[i] for i in new_path_idx]
+    return lvc(new_path, obc, IsInCollision, step_sz)
+
+
 def lvc(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
     # lazy vertex contraction
     for i in range(0,len(path)-1):
