@@ -131,11 +131,11 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
                                             normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
         if mini_path:
             if time_flag:
-                #return removeCollision(mini_path, obc, IsInCollision), time_d
-                return mini_path, time_d
+                return removeCollision(mini_path, obc, IsInCollision), time_d
+                #return mini_path, time_d
             else:
-                #return removeCollision(mini_path, obc, IsInCollision)
-                return mini_path
+                return removeCollision(mini_path, obc, IsInCollision)
+                #return mini_path
         else:
             # can't find a path
             if time_flag:
@@ -161,8 +161,8 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
                                                 normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
             time_norm += time_d
             if mini_path:
-                #new_path += removeCollision(mini_path[1:], obc, IsInCollision)  # take out start point
-                new_path += mini_path[1:]
+                new_path += removeCollision(mini_path[1:], obc, IsInCollision)  # take out start point
+                #new_path += mini_path[1:]
             else:
                 new_path += path[i+1:]     # just take in the rest of the path
                 break
