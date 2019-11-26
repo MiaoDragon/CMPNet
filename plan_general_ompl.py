@@ -147,7 +147,7 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
             else:
                 return path
     #MAX_LENGTH = 50
-    MAX_LENGTH = 20
+    MAX_LENGTH = 50
     # replan segments of paths
     new_path = [path[0]]
     time_norm = 0.
