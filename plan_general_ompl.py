@@ -189,6 +189,8 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
     print(start)
     print('goal:')
     print(goal)
+    vis_start = start
+    vis_goal = goal
     while target_reached==0 and itr<MAX_LENGTH:
         itr=itr+1  # prevent the path from being too long
         if tree==0:
@@ -232,10 +234,10 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
     vis_path_pB = [p.numpy() for p in pB]
     vis_path_pB = np.array(vis_path_pB)
 
-    np.savetxt('path_%f_%f_%f_to_%f_%f_%f_pA.txt' % (start[0].item(),start[1].item(),start[2].item(),
-                                                  goal[0].item(),goal[1].item(),goal[2].item()), vis_path_pA, fmt='%f')
-    np.savetxt('path_%f_%f_%f_to_%f_%f_%f_pB.txt' % (start[0].item(),start[1].item(),start[2].item(),
-                                                  goal[0].item(),goal[1].item(),goal[2].item()), vis_path_pB, fmt='%f')
+    np.savetxt('path_%f_%f_%f_to_%f_%f_%f_pA.txt' % (vis_start[0].item(),vis_start[1].item(),vis_start[2].item(),
+                                                  vis_goal[0].item(),vis_goal[1].item(),vis_goal[2].item()), vis_path_pA, fmt='%f')
+    np.savetxt('path_%f_%f_%f_to_%f_%f_%f_pB.txt' % (vis_start[0].item(),vis_start[1].item(),vis_start[2].item(),
+                                                  vis_goal[0].item(),vis_goal[1].item(),vis_goal[2].item()), vis_path_pB, fmt='%f')
 
 
     if target_reached==-1:
