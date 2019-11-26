@@ -42,7 +42,8 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                         torch.from_numpy(paths[i][j][path_lengths[i][j]-1]).type(torch.FloatTensor)]
 
                 step_sz = DEFAULT_STEP
-                MAX_NEURAL_REPLAN = 11
+                #MAX_NEURAL_REPLAN = 11
+                MAX_NEURAL_REPLAN = 51
                 for t in range(MAX_NEURAL_REPLAN):
                 # adaptive step size on replanning attempts
                 # 1.2, 0.5, 0.1 are for simple env
