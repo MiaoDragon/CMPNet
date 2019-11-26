@@ -144,7 +144,8 @@ def dist_lvc(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
     # append the goal node at the end
     new_path_idx.append(len(path)-1)
     new_path = [path[i] for i in new_path_idx]
-    return lvc(new_path, obc, IsInCollision, step_sz)
+    return new_path
+    #return lvc(new_path, obc, IsInCollision, step_sz)
 
 
 def lvc(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
