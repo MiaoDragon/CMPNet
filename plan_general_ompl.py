@@ -66,10 +66,11 @@ def removeCollision(path, obc, IsInCollision):
     # rule out nodes that are already in collision
     for i in range(0,len(path)):
         if not IsInCollision(path[i].numpy(),obc):
-            print('point not in collision')
+            #print('point not in collision')
             new_path.append(path[i])
         else:
-            print('point in collision')
+            pass
+            #print('point in collision')
     return new_path
 
 def steerTo(start, end, obc, IsInCollision, step_sz=DEFAULT_STEP):
