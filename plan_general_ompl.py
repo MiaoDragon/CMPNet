@@ -46,7 +46,11 @@ def QtoAxisAngle(Q):
     #y = qy / sqrt(1-qw*qw)
     #z = qz / sqrt(1-qw*qw)
     # to unit quarternion
+    print('before normalizing quarternion: ')
+    print(Q)
     Q = Q / np.linalg.norm(Q)
+    print('after normalizing quarternion: ')
+    print(Q)
     angle = 2 * np.arccos(Q[0])
     # for testing singularity
     if Q[0]*Q[0] == 1.0:
