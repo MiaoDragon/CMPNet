@@ -126,14 +126,16 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
     if init_plan_flag:
         # if it is the initial plan, then we just do neural_replan
         #MAX_LENGTH = 80
-        MAX_LENGTH = 3000
+        MAX_LENGTH = 200
         mini_path, time_d = neural_replanner(mpNet, path[0], path[-1], obc, obs, IsInCollision, \
                                             normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
         if mini_path:
             if time_flag:
-                return removeCollision(mini_path, obc, IsInCollision), time_d
+                #return removeCollision(mini_path, obc, IsInCollision), time_d
+                return mini_path, time_d
             else:
-                return removeCollision(mini_path, obc, IsInCollision)
+                #return removeCollision(mini_path, obc, IsInCollision)
+                return mini_path
         else:
             # can't find a path
             if time_flag:
@@ -159,7 +161,8 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
                                                 normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
             time_norm += time_d
             if mini_path:
-                new_path += removeCollision(mini_path[1:], obc, IsInCollision)  # take out start point
+                #new_path += removeCollision(mini_path[1:], obc, IsInCollision)  # take out start point
+                new_path += mini_path[1:]
             else:
                 new_path += path[i+1:]     # just take in the rest of the path
                 break
@@ -218,6 +221,15 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             pB.append(goal)
             tree=0
         target_reached=steerTo(start, goal, obc, IsInCollision, step_sz=step_sz)
+
+    vis_path = []
+    for p1 in range(len(pA)):
+        vis_path.append(pA[p1])
+    for p2 in range(len(pB)-1,-1,-1):
+        vis_path.append(pB[p2])
+    vis_path = [p.numpy() for p in vis_path]
+    vis_path = np.array(vis_path)
+    np.savetxt('path_%f_to_%f.txt' % (start, goal), vis_path, fmt='%f')
 
     if target_reached==0:
         return 0, time_norm
