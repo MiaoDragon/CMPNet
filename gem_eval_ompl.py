@@ -72,13 +72,13 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                     # for several paths at the beginning, don't do this
                     if t > (MAX_NEURAL_REPLAN * 0.10):
                         path = dist_lvc(path, obc[i], IsInCollision, step_sz=step_sz)
-                        #path_vis = [p.numpy() for p in path]
-                        #path_vis = np.array(path_vis)
-                        #np.savetxt('path_%d_replan_%d_reordered.txt' % (j, t), path_vis, fmt='%f')
+                        path_vis = [p.numpy() for p in path]
+                        path_vis = np.array(path_vis)
+                        np.savetxt('path_%d_replan_%d_reordered.txt' % (j, t), path_vis, fmt='%f')
                     path = lvc(path, obc[i], IsInCollision, step_sz=step_sz)
-                    #path_vis = [p.numpy() for p in path]
-                    #path_vis = np.array(path_vis)
-                    #np.savetxt('path_%d_replan_%d_lvc.txt' % (j, t), path_vis, fmt='%f')
+                    path_vis = [p.numpy() for p in path]
+                    path_vis = np.array(path_vis)
+                    np.savetxt('path_%d_replan_%d_lvc.txt' % (j, t), path_vis, fmt='%f')
                     #print('after lvc:')
                     #print(path)
                     if feasibility_check(path, obc[i], IsInCollision, step_sz=0.01):
