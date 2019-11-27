@@ -197,7 +197,10 @@ def main(args):
         unnormalize_func=lambda x: unnormalize(x, args.world_size)
         # seen
         if args.seen_N > 0:
-            time_file = os.path.join(args.model_path,'time_seen_epoch_%d_mlp.p' % (args.start_epoch))
+            if args.use_local_reorder:
+                time_file = os.path.join(args.model_path,'time_seen_epoch_%d_mlp_local_reorder.p' % (args.start_epoch))
+            else:
+                time_file = os.path.join(args.model_path,'time_seen_epoch_%d_mlp.p' % (args.start_epoch))
             fes_path_, valid_path_ = eval_tasks(mpNet, seen_test_data, time_file, \
                                                 IsInCollision, normalize_func, unnormalize_func, \
                                                 time_flag=True, local_reorder_setting=args.use_local_reorder)
@@ -206,7 +209,10 @@ def main(args):
             seen_test_suc_rate += fes_path.sum() / valid_path.sum()
         # unseen
         if args.unseen_N > 0:
-            time_file = os.path.join(args.model_path,'time_unseen_epoch_%d_mlp.p' % (args.start_epoch))
+            if args.use_local_reorder:
+                time_file = os.path.join(args.model_path,'time_unseen_epoch_%d_mlp_local_reorder.p' % (args.start_epoch))
+            else:
+                time_file = os.path.join(args.model_path,'time_unseen_epoch_%d_mlp.p' % (args.start_epoch))
             fes_path_, valid_path_ = eval_tasks(mpNet, unseen_test_data, time_file, \
                                                 IsInCollision, normalize_func, unnormalize_func, \
                                                 time_flag=True, local_reorder_setting=args.use_local_reorder)
@@ -215,12 +221,22 @@ def main(args):
             unseen_test_suc_rate += fes_path.sum() / valid_path.sum()
     if args.seen_N > 0:
         seen_test_suc_rate = seen_test_suc_rate / T
-        f = open(os.path.join(args.model_path,'seen_accuracy_epoch_%d.txt' % (args.start_epoch)), 'w')
+        if args.use_local_reorder:
+            fname = os.path.join(args.model_path,'seen_accuracy_epoch_%d_local_reorder.txt' % (args.start_epoch))
+        else:
+            fname = os.path.join(args.model_path,'seen_accuracy_epoch_%d.txt' % (args.start_epoch))
+
+        f = open(fname, 'w')
         f.write(str(seen_test_suc_rate))
         f.close()
     if args.unseen_N > 0:
         unseen_test_suc_rate = unseen_test_suc_rate / T    # Save the models
-        f = open(os.path.join(args.model_path,'unseen_accuracy_epoch_%d.txt' % (args.start_epoch)), 'w')
+        if args.use_local_reorder:
+            fname = os.path.join(args.model_path,'unseen_accuracy_epoch_%d_local_reorder.txt' % (args.start_epoch))
+        else:
+            fname = os.path.join(args.model_path,'unseen_accuracy_epoch_%d.txt' % (args.start_epoch))
+
+        f = open(fname, 'w')
         f.write(str(unseen_test_suc_rate))
         f.close()
 
