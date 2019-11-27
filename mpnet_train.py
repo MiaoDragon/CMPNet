@@ -240,8 +240,8 @@ def main(args):
                 writer.add_scalar('val_loss', val_record_loss / 100, val_record_i)
                 val_record_loss = 0.
 
-        # Save the models
-        if epoch > 0:
+        # Save the models every 50 epochs
+        if epoch % 50 == 0:
             model_path='mpnet_epoch_%d.pkl' %(epoch)
             save_state(mpNet, torch_seed, np_seed, py_seed, os.path.join(args.model_path,model_path))
             # test
