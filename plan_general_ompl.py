@@ -167,13 +167,14 @@ def lvc(path, obc, IsInCollision, step_sz=DEFAULT_STEP):
                 return lvc(pc,obc,IsInCollision,step_sz=step_sz)
     return path
 
-def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, init_plan_flag, step_sz=DEFAULT_STEP, time_flag=False):
+def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, init_plan_flag,
+                    step_sz=DEFAULT_STEP, max_length=80, local_reorder=False, time_flag=False):
     if init_plan_flag:
         # if it is the initial plan, then we just do neural_replan
         #MAX_LENGTH = 80
-        MAX_LENGTH = 2400
+        #MAX_LENGTH = 1000
         mini_path, time_d = neural_replanner(mpNet, path[0], path[-1], obc, obs, IsInCollision, \
-                                            normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
+                                            normalize, unnormalize, max_length, step_sz=step_sz)
         if mini_path:
             if time_flag:
                 return removeCollision(mini_path, obc, IsInCollision), time_d
@@ -188,7 +189,7 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
             else:
                 return path
     #MAX_LENGTH = 50
-    MAX_LENGTH = 3000
+    #MAX_LENGTH = 1500
     # replan segments of paths
     new_path = [path[0]]
     time_norm = 0.
@@ -204,14 +205,14 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
         else:
             # plan mini path
             mini_path, time_d = neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, \
-                                                normalize, unnormalize, MAX_LENGTH, step_sz=step_sz)
+                                                normalize, unnormalize, max_length, step_sz=step_sz)
             time_norm += time_d
             if mini_path:
                 path_to_add = removeCollision(mini_path[1:], obc, IsInCollision)
                 # edit: NN reorder for local plan
                 # edit: may also add lvc
-                path_to_add = dist_lvc(path_to_add, obc, IsInCollision, step_sz)
-
+                if local_reorder:
+                    path_to_add = dist_lvc(path_to_add, obc, IsInCollision, step_sz)
                 new_path += path_to_add
                 #new_path += removeCollision(mini_path[1:], obc, IsInCollision)  # take out start point
                 #new_path += mini_path[1:]
