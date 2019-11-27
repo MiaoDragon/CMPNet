@@ -71,9 +71,9 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                         # dense local plan with nearest-neighbor reorder
                         if local_reorder_setting:
                             max_length = 5000
+                            local_reorder = True    # turn on for local reordering
                         else:
                             max_length = 8000
-                        #local_reorder = True    # turn on for local reordering
 
 
                     if time_flag:
