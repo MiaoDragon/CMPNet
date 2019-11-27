@@ -198,14 +198,18 @@ def main(args):
         # seen
         if args.seen_N > 0:
             time_file = os.path.join(args.model_path,'time_seen_epoch_%d_mlp.p' % (args.start_epoch))
-            fes_path_, valid_path_ = eval_tasks(mpNet, seen_test_data, time_file, IsInCollision, normalize_func, unnormalize_func, True)
+            fes_path_, valid_path_ = eval_tasks(mpNet, seen_test_data, time_file, \
+                                                IsInCollision, normalize_func, unnormalize_func, \
+                                                time_flag=True, local_reorder_setting=args.use_local_reorder)
             valid_path = valid_path_.flatten()
             fes_path = fes_path_.flatten()   # notice different environments are involved
             seen_test_suc_rate += fes_path.sum() / valid_path.sum()
         # unseen
         if args.unseen_N > 0:
             time_file = os.path.join(args.model_path,'time_unseen_epoch_%d_mlp.p' % (args.start_epoch))
-            fes_path_, valid_path_ = eval_tasks(mpNet, unseen_test_data, time_file, IsInCollision, normalize_func, unnormalize_func, True)
+            fes_path_, valid_path_ = eval_tasks(mpNet, unseen_test_data, time_file, \
+                                                IsInCollision, normalize_func, unnormalize_func, \
+                                                time_flag=True, local_reorder_setting=args.use_local_reorder)
             valid_path = valid_path_.flatten()
             fes_path = fes_path_.flatten()   # notice different environments are involved
             unseen_test_suc_rate += fes_path.sum() / valid_path.sum()
@@ -251,6 +255,9 @@ if __name__ == '__main__':
     parser.add_argument('--world_size', nargs='+', type=float, default=20., help='boundary of world')
     parser.add_argument('--opt', type=str, default='Adagrad')
     parser.add_argument('--train_path', type=int, default=1)
+
+    parser.add_argument('--use_local_reorder', type=int, default=0)
+
     args = parser.parse_args()
     print(args)
     main(args)

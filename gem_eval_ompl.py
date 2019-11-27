@@ -9,7 +9,8 @@ import math
 import time
 from plan_general_ompl import *
 
-def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambda x:x, unnormalize_func=lambda x: x, time_flag=False):
+def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambda x:x, unnormalize_func=lambda x: x,
+               time_flag=False, local_reorder_setting=False):
     obc, obs, paths, path_lengths = test_data
     obs = obs.astype(np.float32)
     obs = torch.from_numpy(obs)
@@ -62,12 +63,16 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                         #step_sz = 0.1
                         step_sz = 0.02
                     if (t > 0 and t < 0.30 * MAX_NEURAL_REPLAN):
-                        #max_length = 3000
-                        max_length = 5000
+                        if local_reorder_setting:
+                            max_length = 3000
+                        else:
+                            max_length = 5000
                     else:
                         # dense local plan with nearest-neighbor reorder
-                        #max_length = 5000
-                        max_length = 8000
+                        if local_reorder_setting:
+                            max_length = 5000
+                        else:
+                            max_length = 8000
                         #local_reorder = True    # turn on for local reordering
 
 
