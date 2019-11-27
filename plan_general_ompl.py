@@ -260,7 +260,7 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             if not IsInCollision(sample, obc):
                 start = sample
                 pA.append(start)
-                tree=1
+            tree=1
             #tree=0  # turn this off to use bidirectional
         else:
             ip2 = torch.cat((goal, start)).unsqueeze(0)
@@ -280,7 +280,7 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             if not IsInCollision(sample, obc):
                 goal = sample
                 pB.append(goal)
-                tree=0
+            tree=0
             #tree=1  # turn this off for bidirectional
         target_reached=steerTo(start, goal, obc, IsInCollision, step_sz=step_sz)
 
