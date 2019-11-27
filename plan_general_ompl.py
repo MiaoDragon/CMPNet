@@ -208,6 +208,10 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
             time_norm += time_d
             if mini_path:
                 path_to_add = removeCollision(mini_path[1:], obc, IsInCollision)
+                # edit: NN reorder for local plan
+                # edit: may also add lvc
+                path_to_add = dist_lvc(path_to_add, obc, IsInCollision, step_sz)
+
                 new_path += path_to_add
                 #new_path += removeCollision(mini_path[1:], obc, IsInCollision)  # take out start point
                 #new_path += mini_path[1:]
