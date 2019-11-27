@@ -66,7 +66,8 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                     else:
                         # dense local plan with nearest-neighbor reorder
                         max_length = 5000
-                        local_reorder = True
+                        #local_reorder = True    # turn on for local reordering
+
 
                     if time_flag:
                         path, time_norm = neural_replan(mpNet, path, obc[i], obs[i], IsInCollision, \
