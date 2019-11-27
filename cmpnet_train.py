@@ -209,7 +209,7 @@ def main(args):
 
     # Train the Models
     print('training...')
-    writer_fname = '%s_%f_%s' % (args.env_type, args.learning_rate, args.opt)
+    writer_fname = 'cont_%s_%f_%s' % (args.env_type, args.learning_rate, args.opt)
     writer = SummaryWriter('./runs/'+writer_fname)
     record_loss = 0.
     record_i = 0
