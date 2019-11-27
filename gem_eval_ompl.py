@@ -43,7 +43,7 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
 
                 step_sz = DEFAULT_STEP
                 #MAX_NEURAL_REPLAN = 11
-                MAX_NEURAL_REPLAN = 51
+                MAX_NEURAL_REPLAN = 101
                 for t in range(MAX_NEURAL_REPLAN):
                 # adaptive step size on replanning attempts
                 # 1.2, 0.5, 0.1 are for simple env
