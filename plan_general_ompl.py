@@ -212,8 +212,10 @@ def neural_replan(mpNet, path, obc, obs, IsInCollision, normalize, unnormalize, 
                 #new_path += removeCollision(mini_path[1:], obc, IsInCollision)  # take out start point
                 #new_path += mini_path[1:]
             else:
-                new_path += path[i+1:]     # just take in the rest of the path
-                break
+                #new_path += path[i+1:]     # just take in the rest of the path
+                #break
+                #edit: we can still plan the rest of the path, even if from path[i] -> path[i+1] fail
+                new_path.append(goal)
     if time_flag:
         return new_path, time_norm
     else:
