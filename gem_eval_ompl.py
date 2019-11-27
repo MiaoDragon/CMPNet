@@ -9,7 +9,7 @@ import math
 import time
 from plan_general_ompl import *
 
-def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambda x:x, unnormalize_func=lambda x: x,
+def eval_tasks(mpNet, test_data, folder, filename, IsInCollision, normalize_func = lambda x:x, unnormalize_func=lambda x: x,
                time_flag=False, local_reorder_setting=False):
     obc, obs, paths, path_lengths = test_data
     obs = obs.astype(np.float32)
@@ -18,6 +18,14 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
     valid_env = []
     time_env = []
     time_total = []
+
+    dir_name = folder+'planning_res_path'
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+    dir_name = folder+'planning_res_path_local_reorder'
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+
     for i in range(len(paths)):
         time_path = []
         fes_path = []   # 1 for feasible, 0 for not feasible
@@ -120,15 +128,15 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
             if fp:
                 #pass
                 if local_reorder_setting:
-                    np.savetxt('planning_res_path_local_reorder/path_%d_fes.txt' % (j), path, fmt='%f')
+                    np.savetxt(folder+'planning_res_path_local_reorder/path_%d_fes.txt' % (j), path, fmt='%f')
                 else:
-                    np.savetxt('planning_res_path/path_%d_fes.txt' % (j), path, fmt='%f')
+                    np.savetxt(folder+'planning_res_path/path_%d_fes.txt' % (j), path, fmt='%f')
             else:
                 #pass
                 if local_reorder_setting:
-                    np.savetxt('planning_res_path_local_reorder/path_%d_nfes.txt' % (j), path, fmt='%f')
+                    np.savetxt(folder+'planning_res_path_local_reorder/path_%d_nfes.txt' % (j), path, fmt='%f')
                 else:
-                    np.savetxt('planning_res_path/path_%d_nfes.txt' % (j), path, fmt='%f')
+                    np.savetxt(folder+'planning_res_path/path_%d_nfes.txt' % (j), path, fmt='%f')
 
             fes_path.append(fp)
             print('env %d accuracy up to now: %f' % (i, (float(np.sum(fes_path))/ np.sum(valid_path))))

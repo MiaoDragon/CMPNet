@@ -201,7 +201,7 @@ def main(args):
                 time_file = os.path.join(args.model_path,'time_seen_epoch_%d_mlp_local_reorder.p' % (args.start_epoch))
             else:
                 time_file = os.path.join(args.model_path,'time_seen_epoch_%d_mlp.p' % (args.start_epoch))
-            fes_path_, valid_path_ = eval_tasks(mpNet, seen_test_data, time_file, \
+            fes_path_, valid_path_ = eval_tasks(mpNet, seen_test_data, args.model_path, time_file, \
                                                 IsInCollision, normalize_func, unnormalize_func, \
                                                 time_flag=True, local_reorder_setting=args.use_local_reorder)
             valid_path = valid_path_.flatten()
@@ -213,7 +213,7 @@ def main(args):
                 time_file = os.path.join(args.model_path,'time_unseen_epoch_%d_mlp_local_reorder.p' % (args.start_epoch))
             else:
                 time_file = os.path.join(args.model_path,'time_unseen_epoch_%d_mlp.p' % (args.start_epoch))
-            fes_path_, valid_path_ = eval_tasks(mpNet, unseen_test_data, time_file, \
+            fes_path_, valid_path_ = eval_tasks(mpNet, unseen_test_data, args.model_path, time_file, \
                                                 IsInCollision, normalize_func, unnormalize_func, \
                                                 time_flag=True, local_reorder_setting=args.use_local_reorder)
             valid_path = valid_path_.flatten()
