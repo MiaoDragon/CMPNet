@@ -51,7 +51,7 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                     local_reorder = False
                     if (t == 0):
                         # initial plan
-                        max_length = 1000
+                        max_length = 2400
                     elif (t == 2):
                         #step_sz = 1.2
                         step_sz = 0.04
@@ -62,10 +62,10 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                         #step_sz = 0.1
                         step_sz = 0.02
                     if (t > 0 and t < 0.30 * MAX_NEURAL_REPLAN):
-                        max_length = 1500
+                        max_length = 3000
                     else:
                         # dense local plan with nearest-neighbor reorder
-                        max_length = 3000
+                        max_length = 5000
                         local_reorder = True
 
                     if time_flag:
