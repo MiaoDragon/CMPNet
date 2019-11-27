@@ -251,14 +251,16 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             time_norm += time.time() - time0
             ip1=to_var(ip1)
             ob1=to_var(ob1)
-            start=mpNet(ip1,ob1).squeeze(0)
+            sample=mpNet(ip1,ob1).squeeze(0)
             # unnormalize to world size
-            start=start.data.cpu()
+            sample=sample.data.cpu()
             time0 = time.time()
-            start = unnormalize(start)
+            sample = unnormalize(sample)
             time_norm += time.time() - time0
-            pA.append(start)
-            tree=1
+            if not IsInCollision(sample, obc):
+                start = sample
+                pA.append(start)
+                tree=1
             #tree=0  # turn this off to use bidirectional
         else:
             ip2 = torch.cat((goal, start)).unsqueeze(0)
@@ -269,14 +271,16 @@ def neural_replanner(mpNet, start, goal, obc, obs, IsInCollision, normalize, unn
             time_norm += time.time() - time0
             ip2=to_var(ip2)
             ob2=to_var(ob2)
-            goal=mpNet(ip2,ob2).squeeze(0)
+            sample=mpNet(ip2,ob2).squeeze(0)
             # unnormalize to world size
-            goal=goal.data.cpu()
+            sample=sample.data.cpu()
             time0 = time.time()
-            goal = unnormalize(goal)
+            sample = unnormalize(sample)
             time_norm += time.time() - time0
-            pB.append(goal)
-            tree=0
+            if not IsInCollision(sample, obc):
+                goal = sample
+                pB.append(goal)
+                tree=0
             #tree=1  # turn this off for bidirectional
         target_reached=steerTo(start, goal, obc, IsInCollision, step_sz=step_sz)
 
