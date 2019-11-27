@@ -119,10 +119,16 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
             path = np.array(path)
             if fp:
                 #pass
-                np.savetxt('planning_res_path/path_%d_fes.txt' % (j), path, fmt='%f')
+                if local_reorder_setting:
+                    np.savetxt('planning_res_path_local_reorder/path_%d_fes.txt' % (j), path, fmt='%f')
+                else:
+                    np.savetxt('planning_res_path/path_%d_fes.txt' % (j), path, fmt='%f')
             else:
                 #pass
-                np.savetxt('planning_res_path/path_%d_nfes.txt' % (j), path, fmt='%f')
+                if local_reorder_setting:
+                    np.savetxt('planning_res_path_local_reorder/path_%d_nfes.txt' % (j), path, fmt='%f')
+                else:
+                    np.savetxt('planning_res_path/path_%d_nfes.txt' % (j), path, fmt='%f')
 
             fes_path.append(fp)
             print('env %d accuracy up to now: %f' % (i, (float(np.sum(fes_path))/ np.sum(valid_path))))
