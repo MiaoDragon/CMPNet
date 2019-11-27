@@ -80,9 +80,9 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                     print('after neural replan %d:' % (t))
                     #print(path)
 
-                    #path_vis = [p.numpy() for p in path]
-                    #path_vis = np.array(path_vis)
-                    #np.savetxt('path_%d_replan_%d.txt' % (j, t), path_vis, fmt='%f')
+                    path_vis = [p.numpy() for p in path]
+                    path_vis = np.array(path_vis)
+                    np.savetxt('path_%d_replan_%d.txt' % (j, t), path_vis, fmt='%f')
                     # for several paths at the beginning, don't do this
                     if t > (MAX_NEURAL_REPLAN * 2.0):
                         path = dist_lvc(path, obc[i], IsInCollision, step_sz=step_sz)
@@ -90,9 +90,9 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
                         #path_vis = np.array(path_vis)
                         #np.savetxt('path_%d_replan_%d_reordered.txt' % (j, t), path_vis, fmt='%f')
                     path = lvc(path, obc[i], IsInCollision, step_sz=step_sz)
-                    #path_vis = [p.numpy() for p in path]
-                    #path_vis = np.array(path_vis)
-                    #np.savetxt('path_%d_replan_%d_lvc.txt' % (j, t), path_vis, fmt='%f')
+                    path_vis = [p.numpy() for p in path]
+                    path_vis = np.array(path_vis)
+                    np.savetxt('path_%d_replan_%d_lvc.txt' % (j, t), path_vis, fmt='%f')
                     #print('after lvc:')
                     #print(path)
                     if feasibility_check(path, obc[i], IsInCollision, step_sz=0.01):
@@ -111,11 +111,11 @@ def eval_tasks(mpNet, test_data, filename, IsInCollision, normalize_func = lambd
             path = [p.numpy() for p in path]
             path = np.array(path)
             if fp:
-                pass
-                #np.savetxt('path_%d_fes.txt' % (j), path, fmt='%f')
+                #pass
+                np.savetxt('path_%d_fes.txt' % (j), path, fmt='%f')
             else:
-                pass
-                #np.savetxt('path_%d_nfes.txt' % (j), path, fmt='%f')
+                #pass
+                np.savetxt('path_%d_nfes.txt' % (j), path, fmt='%f')
 
             fes_path.append(fp)
             print('env %d accuracy up to now: %f' % (i, (float(np.sum(fes_path))/ np.sum(valid_path))))
