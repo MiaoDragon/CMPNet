@@ -206,7 +206,7 @@ def main(args):
                                                 time_flag=True, local_reorder_setting=args.use_local_reorder)
             valid_path = valid_path_.flatten()
             fes_path = fes_path_.flatten()   # notice different environments are involved
-            seen_test_suc_rate += fes_path.sum() / valid_path.sum()
+            seen_test_suc_rate += float(fes_path.sum()) / valid_path.sum()
         # unseen
         if args.unseen_N > 0:
             if args.use_local_reorder:
@@ -218,7 +218,7 @@ def main(args):
                                                 time_flag=True, local_reorder_setting=args.use_local_reorder)
             valid_path = valid_path_.flatten()
             fes_path = fes_path_.flatten()   # notice different environments are involved
-            unseen_test_suc_rate += fes_path.sum() / valid_path.sum()
+            unseen_test_suc_rate += float(fes_path.sum()) / valid_path.sum()
     if args.seen_N > 0:
         seen_test_suc_rate = seen_test_suc_rate / T
         if args.use_local_reorder:
