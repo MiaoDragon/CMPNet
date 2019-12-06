@@ -366,7 +366,9 @@ void MPNetPlanner::mpnet_predict(const base::State* start, const base::State* go
 
     torch::Tensor mlp_input_tensor;
     // Note the order of the cat
-    mlp_input_tensor = torch::cat({obs_enc,sg}, 1).to(at::kCUDA);
+    //mlp_input_tensor = torch::cat({obs_enc,sg}, 1).to(at::kCUDA);
+    mlp_input_tensor = torch::cat({obs_enc,sg}, 1);
+
     std::vector<torch::jit::IValue> mlp_input;
     mlp_input.push_back(mlp_input_tensor);
     auto mlp_output = MLP->forward(mlp_input);
