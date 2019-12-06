@@ -34,7 +34,15 @@ include_directories(
         ${TORCH_INCLUDE_DIRS}
         )
 message("found torch library path: " "${TORCH_LIBRARIES}")
-
+set(TORCH_LIBRARIES
+    torch
+    caffe2_library
+    caffe2_gpu_library
+    /home/arclabdl1/YLmiao/CMPNet/deps/libtorch/lib/libc10.so
+    /usr/local/cuda-9.0/lib64/stubs/libcuda.so
+    /usr/local/cuda-9.0/lib64/libnvrtc.so
+    /usr/local/cuda-9.0/lib64/libcudart.so
+    /home/arclabdl1/YLmiao/CMPNet/deps/libtorch/lib/libc10_cuda.so)
 
 
 
