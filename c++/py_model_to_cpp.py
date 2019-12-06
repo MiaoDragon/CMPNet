@@ -4,9 +4,11 @@ Since we can't use Pickle in C++ to load trained model.
 Adapted from work from Anthony Simeonov.
 """
 from utility import *
+from Model.GEM_end2end_model import End2EndMPNet
 import Model.model_home as model_home
 import Model.AE.CAE_home_voxel_3 as CAE_home_voxel_3
 import data_loader_home
+from utility import *
 class Encoder_home(nn.Module):
     # ref: https://github.com/lxxue/voxnet-pytorch/blob/master/models/voxnet.py
     def __init__(self, input_size=32, output_size=64):
@@ -127,13 +129,6 @@ class MLP_home_Annotated(torch.jit.ScriptModule):
 
         return out7
 
-
-
-
-
-
-
-
 def copyMLP(MLP_to_copy, mlp_weights):
 	# this function is where weights are manually copied from the originally trained
 	# MPNet models (which have different naming convention for the weights that doesn't
@@ -224,6 +219,12 @@ def main(args):
 
     # Everything from here below just tests both models to see if the outputs match
     obs, path_data = load_dataset(N=1, NP=1, folder=args.data_path)
+
+
+    # write test case
+    obs_test = np.array([0.1,1.2,3.0,2.5,1.4,5.2,3.4,-1.])
+    #obs_test = obs_test.reshape((1,2,2,2))
+    np.savetxt('obs_voxel_test.txt', obs_test, delimiter='\n', fmt='%f')
 
     # write obstacle to flattened vector representation, then later be loaded in the C++
     obs_out = obs.flatten()
