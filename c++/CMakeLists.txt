@@ -16,15 +16,15 @@ set(INCLUDE_DIRECTORIES include)
 set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda-9.0")
 add_definitions(-O3 )
 
-find_package(ompl)
+find_package(ompl HINTS /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release)
 
 message("found ompl library path: " ${OMPL_LIBRARIES} ", " ${OMPLAPP_LIBRARIES})
 
 # reset OMPL_LIBRARIES to /usr/local/lib
-#set(OMPL_LIBRARIES /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl.so.15)
-#set(OMPLAPP_LIBRARIES
-#    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl_app_base.so
-#    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl_app.so)
+set(OMPL_LIBRARIES /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl.so)
+set(OMPLAPP_LIBRARIES
+    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl_app_base.so
+    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl_app.so)
 
 
 find_package(Torch REQUIRED)
@@ -56,15 +56,14 @@ set(LIB_SOURCE
     src/home_ompl.cpp
 )
 set(EXEC_SOURCE
-    src/mpnet_planner.cpp
     src/home_ompl.cpp)
 
-#add_library(${PROJECT_NAME} SHARED ${LIB_SOURCE})
+add_library(${PROJECT_NAME} SHARED ${LIB_SOURCE})
 
 #add_library(sst_module SHARED
 #    ${PROJECT_SOURCE_DIR}/src/python_wrapper.cpp)
 #target_include_directories(${PROJECT_NAME} ${INCLUDE_DIR})
-#target_link_libraries(${PROJECT_NAME} ompl ompl_app ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${TORCH_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ompl ompl_app ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${TORCH_LIBRARIES})
 # Don't prepend wrapper library name with lib and add to Python libs.
 #set_target_properties(sst_module PROPERTIES
 #        PREFIX "_"
@@ -74,8 +73,6 @@ set(EXEC_SOURCE
 
 add_executable(home_ompl ${EXEC_SOURCE})
 #target_include_directories(home_ompl ${PROJECT_NAME})
-message("found ompl library path: " ${OMPL_LIBRARIES} ", " "${OMPLAPP_LIBRARIES}")
-
-target_link_libraries(home_ompl ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${TORCH_LIBRARIES})
+target_link_libraries(home_ompl ompl ompl_app ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${TORCH_LIBRARIES} ${PROJECT_NAME})
 
 set_property(TARGET home_ompl PROPERTY CXX_STANDARD 11)
