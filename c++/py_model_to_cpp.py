@@ -30,7 +30,7 @@ class Encoder_home(nn.Module):
             #nn.PReLU(),
             nn.Linear(first_fc_in_features, output_size)
         )
-	@torch.jit.script_method
+    @torch.jit.script_method
     def forward(self, x):
         x = self.encoder(x)
         x = x.view(x.size(0), -1)
@@ -39,7 +39,7 @@ class Encoder_home(nn.Module):
 
 class Encoder_home_Annotated(torch.jit.ScriptModule):
     # ref: https://github.com/lxxue/voxnet-pytorch/blob/master/models/voxnet.py
-	__constants__ = ['encoder', 'head', 'device']
+    __constants__ = ['encoder', 'head', 'device']
     def __init__(self, input_size=32, output_size=64):
         super(Encoder_home_Annotated, self).__init__()
         input_size = [input_size, input_size, input_size]
@@ -57,8 +57,8 @@ class Encoder_home_Annotated(torch.jit.ScriptModule):
         self.head = nn.Sequential(
             nn.Linear(first_fc_in_features, output_size)
         )
-		self.device = torch.device('cuda')
-	@torch.jit.script_method
+        self.device = torch.device('cuda')
+    @torch.jit.script_method
     def forward(self, x):
         x = self.encoder(x)
         x = x.view(x.size(0), -1)
@@ -77,14 +77,14 @@ class MLP_home(nn.Module):
                     nn.Linear(128, 64), nn.PReLU(),
                     nn.Linear(64, output_size)
                 )
-	@torch.jit.script_method
+    @torch.jit.script_method
     def forward(self, x):
         out = self.fc(x)
         return out
 
 
 class MLP_home_Annotated(torch.jit.ScriptModule):
-	__constants__ = ['fc1','fc2','fc3','fc4','fc5','fc6','fc7','device']
+    __constants__ = ['fc1','fc2','fc3','fc4','fc5','fc6','fc7','device']
     def __init__(self, input_size, output_size):
         super(MLP_home_Annotated, self).__init__()
         self.fc1 = nn.Sequential(nn.Linear(input_size, 2560), nn.PReLU())
@@ -95,72 +95,72 @@ class MLP_home_Annotated(torch.jit.ScriptModule):
         self.fc6 = nn.Sequential(nn.Linear(128, 64), nn.PReLU())
         self.fc7 = nn.Linear(nn.Linear(64, output_size))
 
-		self.device = torch.device('cuda')
-	@torch.jit.script_method
+        self.device = torch.device('cuda')
+    @torch.jit.script_method
     def forward(self, x):
-		prob = 0.5
+        prob = 0.5
 
-		p = 1 - prob
-		scale = 1.0/p
-		drop1 = (scale)*torch.bernoulli(torch.full((1, 2560), p)).to(device=self.device)
-		drop2 = (scale)*torch.bernoulli(torch.full((1, 1024), p)).to(device=self.device)
-		drop3 = (scale)*torch.bernoulli(torch.full((1, 512), p)).to(device=self.device)
-		drop4 = (scale)*torch.bernoulli(torch.full((1, 256), p)).to(device=self.device)
-		drop5 = (scale)*torch.bernoulli(torch.full((1, 128), p)).to(device=self.device)
+        p = 1 - prob
+        scale = 1.0/p
+        drop1 = (scale)*torch.bernoulli(torch.full((1, 2560), p)).to(device=self.device)
+        drop2 = (scale)*torch.bernoulli(torch.full((1, 1024), p)).to(device=self.device)
+        drop3 = (scale)*torch.bernoulli(torch.full((1, 512), p)).to(device=self.device)
+        drop4 = (scale)*torch.bernoulli(torch.full((1, 256), p)).to(device=self.device)
+        drop5 = (scale)*torch.bernoulli(torch.full((1, 128), p)).to(device=self.device)
 
-		out1 = self.fc1(x)
-		out1 = torch.mul(out1, drop1)
+        out1 = self.fc1(x)
+        out1 = torch.mul(out1, drop1)
 
-		out2 = self.fc2(out1)
-		out2 = torch.mul(out2, drop2)
+        out2 = self.fc2(out1)
+        out2 = torch.mul(out2, drop2)
 
-		out3 = self.fc3(out2)
-		out3 = torch.mul(out3, drop3)
+        out3 = self.fc3(out2)
+        out3 = torch.mul(out3, drop3)
 
-		out4 = self.fc4(out3)
-		out4 = torch.mul(out4, drop4)
+        out4 = self.fc4(out3)
+        out4 = torch.mul(out4, drop4)
 
-		out5 = self.fc5(out4)
-		out5 = torch.mul(out5, drop5)
+        out5 = self.fc5(out4)
+        out5 = torch.mul(out5, drop5)
 
-		out6 = self.fc6(out5)
+        out6 = self.fc6(out5)
 
-		out7 = self.fc7(out6)
+        out7 = self.fc7(out6)
 
         return out7
 
 def copyMLP(MLP_to_copy, mlp_weights):
-	# this function is where weights are manually copied from the originally trained
-	# MPNet models (which have different naming convention for the weights that doesn't
-	# work with manual dropout implementation) into the models defined in this script
-	# which have the new layer naming convention
+    # this function is where weights are manually copied from the originally trained
+    # MPNet models (which have different naming convention for the weights that doesn't
+    # work with manual dropout implementation) into the models defined in this script
+    # which have the new layer naming convention
 
-	# mlp_weights is just a state_dict() with the good model weights, not loaded into a particular model yet
-	# MLP_to_copy is one of the MLP_Python models defined above (depending on 1.0 or 2.0)
-	MLP_to_copy.state_dict()['fc1.0.weight'].copy_(mlp_weights['fc.0.weight'])
-	MLP_to_copy.state_dict()['fc2.0.weight'].copy_(mlp_weights['fc.3.weight'])
-	MLP_to_copy.state_dict()['fc3.0.weight'].copy_(mlp_weights['fc.6.weight'])
-	MLP_to_copy.state_dict()['fc4.0.weight'].copy_(mlp_weights['fc.9.weight'])
-	MLP_to_copy.state_dict()['fc5.0.weight'].copy_(mlp_weights['fc.12.weight'])
-	MLP_to_copy.state_dict()['fc6.0.weight'].copy_(mlp_weights['fc.15.weight'])
-	MLP_to_copy.state_dict()['fc7.weight'].copy_(mlp_weights['fc.17.weight'])
+    # mlp_weights is just a state_dict() with the good model weights, not loaded into a particular model yet
+    # MLP_to_copy is one of the MLP_Python models defined above (depending on 1.0 or 2.0)
+    MLP_to_copy.state_dict()['fc1.0.weight'].copy_(mlp_weights['fc.0.weight'])
+    MLP_to_copy.state_dict()['fc2.0.weight'].copy_(mlp_weights['fc.3.weight'])
+    MLP_to_copy.state_dict()['fc3.0.weight'].copy_(mlp_weights['fc.6.weight'])
+    MLP_to_copy.state_dict()['fc4.0.weight'].copy_(mlp_weights['fc.9.weight'])
+    MLP_to_copy.state_dict()['fc5.0.weight'].copy_(mlp_weights['fc.12.weight'])
+    MLP_to_copy.state_dict()['fc6.0.weight'].copy_(mlp_weights['fc.15.weight'])
+    MLP_to_copy.state_dict()['fc7.weight'].copy_(mlp_weights['fc.17.weight'])
 
-	MLP_to_copy.state_dict()['fc1.0.bias'].copy_(mlp_weights['fc.0.bias'])
-	MLP_to_copy.state_dict()['fc2.0.bias'].copy_(mlp_weights['fc.3.bias'])
-	MLP_to_copy.state_dict()['fc3.0.bias'].copy_(mlp_weights['fc.6.bias'])
-	MLP_to_copy.state_dict()['fc4.0.bias'].copy_(mlp_weights['fc.9.bias'])
-	MLP_to_copy.state_dict()['fc5.0.bias'].copy_(mlp_weights['fc.12.bias'])
-	MLP_to_copy.state_dict()['fc6.0.bias'].copy_(mlp_weights['fc.15.bias'])
-	MLP_to_copy.state_dict()['fc7.bias'].copy_(mlp_weights['fc.17.bias'])
+    MLP_to_copy.state_dict()['fc1.0.bias'].copy_(mlp_weights['fc.0.bias'])
+    MLP_to_copy.state_dict()['fc2.0.bias'].copy_(mlp_weights['fc.3.bias'])
+    MLP_to_copy.state_dict()['fc3.0.bias'].copy_(mlp_weights['fc.6.bias'])
+    MLP_to_copy.state_dict()['fc4.0.bias'].copy_(mlp_weights['fc.9.bias'])
+    MLP_to_copy.state_dict()['fc5.0.bias'].copy_(mlp_weights['fc.12.bias'])
+    MLP_to_copy.state_dict()['fc6.0.bias'].copy_(mlp_weights['fc.15.bias'])
+    MLP_to_copy.state_dict()['fc7.bias'].copy_(mlp_weights['fc.17.bias'])
 
     # PReLU
-	MLP_to_copy.state_dict()['fc1.1.weight'].copy_(mlp_weights['fc.1.weight'])
-	MLP_to_copy.state_dict()['fc2.1.weight'].copy_(mlp_weights['fc.4.weight'])
-	MLP_to_copy.state_dict()['fc3.1.weight'].copy_(mlp_weights['fc.7.weight'])
-	MLP_to_copy.state_dict()['fc4.1.weight'].copy_(mlp_weights['fc.10.weight'])
-	MLP_to_copy.state_dict()['fc5.1.weight'].copy_(mlp_weights['fc.13.weight'])
-	MLP_to_copy.state_dict()['fc6.1.weight'].copy_(mlp_weights['fc.16.weight'])
-	return MLP_to_copy
+    MLP_to_copy.state_dict()['fc1.1.weight'].copy_(mlp_weights['fc.1.weight'])
+    MLP_to_copy.state_dict()['fc2.1.weight'].copy_(mlp_weights['fc.4.weight'])
+    MLP_to_copy.state_dict()['fc3.1.weight'].copy_(mlp_weights['fc.7.weight'])
+    MLP_to_copy.state_dict()['fc4.1.weight'].copy_(mlp_weights['fc.10.weight'])
+    MLP_to_copy.state_dict()['fc5.1.weight'].copy_(mlp_weights['fc.13.weight'])
+    MLP_to_copy.state_dict()['fc6.1.weight'].copy_(mlp_weights['fc.16.weight'])
+    return MLP_to_copy
 
 def main(args):
     # Set this value to export models for continual learning or batch training
@@ -235,19 +235,19 @@ def main(args):
     obs = Variable(obs)
     # h = mpNet.encoder(obs)
     h = encoder(obs)
-	path_data = np.array([-0.08007369,  0.32780212, -0.01338363,  0.00726194, 0.00430644, -0.00323558,
+    path_data = np.array([-0.08007369,  0.32780212, -0.01338363,  0.00726194, 0.00430644, -0.00323558,
                        0.18593094,  0.13094018, 0.18499476, 0.3250918, 0.52175426, 0.07388325, -0.49999127, 0.52322733])
 
-	path_data = torch.from_numpy(path_data).type(torch.FloatTensor)
+    path_data = torch.from_numpy(path_data).type(torch.FloatTensor)
 
-	test_input = torch.cat((path_data, h.data.cpu())).cuda()  # for MPNet1.0
-	test_input = Variable(test_input)
+    test_input = torch.cat((path_data, h.data.cpu())).cuda()  # for MPNet1.0
+    test_input = Variable(test_input)
     for i in range(5):
-    	test_output = mpNet.mlp(test_input)
-    	test_output_save = MLP(test_input)
-    	print("output %d: " % i)
-    	print(test_output.data)
-    	print(test_output_save.data)
+        test_output = mpNet.mlp(test_input)
+        test_output_save = MLP(test_input)
+        print("output %d: " % i)
+        print(test_output.data)
+        print(test_output_save.data)
 
 parser = argparse.ArgumentParser()
 # for training
