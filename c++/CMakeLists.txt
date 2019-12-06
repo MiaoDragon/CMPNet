@@ -20,11 +20,16 @@ IF(APPLE)
 ENDIF(APPLE)
 
 
-find_package(ompl PATHS /usr/local/lib)
+find_package(ompl)
 
 message("found ompl library path: " ${OMPL_LIBRARIES} ", " ${OMPLAPP_LIBRARIES})
+
 # reset OMPL_LIBRARIES to /usr/local/lib
 set(OMPL_LIBRARIES /usr/local/lib/libompl.so.15)
+set(OMPLAPP_LIBRARIES
+    /usr/local/lib/libompl_app_base.so
+    /usr/local/lib/libompl_app.so)
+
 
 find_package(Torch REQUIRED)
 include_directories(
