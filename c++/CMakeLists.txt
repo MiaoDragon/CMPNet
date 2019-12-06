@@ -24,7 +24,7 @@ find_package(ompl HINTS /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release)
 message("found ompl library path: " ${OMPL_LIBRARIES} ", " ${OMPLAPP_LIBRARIES})
 
 
-messsage("ompl inlucde path: " ${OMPL_INCLUDE_DIRS})
+message("ompl inlucde path: " ${OMPL_INCLUDE_DIRS})
 # reset OMPL_LIBRARIES to /usr/local/lib
 set(OMPL_LIBRARIES /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl.so)
 set(OMPLAPP_LIBRARIES
