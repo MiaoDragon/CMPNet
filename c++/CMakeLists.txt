@@ -32,8 +32,6 @@ message("found ompl library path: " ${OMPL_LIBRARIES} ", " ${OMPLAPP_LIBRARIES})
 
 find_package(Torch REQUIRED)
 
-find_package(Boost COMPONENTS system REQUIRED)
-
 include_directories(
         ${PROJECT_SOURCE_DIR}/include
         ${OMPL_INCLUDE_DIRS}

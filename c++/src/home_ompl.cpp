@@ -19,6 +19,7 @@
 #include <omplapp/apps/SE3RigidBodyPlanning.h>
 #include <omplapp/config.h>
 #include "mpnet_planner.hpp"
+#include <ompl/base/spaces/SE3StateSpace.h>
 using namespace ompl;
 
 int main()
