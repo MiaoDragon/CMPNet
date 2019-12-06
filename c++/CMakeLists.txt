@@ -29,7 +29,6 @@ set(OMPLAPP_LIBRARIES
 
 find_package(Torch REQUIRED)
 include_directories(
-        ${PYTHON_INCLUDE_DIRS}
         ${PROJECT_SOURCE_DIR}/include
         ${OMPL_INCLUDE_DIRS}
         )
