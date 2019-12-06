@@ -9,9 +9,10 @@
 #include "ompl/tools/config/SelfConfig.h"
 #include <torch/torch.h>
 #include <torch/script.h>
+#include "mpnet_planner.hpp"
 #include <iostream>
 #include <cmath>
-
+#include <iterator>
 using namespace ompl;
 using namespace std;
 #define DEBUG
