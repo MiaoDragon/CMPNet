@@ -20,7 +20,7 @@ set(INCLUDE_DIRECTORIES include)
 set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda-9.0")
 add_definitions(-O3 )
 
-find_package(ompl HINTS /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release)
+find_package(ompl REQUIRED HINTS /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release)
 
 find_package(Eigen3)
 message("found ompl library path: " ${OMPL_LIBRARIES} ", " ${OMPLAPP_LIBRARIES})
@@ -69,10 +69,11 @@ set(INCLUDE_DIR
 
 set(LIB_SOURCE
     src/mpnet_planner.cpp
-    src/home_ompl.cpp
 )
 set(EXEC_SOURCE
-    src/home_ompl.cpp)
+    src/home_ompl.cpp
+    src/mpnet_planner.cpp
+    )
 
 add_library(${PROJECT_NAME} SHARED ${LIB_SOURCE})
 
