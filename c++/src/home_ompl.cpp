@@ -12,23 +12,23 @@ int main()
     app::SE3RigidBodyPlanning setup;
 
     // load the robot and the environment
-    std::string robot_fname = std::string(OMPLAPP_RESOURCE_DIR) + "/3D/home_robot.dae";
-    std::string env_fname = std::string(OMPLAPP_RESOURCE_DIR) + "/3D/home_env.dae";
+    std::string robot_fname = std::string(OMPLAPP_RESOURCE_DIR) + "/3D/Home_robot.dae";
+    std::string env_fname = std::string(OMPLAPP_RESOURCE_DIR) + "/3D/Home_env.dae";
     setup.setRobotMesh(robot_fname);
     setup.setEnvironmentMesh(env_fname);
 
     // define start state
     base::ScopedState<base::SE3StateSpace> start(setup.getSpaceInformation());
-    start->setX(-4.96);
-    start->setY(-40.62);
-    start->setZ(70.57);
+    start->setX(262.95);
+    start->setY(75.05);
+    start->setZ(46.19);
     start->rotation().setIdentity();
 
     // define goal state
     base::ScopedState<base::SE3StateSpace> goal(start);
     goal->setX(200.49);
     goal->setY(-40.62);
-    goal->setZ(70.57);
+    goal->setZ(46.19);
     goal->rotation().setIdentity();
 
     // set the start & goal states
