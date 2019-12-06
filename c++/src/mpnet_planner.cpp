@@ -51,8 +51,16 @@ MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermed
     }
 
     // MPNet specific: load network structure and parameters
-    encoder.reset(new torch::jit::script::Module(torch::jit::load("../encoder_annotated_test_cpu_2.pt")));
-    MLP.reset(new torch::jit::script::Module(torch::jit::load("../mlp_annotated_test_gpu_2.pt")));
+    // here there might be a version issue
+    // -----
+    // ***use the below for newer version (~CUDA 10.0)
+    //encoder.reset(new torch::jit::script::Module(torch::jit::load("../encoder_annotated_test_cpu_2.pt")));
+    //MLP.reset(new torch::jit::script::Module(torch::jit::load("../mlp_annotated_test_gpu_2.pt")));
+    // -----
+    // below works for CUDA 9.0
+    encoder.reset(torch::jit::load("../encoder_annotated_test_cpu_2.pt"));
+    MLP.reset(torch::jit::load("../mlp_annotated_test_gpu_2.pt"));
+
     MLP->to(at::kCUDA);
 
     // obtain obstacle representation
