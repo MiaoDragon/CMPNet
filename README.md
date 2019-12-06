@@ -30,6 +30,7 @@
 
 # Instructions for C++ MPNet:
 * make a new directory named deps, and download libtorch into it by following this obtained from pytorch website:
+    e.g.: the following works for cuda 10.1
     Download here (Pre-cxx11 ABI):
     https://download.pytorch.org/libtorch/cu101/libtorch-shared-with-deps-1.3.1.zip
     Download here (cxx11 ABI):
