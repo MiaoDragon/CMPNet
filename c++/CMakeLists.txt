@@ -23,13 +23,20 @@ find_package(ompl HINTS /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release)
 
 message("found ompl library path: " ${OMPL_LIBRARIES} ", " ${OMPLAPP_LIBRARIES})
 
-
-message("ompl inlucde path: " ${OMPL_INCLUDE_DIRS})
-# reset OMPL_LIBRARIES to /usr/local/lib
-set(OMPL_LIBRARIES /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl.so)
+set(OMPL_LIBRARIES /usr/local/lib/libompl.so)
 set(OMPLAPP_LIBRARIES
-    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl_app_base.so
-    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl_app.so)
+    /usr/local/lib/libompl_app_base.so
+    /usr/local/lib/libompl_app.so)
+
+set(OMPL_INCLUDE_DIRS
+    /usr/local/include/ompl
+    /usr/local/include/omplapp)
+#message("ompl inlucde path: " ${OMPL_INCLUDE_DIRS})
+# reset OMPL_LIBRARIES to /usr/local/lib
+#set(OMPL_LIBRARIES /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl.so)
+#set(OMPLAPP_LIBRARIES
+#    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl_app_base.so
+#    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl_app.so)
 
 
 find_package(Torch REQUIRED)
