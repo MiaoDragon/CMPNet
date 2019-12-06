@@ -1,6 +1,21 @@
 /**
 * Adapted from OMPL tutorial
 **/
+#include "ompl/geometric/planners/rrt/RRT.h"
+#include <limits>
+#include "ompl/base/goals/GoalSampleableRegion.h"
+#include "ompl/tools/config/SelfConfig.h"
+#include "ompl/base/Goal.h"
+#include "ompl/base/goals/GoalSampleableRegion.h"
+#include "ompl/base/goals/GoalState.h"
+#include "ompl/base/objectives/PathLengthOptimizationObjective.h"
+#include "ompl/base/samplers/InformedStateSampler.h"
+#include "ompl/base/samplers/informed/RejectionInfSampler.h"
+#include "ompl/base/samplers/informed/OrderedInfSampler.h"
+#include "ompl/tools/config/SelfConfig.h"
+#include "ompl/util/GeometricEquations.h"
+#include "ompl/base/spaces/RealVectorStateSpace.h"
+#include <ompl/base/goals/GoalStates.h>
 #include <omplapp/apps/SE3RigidBodyPlanning.h>
 #include <omplapp/config.h>
 #include "mpnet_planner.hpp"
