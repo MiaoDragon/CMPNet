@@ -463,6 +463,7 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
     int iter = 0;
     int max_length = _max_length;
 
+    bool feasible = true;
     while (!ptc)
     {
         if (iter==0)
@@ -482,7 +483,7 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
         path = neural_replan(path, max_length);
 
         // collision check for the entire path to see if it is feasible
-        bool feasible = true;
+        feasible = true;
 
         for (int i=0; i<path.size()-1; i++)
         {
@@ -510,9 +511,6 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
         solved = true;
         approximate = false;
     }
-    // save the path
-    solution = goal_motion;
-
     /* set the solution path */
     auto sol_path(std::make_shared<ompl::geometric::PathGeometric>(si_));
     for (int i=0; i<path.size(); i++)
