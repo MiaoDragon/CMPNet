@@ -76,19 +76,23 @@ class Encoder_home_Annotated(torch.jit.ScriptModule):
 class MLP_home(nn.Module):
     def __init__(self, input_size, output_size):
         super(MLP_home, self).__init__()
-        self.fc = nn.Sequential(
-                    nn.Linear(input_size, 2560), nn.PReLU(), nn.Dropout(),
-                    nn.Linear(2560, 1024), nn.PReLU(), nn.Dropout(),
-                    nn.Linear(1024, 512), nn.PReLU(), nn.Dropout(),
-                    nn.Linear(512, 256), nn.PReLU(), nn.Dropout(),
-                    nn.Linear(256, 128), nn.PReLU(), nn.Dropout(),
-                    nn.Linear(128, 64), nn.PReLU(),
-                    nn.Linear(64, output_size)
-                )
-    @torch.jit.script_method
+        self.fc1 = nn.Sequential(nn.Linear(input_size, 2560), nn.PReLU())
+        self.fc2 = nn.Sequential(nn.Linear(2560, 1024), nn.PReLU())
+        self.fc3 = nn.Sequential(nn.Linear(1024, 512), nn.PReLU())
+        self.fc4 = nn.Sequential(nn.Linear(512, 256), nn.PReLU())
+        self.fc5 = nn.Sequential(nn.Linear(256, 128), nn.PReLU())
+        self.fc6 = nn.Sequential(nn.Linear(128, 64), nn.PReLU())
+        self.fc7 = nn.Linear(64, output_size)
+
     def forward(self, x):
-        out = self.fc(x)
-        return out
+        x = self.fc1(x)
+        x = self.fc2(x)
+        x = self.fc3(x)
+        x = self.fc4(x)
+        x = self.fc5(x)
+        x = self.fc6(x)
+        x = self.fc7(x)
+        return x
 
 
 class MLP_home_Annotated(torch.jit.ScriptModule):
