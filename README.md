@@ -36,6 +36,6 @@
     https://download.pytorch.org/libtorch/cu101/libtorch-cxx11-abi-shared-with-deps-1.3.1.zip
 * make a new directory called build in the main directory.
 * in the build directory, run the following:
-    `cmake ..`
+    `cmake c++`
     `make`
 * convert Python trained MPNet model to C++ by running py_model_to_cpp.py inside c++ folder.
