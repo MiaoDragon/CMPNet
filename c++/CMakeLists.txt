@@ -22,15 +22,12 @@ add_definitions(-O3 )
 find_package(ompl HINTS /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release)
 
 message("found ompl library path: " ${OMPL_LIBRARIES} ", " ${OMPLAPP_LIBRARIES})
-list(APPEND OMPL_LIBRARIES
-    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/_base.so
-    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/_geometric.so)
 
 # reset OMPL_LIBRARIES to /usr/local/lib
 #set(OMPL_LIBRARIES /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl.so)
-#set(OMPLAPP_LIBRARIES
-#    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl_app_base.so
-#    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl_app.so)
+set(OMPLAPP_LIBRARIES
+    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl_app_base.so.15
+/home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl_app.so.15)
 
 
 find_package(Torch REQUIRED)
