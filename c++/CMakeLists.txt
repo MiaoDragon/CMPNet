@@ -25,10 +25,10 @@ find_package(ompl)
 message("found ompl library path: " ${OMPL_LIBRARIES} ", " ${OMPLAPP_LIBRARIES})
 
 # reset OMPL_LIBRARIES to /usr/local/lib
-set(OMPL_LIBRARIES /usr/local/lib/libompl.so.15)
+set(OMPL_LIBRARIES /home/arclabdl1/ompl/ompl-1.4.2-Source/build/Release/lib/libompl.so)
 set(OMPLAPP_LIBRARIES
-    /usr/local/lib/libompl_app_base.so
-    /usr/local/lib/libompl_app.so)
+    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl_app_base.so
+    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl_app.so)
 
 
 find_package(Torch REQUIRED)
