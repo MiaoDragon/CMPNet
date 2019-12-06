@@ -77,6 +77,8 @@ protected:
     /** \brief Representation of a motion
         This only contains pointers to parent motions as we
         only need to go backwards in the tree. */
+    int _max_replan;
+    int _max_length;
     at::Tensor obs_enc; // two dimensional or one dimensional
     std::shared_ptr<torch::jit::script::Module> encoder;
     std::shared_ptr<torch::jit::script::Module> MLP;
@@ -138,7 +140,7 @@ protected:
 
     /** \brief The most recent goal motion.  Used for PlannerData computation */
     Motion *lastGoalMotion_{nullptr};
-    
+
     std::shared_ptr<NearestNeighbors<Motion *>> nn_;
 };
 

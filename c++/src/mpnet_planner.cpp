@@ -7,6 +7,18 @@
 #include <limits>
 #include "ompl/base/goals/GoalSampleableRegion.h"
 #include "ompl/tools/config/SelfConfig.h"
+#include "ompl/base/Goal.h"
+#include "ompl/base/goals/GoalSampleableRegion.h"
+#include "ompl/base/goals/GoalState.h"
+#include "ompl/base/objectives/PathLengthOptimizationObjective.h"
+#include "ompl/base/samplers/InformedStateSampler.h"
+#include "ompl/base/samplers/informed/RejectionInfSampler.h"
+#include "ompl/base/samplers/informed/OrderedInfSampler.h"
+#include "ompl/tools/config/SelfConfig.h"
+#include "ompl/util/GeometricEquations.h"
+#include "ompl/base/spaces/RealVectorStateSpace.h"
+#include <ompl/base/goals/GoalStates.h>
+
 #include <torch/torch.h>
 #include <torch/script.h>
 #include "mpnet_planner.hpp"
@@ -39,8 +51,8 @@ MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermed
     }
 
     // MPNet specific: load network structure and parameters
-    encoder = torch::jit::load("../encoder_annotated_test_cpu_2.pt");
-    MLP = torch::jit::load("../mlp_annotated_test_gpu_2.pt");
+    encoder = std::make_shared<torch::jit::script::Module>(torch::jit::load("../encoder_annotated_test_cpu_2.pt"));
+    MLP = std::make_shared<torch::jit::script::Module>torch::jit::load("../mlp_annotated_test_gpu_2.pt");
     MLP->to(at::kCUDA);
 
     // obtain obstacle representation
@@ -52,14 +64,14 @@ MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermed
     //      need to modify {1, 16053} to desired size as in python loading code
     #ifdef DEBUG
         std::string pcd_fname_test = "../obs_voxel_test.txt";
-        infile.open(pcd_fname);
+        infile.open(pcd_fname_test);
 
-        std::string line;
-        std::vector<float> tt;
-        while (getline(infile, line)){
-            tt.push_back(std::atof(line.c_str()));
+        std::string line_test;
+        std::vector<float> tt_test;
+        while (getline(infile, line_test)){
+            tt_test.push_back(std::atof(line_test.c_str()));
         }
-        torch::Tensor torch_tensor_test = torch::from_blob(tt.data(), {1,2,2,2});
+        torch::Tensor torch_tensor_test = torch::from_blob(tt_test.data(), {1,2,2,2});
         std::cout << "torch_tensor[0,0,0,0] = " << torch_tensor_test[0][0][0][0] << "\n";
         std::cout << "torch_tensor[0,0,0,1] = " << torch_tensor_test[0][0][0][1] << "\n";
         std::cout << "torch_tensor[0,0,1,0] = " << torch_tensor_test[0][0][1][0] << "\n";
@@ -88,7 +100,8 @@ MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermed
 MPNetPlanner::~MPNetPlanner()
 {
     freeMemory();
-    MPNet.reset();
+    encoder.reset();
+    MLP.reset();
 }
 
 void MPNetPlanner::clear()
@@ -139,18 +152,18 @@ StatePtrVec MPNetPlanner::neural_replan(StatePtrVec path, int max_length)
             new_path.push_back(path[i]);
         }
     }
-    new_path.push_back(goal);
+    new_path.push_back(path.back());
 
     StatePtrVec res_path;
     res_path.push_back(path[0]);
     for (int i=0; i < new_path.size()-1; i++)
     {
         // check each segment of the path if it is connectable
-        bool connected = si_->checkMotion(new_path[i] new_path[i+1]);
+        bool connected = si_->checkMotion(new_path[i], new_path[i+1]);
         if (!connected)
         {
             // if not, use MPNet to do local replanning
-            StatePtrVec minipath = neural_replanner(new_path[i], new_path[i+1], int max_length);
+            StatePtrVec minipath = neural_replanner(new_path[i], new_path[i+1], max_length);
             for (int j=1; j < minipath.size(); j++)
             {
                 res_path.push_back(minipath[j]);
@@ -245,7 +258,7 @@ StatePtrVec MPNetPlanner::neural_replanner(base::State* start, base::State* goal
         {
             minipath.push_back(start_tree[i]);
         }
-        for (int i=goal_tree.size()-1; j>-1; j--)
+        for (int i=goal_tree.size()-1; i>-1; i--)
         {
             minipath.push_back(goal_tree[i]);
         }
