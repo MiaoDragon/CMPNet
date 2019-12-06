@@ -361,17 +361,17 @@ void MPNetPlanner::mpnet_predict(const base::State* start, const base::State* go
     for (int i = 0; i < dim; i++)
     {
         //TODO: better assign by using angleAxis
-        next->as<ompl::base::RealVectorStateSpace::StateType>()->values[i] = res_a[0][i];
+        next->as<base::RealVectorStateSpace::StateType>()->values[i] = res_a[0][i];
     }
 }
-torch::Tensor MPNetPlanner::getStartGoalTensor(const ompl::base::State *start_state, const ompl::base::State *goal_state, int dim){
+torch::Tensor MPNetPlanner::getStartGoalTensor(const base::State *start_state, const base::State *goal_state, int dim){
     //convert to torch tensor by getting data from states
     std::vector<float> goal_vec;
     std::vector<float> start_vec;
 
     for (int i = 0; i < dim; i++){
-        goal_vec.push_back((float)goal_state->as<ompl::base::RealVectorStateSpace::StateType>()->values[i]);
-        start_vec.push_back((float)start_state->as<ompl::base::RealVectorStateSpace::StateType>()->values[i]);
+        goal_vec.push_back((float)goal_state->as<base::RealVectorStateSpace::StateType>()->values[i]);
+        start_vec.push_back((float)start_state->as<base::RealVectorStateSpace::StateType>()->values[i]);
     }
 
 
@@ -404,7 +404,7 @@ torch::Tensor MPNetPlanner::getStartGoalTensor(const ompl::base::State *start_st
 }
 
 
-ompl::base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition &ptc)
+base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition &ptc)
 {
     checkValidity();
     base::Goal *goal = pdef_->getGoal().get();
@@ -437,7 +437,7 @@ ompl::base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCond
 
 
     // initialize the path
-    const base::State *const_goal_state = goal->as<ompl::base::GoalStates>()->getState(0);
+    const base::State *const_goal_state = goal->as<base::GoalStates>()->getState(0);
     base::State *goal_state = si_->allocState();
     si_->copyState(goal_state, const_goal_state);
     StatePtrVec path;
