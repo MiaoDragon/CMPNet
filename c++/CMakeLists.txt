@@ -38,6 +38,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/include
         ${OMPL_INCLUDE_DIRS}
         )
+message("found torch library path: " ${TORCH_LIBRARIES})
 
 
 set(LIB_SOURCE
