@@ -13,6 +13,7 @@
 #include <cmath>
 
 using namespace ompl;
+using namespace std;
 #define DEBUG
 
 MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermediateStates, int max_replan, int max_length)
