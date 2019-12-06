@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(CMPNet)
 # add torch and ompl paths here
 #set(CMAKE_PREFIX_PATH /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release ${CMAKE_PREFIX_PATH})
-add_compile_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 list(APPEND CMAKE_PREFIX_PATH
     ${PROJECT_SOURCE_DIR}/../deps/libtorch
     /usr/local/cuda-9.0)
