@@ -1,3 +1,4 @@
+from __future__ import division
 """
 convert from trained python module to C++ pytorch module.
 Since we can't use Pickle in C++ to load trained model.
