@@ -55,5 +55,5 @@ target_link_libraries(${PROJECT_NAME} ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${T
 #        )
 
 add_executable(home_ompl ${SOURCE_FILES})
-target_link_libraries(home_ompl ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${TORCH_LIBRARIES})
+target_link_libraries(home_ompl ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${PROJECT_NAME} ${TORCH_LIBRARIES})
 set_property(TARGET home_ompl PROPERTY CXX_STANDARD 11)
