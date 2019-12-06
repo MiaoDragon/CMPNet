@@ -74,7 +74,7 @@ set(EXEC_SOURCE
     src/home_ompl.cpp
     )
 
-add_library(${PROJECT_NAME} STATIC ${LIB_SOURCE})
+add_library(${PROJECT_NAME} ${LIB_SOURCE})
 
 message("OMPLAPPBASE" ${OMPLAPPBASE_LIBRARIES})
 #add_library(sst_module SHARED
