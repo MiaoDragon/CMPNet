@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 2.8)
 project(CMPNet)
 # add torch and ompl paths here
 list(APPEND CMAKE_PREFIX_PATH
-    ${PROJECT_SOURCE_DIR}/deps/libtorch)
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+    ${PROJECT_SOURCE_DIR}/../deps/libtorch)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../lib)
 set(CMAKE_CXX_FLAGS "-std=c++1y ${CMAKE_CXX_FLAGS}")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -21,7 +21,7 @@ find_package(ompl)
 find_package(Torch REQUIRED)
 include_directories(
         ${PYTHON_INCLUDE_DIRS}
-        "${PROJECT_SOURCE_DIR}/include"
+        "${PROJECT_SOURCE_DIR}/../include"
         ${OMPL_INCLUDE_DIRS}
         )
 
