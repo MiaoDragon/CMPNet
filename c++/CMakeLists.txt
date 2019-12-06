@@ -44,8 +44,7 @@ set(SOURCE_FILES
     src/home_ompl.cpp
 )
 
-add_library(${PROJECT_NAME} STATIC
-    ${SOURCE_FILES})
+add_library(${PROJECT_NAME} ${SOURCE_FILES})
 
 #add_library(sst_module SHARED
 #    ${PROJECT_SOURCE_DIR}/src/python_wrapper.cpp)
