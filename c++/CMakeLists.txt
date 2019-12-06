@@ -76,7 +76,7 @@ set(EXEC_SOURCE
 
 add_library(${PROJECT_NAME} ${LIB_SOURCE})
 
-message("OMPLAPPBASE" ${OMPLAPPBASE_LIBRARIES})
+message("D_GLIBCXX_USE_CXX11_ABI" ${D_GLIBCXX_USE_CXX11_ABI})
 #add_library(sst_module SHARED
 #    ${PROJECT_SOURCE_DIR}/src/python_wrapper.cpp)
 #target_include_directories(${PROJECT_NAME} ${INCLUDE_DIR})
