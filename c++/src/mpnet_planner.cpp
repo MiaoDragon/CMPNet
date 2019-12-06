@@ -51,8 +51,10 @@ MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermed
     }
 
     // MPNet specific: load network structure and parameters
-    encoder = std::make_shared<torch::jit::script::Module>(torch::jit::load("../encoder_annotated_test_cpu_2.pt"));
-    MLP = std::make_shared<torch::jit::script::Module>torch::jit::load("../mlp_annotated_test_gpu_2.pt");
+    std::shared_ptr<torch::jit::script::Module> encoder_ptr(torch::jit::load("../encoder_annotated_test_cpu_2.pt"));
+    std::shared_ptr<torch::jit::script::Module> mlp_ptr(torch::jit::load("../mlp_annotated_test_gpu_2.pt"));
+    encoder = encoder_ptr;
+    MLP = mlp_ptr;
     MLP->to(at::kCUDA);
 
     // obtain obstacle representation
@@ -455,7 +457,7 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
     si_->copyState(goal_state, const_goal_state);
     StatePtrVec path;
     path.push_back(pdef_->getStartState(0));
-    path.push_back(goal_state)
+    path.push_back(goal_state);
 
     // reference to python planning methods
     int iter = 0;
