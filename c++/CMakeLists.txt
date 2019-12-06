@@ -28,7 +28,7 @@ include_directories(
 
 set(SOURCE_FILES
     src/mpnet_planner.cpp
-    #src/home_ompl.cpp
+    src/home_ompl.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC
