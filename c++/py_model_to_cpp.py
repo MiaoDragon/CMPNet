@@ -145,6 +145,7 @@ def copyMLP(MLP_to_copy, mlp_weights):
 
     # mlp_weights is just a state_dict() with the good model weights, not loaded into a particular model yet
     # MLP_to_copy is one of the MLP_Python models defined above (depending on 1.0 or 2.0)
+    print(MLP_to_copy.state_dict().keys())
     MLP_to_copy.state_dict()['fc1.0.weight'].copy_(mlp_weights['fc.0.weight'])
     MLP_to_copy.state_dict()['fc2.0.weight'].copy_(mlp_weights['fc.3.weight'])
     MLP_to_copy.state_dict()['fc3.0.weight'].copy_(mlp_weights['fc.6.weight'])
