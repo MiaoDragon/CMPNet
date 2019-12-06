@@ -92,7 +92,7 @@ class MLP_home(nn.Module):
 
 
 class MLP_home_Annotated(torch.jit.ScriptModule):
-    __constants__ = ['fc1','fc2','fc3','fc4','fc5','fc6','fc7','device']
+    __constants__ = ['fc1','fc2','fc3','fc4','fc5','fc6','device']
     def __init__(self, input_size, output_size):
         super(MLP_home_Annotated, self).__init__()
         self.fc1 = nn.Sequential(nn.Linear(input_size, 2560), nn.PReLU())
@@ -101,7 +101,7 @@ class MLP_home_Annotated(torch.jit.ScriptModule):
         self.fc4 = nn.Sequential(nn.Linear(512, 256), nn.PReLU())
         self.fc5 = nn.Sequential(nn.Linear(256, 128), nn.PReLU())
         self.fc6 = nn.Sequential(nn.Linear(128, 64), nn.PReLU())
-        self.fc7 = nn.Linear(64, 7)
+        self.fc7 = nn.Linear(64, output_size)
 
         self.device = torch.device('cuda')
     @torch.jit.script_method
