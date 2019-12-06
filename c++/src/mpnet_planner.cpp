@@ -51,10 +51,8 @@ MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermed
     }
 
     // MPNet specific: load network structure and parameters
-    std::shared_ptr<torch::jit::script::Module> encoder_ptr = torch::jit::load("../encoder_annotated_test_cpu_2.pt");
-    std::shared_ptr<torch::jit::script::Module> mlp_ptr = torch::jit::load("../mlp_annotated_test_gpu_2.pt");
-    encoder = encoder_ptr;
-    MLP = mlp_ptr;
+    encoder.reset(new torch::jit::script::Module(torch::jit::load("../encoder_annotated_test_cpu_2.pt")));
+    MLP.reset(new torch::jit::script::Module(torch::jit::load("../mlp_annotated_test_gpu_2.pt")));
     MLP->to(at::kCUDA);
 
     // obtain obstacle representation
@@ -319,7 +317,7 @@ std::vector<float> MPNetPlanner::normalize(std::vector<float> state, int dim)
         norm += state[i]*state[i];
     }
     norm = sqrt(norm);
-    for (int i=3; i<7; i+++)
+    for (int i=3; i<7; i++)
     {
         res.push_back(state[i]/norm);
     }
@@ -341,7 +339,7 @@ std::vector<float> MPNetPlanner::unnormalize(std::vector<float> state, int dim)
         norm += state[i]*state[i];
     }
     norm = sqrt(norm);
-    for (int i=3; i<7; i+++)
+    for (int i=3; i<7; i++)
     {
         res.push_back(state[i]/norm);
     }
