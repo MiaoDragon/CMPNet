@@ -21,6 +21,7 @@ add_definitions(-O3 )
 
 find_package(ompl HINTS /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release)
 
+find_package(Eigen3)
 message("found ompl library path: " ${OMPL_LIBRARIES} ", " ${OMPLAPP_LIBRARIES})
 
 set(OMPL_LIBRARIES /usr/local/lib/libompl.so)
@@ -45,6 +46,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/include
         ${OMPL_INCLUDE_DIRS}
         ${TORCH_INCLUDE_DIRS}
+        ${EIGEN3_INCLUDE_DIR}
         )
 message("found torch library path: " "${TORCH_LIBRARIES}")
 set(TORCH_LIBRARIES
