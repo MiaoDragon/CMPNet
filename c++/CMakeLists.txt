@@ -39,12 +39,14 @@ include_directories(
         )
 
 
-set(SOURCE_FILES
+set(LIB_SOURCE
     src/mpnet_planner.cpp
     src/home_ompl.cpp
 )
+set(EXEC_SOURCE
+    src/home_ompl.cpp)
 
-add_library(${PROJECT_NAME} ${SOURCE_FILES})
+add_library(${PROJECT_NAME} SHARED ${LIB_SOURCE})
 
 #add_library(sst_module SHARED
 #    ${PROJECT_SOURCE_DIR}/src/python_wrapper.cpp)
@@ -58,6 +60,6 @@ target_link_libraries(${PROJECT_NAME} ${OMPLAPP_LIBRARIES} ${OMPL_LIBRARIES} ${T
 #        LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/sparse_rrt
 #        )
 
-add_executable(home_ompl ${SOURCE_FILES})
+add_executable(home_ompl ${EXEC_SOURCE})
 target_link_libraries(home_ompl ${PROJECT_NAME} ${OMPLAPP_LIBRARIES} ${OMPL_LIBRARIES}  ${TORCH_LIBRARIES})
 set_property(TARGET home_ompl PROPERTY CXX_STANDARD 11)
