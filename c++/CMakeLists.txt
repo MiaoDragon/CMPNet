@@ -22,6 +22,9 @@ add_definitions(-O3 )
 find_package(ompl HINTS /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release)
 
 message("found ompl library path: " ${OMPL_LIBRARIES} ", " ${OMPLAPP_LIBRARIES})
+list(APPEND OMPL_LIBRARIES
+    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/_base.so
+    /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/_geometric.so)
 
 # reset OMPL_LIBRARIES to /usr/local/lib
 #set(OMPL_LIBRARIES /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release/lib/libompl.so)
@@ -66,16 +69,11 @@ add_library(${PROJECT_NAME} SHARED ${LIB_SOURCE})
 #add_library(sst_module SHARED
 #    ${PROJECT_SOURCE_DIR}/src/python_wrapper.cpp)
 #target_include_directories(${PROJECT_NAME} ${INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} ompl ompl_app ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${TORCH_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${TORCH_LIBRARIES})
 # Don't prepend wrapper library name with lib and add to Python libs.
-#set_target_properties(sst_module PROPERTIES
-#        PREFIX "_"
-#        SUFFIX ".so"
-#        LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/sparse_rrt
-#        )
 
 add_executable(home_ompl ${EXEC_SOURCE})
 #target_include_directories(home_ompl ${PROJECT_NAME})
-target_link_libraries(home_ompl ompl ompl_app ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${TORCH_LIBRARIES} ${PROJECT_NAME})
+target_link_libraries(home_ompl ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${TORCH_LIBRARIES} ${PROJECT_NAME})
 
 set_property(TARGET home_ompl PROPERTY CXX_STANDARD 11)
