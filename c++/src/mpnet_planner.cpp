@@ -499,7 +499,7 @@ ompl::base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCond
     solution = goal_motion;
 
     /* set the solution path */
-    auto sol_path(std::make_shared<PathGeometric>(si_));
+    auto sol_path(std::make_shared<ompl::geometric::PathGeometric>(si_));
     for (int i=0; i<path.size(); i++)
         sol_path->append(path[i]);
     //TODO: modify approxdif to be the approximate difference to real solution

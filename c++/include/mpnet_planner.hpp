@@ -138,7 +138,8 @@ protected:
 
     /** \brief The most recent goal motion.  Used for PlannerData computation */
     Motion *lastGoalMotion_{nullptr};
-
+    
+    std::shared_ptr<NearestNeighbors<Motion *>> nn_;
 };
 
 #endif
