@@ -228,7 +228,7 @@ def main(args):
 
     # write obstacle to flattened vector representation, then later be loaded in the C++
     obs_out = obs.flatten()
-    np.savetxt('obs_voxel.txt', obs_out, delimiter='\n' fmt='%f')
+    np.savetxt('obs_voxel.txt', obs_out, delimiter='\n', fmt='%f')
 
 
     obs = torch.from_numpy(obs)
