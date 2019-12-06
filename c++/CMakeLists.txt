@@ -5,7 +5,7 @@ set(CMAKE_PREFIX_PATH /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release ${
 list(APPEND CMAKE_PREFIX_PATH
     ${PROJECT_SOURCE_DIR}/../deps/libtorch
     /usr/local/cuda-9.0)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release)
+set(CMAKE_MODULE_PATH /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release ${CMAKE_MODULE_PATH})
 message("CMAKE_MODULE_PATH" "${CMAKE_MODULE_PATH}")
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
