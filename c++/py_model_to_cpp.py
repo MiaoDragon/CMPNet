@@ -101,7 +101,7 @@ class MLP_home_Annotated(torch.jit.ScriptModule):
         self.fc4 = nn.Sequential(nn.Linear(512, 256), nn.PReLU())
         self.fc5 = nn.Sequential(nn.Linear(256, 128), nn.PReLU())
         self.fc6 = nn.Sequential(nn.Linear(128, 64), nn.PReLU())
-        self.fc7 = nn.Linear(nn.Linear(64, output_size))
+        self.fc7 = nn.Linear(64, output_size)
 
         self.device = torch.device('cuda')
     @torch.jit.script_method
