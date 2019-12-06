@@ -75,7 +75,7 @@ set(EXEC_SOURCE
     src/mpnet_planner.cpp
     )
 
-add_library(${PROJECT_NAME} SHARED ${LIB_SOURCE})
+add_library(${PROJECT_NAME} STATIC ${LIB_SOURCE})
 
 message("OMPLAPPBASE" ${OMPLAPPBASE_LIBRARIES})
 #add_library(sst_module SHARED
