@@ -12,6 +12,10 @@ import Model.model_home as model_home
 import Model.AE.CAE_home_voxel_3 as CAE_home_voxel_3
 import data_loader_home
 from utility import *
+import numpy as np
+from torch.autograd import Variable
+import torch
+import torch.nn as nn
 class Encoder_home(nn.Module):
     # ref: https://github.com/lxxue/voxnet-pytorch/blob/master/models/voxnet.py
     def __init__(self, input_size=32, output_size=64):
