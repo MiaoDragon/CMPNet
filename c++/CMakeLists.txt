@@ -63,7 +63,7 @@ add_library(${PROJECT_NAME} SHARED ${LIB_SOURCE})
 #add_library(sst_module SHARED
 #    ${PROJECT_SOURCE_DIR}/src/python_wrapper.cpp)
 #target_include_directories(${PROJECT_NAME} ${INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${TORCH_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ompl ompl_app ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${TORCH_LIBRARIES})
 # Don't prepend wrapper library name with lib and add to Python libs.
 #set_target_properties(sst_module PROPERTIES
 #        PREFIX "_"
@@ -73,6 +73,6 @@ target_link_libraries(${PROJECT_NAME} ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${T
 
 add_executable(home_ompl ${EXEC_SOURCE})
 #target_include_directories(home_ompl ${PROJECT_NAME})
-target_link_libraries(home_ompl ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${TORCH_LIBRARIES} ${PROJECT_NAME})
+target_link_libraries(home_ompl ompl ompl_app ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${TORCH_LIBRARIES} ${PROJECT_NAME})
 
 set_property(TARGET home_ompl PROPERTY CXX_STANDARD 11)
