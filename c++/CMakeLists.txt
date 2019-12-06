@@ -20,7 +20,7 @@ IF(APPLE)
 ENDIF(APPLE)
 
 
-find_package(ompl)
+find_package(ompl 15)
 find_package(Torch REQUIRED)
 include_directories(
         ${PYTHON_INCLUDE_DIRS}
