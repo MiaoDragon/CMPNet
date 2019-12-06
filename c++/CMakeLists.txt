@@ -13,7 +13,7 @@ set(CUDNN_LIBRARY "/usr/local/cuda-9.0/lib64/libcudnn.so")
 #set(CUDNN_LIBRARY "/usr/local/cuda-9.0/lib64")
 
 set(INCLUDE_DIRECTORIES include)
-
+set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda-9.0")
 add_definitions(-O3 )
 
 find_package(ompl)
@@ -31,6 +31,7 @@ find_package(Torch REQUIRED)
 include_directories(
         ${PROJECT_SOURCE_DIR}/include
         ${OMPL_INCLUDE_DIRS}
+        ${TORCH_INCLUDE_DIRS}
         )
 message("found torch library path: " ${TORCH_LIBRARIES})
 
