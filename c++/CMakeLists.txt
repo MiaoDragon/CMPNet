@@ -16,11 +16,6 @@ set(INCLUDE_DIRECTORIES include)
 
 add_definitions(-O3 )
 
-IF(APPLE)
-   set(CMAKE_MACOSX_RPATH 1)
-ENDIF(APPLE)
-
-
 find_package(ompl)
 
 message("found ompl library path: " ${OMPL_LIBRARIES} ", " ${OMPLAPP_LIBRARIES})
