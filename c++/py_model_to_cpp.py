@@ -193,7 +193,7 @@ def main(args):
 
     # Get the weights from this model and create a copy of the weights in mlp_weights (to be copied over)
     MLP2 = mpNet.mlp
-    MLP2.cuda()
+    #MLP2.cuda()
     mlp_weights = MLP2.state_dict()
 
     # Save a copy of the encoder's state_dict() for loading into the annotated encoder later on
@@ -208,11 +208,11 @@ def main(args):
     #encoder.cuda()
     # Create the annotated model
     MLP = MLP_home_Annotated(78,7)
-    MLP.cuda()
+    #MLP.cuda()
 
     # Create the python model with the new layer names
     MLP_to_copy = MLP_home(78,7)
-    MLP_to_copy.cuda()
+    #MLP_to_copy.cuda()
 
     # Copy over the mlp_weights into the Python model with the new layer names
     MLP_to_copy = copyMLP(MLP_to_copy, mlp_weights)
@@ -255,7 +255,7 @@ def main(args):
     path_data = np.array([path_data])
     path_data = torch.from_numpy(path_data).type(torch.FloatTensor)
 
-    test_input = torch.cat((path_data, h.data.cpu()), dim=1).cuda()  # for MPNet1.0
+    test_input = torch.cat((path_data, h.data.cpu()), dim=1)#.cuda()  # for MPNet1.0
     test_input = Variable(test_input)
     for i in range(5):
         test_output = mpNet.mlp(test_input)
