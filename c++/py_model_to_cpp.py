@@ -244,16 +244,16 @@ def main(args):
     np.savetxt('obs_voxel.txt', obs_out, delimiter='\n', fmt='%f')
 
 
-    obs = torch.from_numpy(obs[0]).type(torch.FloatTensor)
+    obs = torch.from_numpy(obs).type(torch.FloatTensor)
     obs = Variable(obs)
     # h = mpNet.encoder(obs)
     h = encoder(obs)
     path_data = np.array([-0.08007369,  0.32780212, -0.01338363,  0.00726194, 0.00430644, -0.00323558,
                        0.18593094,  0.13094018, 0.18499476, 0.3250918, 0.52175426, 0.07388325, -0.49999127, 0.52322733])
-
+    path_data = np.array([path_data])
     path_data = torch.from_numpy(path_data).type(torch.FloatTensor)
 
-    test_input = torch.cat((path_data, h.data.cpu())).cuda()  # for MPNet1.0
+    test_input = torch.cat((path_data, h.data.cpu()), dim=1).cuda()  # for MPNet1.0
     test_input = Variable(test_input)
     for i in range(5):
         test_output = mpNet.mlp(test_input)
