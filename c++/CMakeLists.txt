@@ -23,6 +23,8 @@ ENDIF(APPLE)
 find_package(ompl PATHS /usr/local/lib)
 
 message("found ompl library path: " ${OMPL_LIBRARIES} ", " ${OMPLAPP_LIBRARIES})
+# reset OMPL_LIBRARIES to /usr/local/lib
+set(OMPL_LIBRARIES /usr/local/lib/libompl.so.15)
 
 find_package(Torch REQUIRED)
 include_directories(
