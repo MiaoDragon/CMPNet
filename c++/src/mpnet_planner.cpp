@@ -51,8 +51,8 @@ MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermed
     }
 
     // MPNet specific: load network structure and parameters
-    std::shared_ptr<torch::jit::script::Module> encoder_ptr = torch::jit::load("../encoder_annotated_test_cpu_2.pt"));
-    std::shared_ptr<torch::jit::script::Module> mlp_ptr = torch::jit::load("../mlp_annotated_test_gpu_2.pt"));
+    std::shared_ptr<torch::jit::script::Module> encoder_ptr = torch::jit::load("../encoder_annotated_test_cpu_2.pt");
+    std::shared_ptr<torch::jit::script::Module> mlp_ptr = torch::jit::load("../mlp_annotated_test_gpu_2.pt");
     encoder = encoder_ptr;
     MLP = mlp_ptr;
     MLP->to(at::kCUDA);
