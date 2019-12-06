@@ -23,10 +23,10 @@ class Encoder_home(nn.Module):
         super(Encoder, self).__init__()
         input_size = [input_size, input_size, input_size]
         self.encoder = nn.Sequential(
-            nn.Conv3d(in_channels=1, out_channels=16, kernel_size=[6,6,6], stride=[2,2,2]),
+            nn.Conv3d(in_channels=1, out_channels=16, kernel_size=6, stride=2),
             nn.PReLU(),
             nn.MaxPool3d(2, stride=2),
-            nn.Conv3d(in_channels=16, out_channels=8, kernel_size=[3,3,3], stride=[2,2,2]),
+            nn.Conv3d(in_channels=16, out_channels=8, kernel_size=3, stride=2),
             nn.PReLU()
         )
         x = self.encoder(torch.autograd.Variable(torch.rand([1, 1] + input_size)))
@@ -52,10 +52,10 @@ class Encoder_home_Annotated(torch.jit.ScriptModule):
         super(Encoder_home_Annotated, self).__init__()
         input_size = [input_size, input_size, input_size]
         self.encoder = nn.Sequential(
-            nn.Conv3d(in_channels=1, out_channels=16, kernel_size=[6,6,6], stride=[2,2,2]),
+            nn.Conv3d(in_channels=1, out_channels=16, kernel_size=6, stride=2),
             nn.PReLU(),
             nn.MaxPool3d(2, stride=2),
-            nn.Conv3d(in_channels=16, out_channels=8, kernel_size=[3,3,3], stride=[2,2,2]),
+            nn.Conv3d(in_channels=16, out_channels=8, kernel_size=3, stride=2),
             nn.PReLU()
         )
         x = self.encoder(torch.autograd.Variable(torch.rand([1, 1] + input_size)))
