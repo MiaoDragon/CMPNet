@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(CMPNet)
 # add torch and ompl paths here
 #set(CMAKE_PREFIX_PATH /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release ${CMAKE_PREFIX_PATH})
+add_compile_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 list(APPEND CMAKE_PREFIX_PATH
     ${PROJECT_SOURCE_DIR}/../deps/libtorch
     /usr/local/cuda-9.0)
@@ -9,7 +10,7 @@ list(APPEND CMAKE_PREFIX_PATH
 #message("CMAKE_MODULE_PATH" "${CMAKE_MODULE_PATH}")
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
-set(CMAKE_CXX_FLAGS "-std=c++1y ${CMAKE_CXX_FLAGS}")
+#set(CMAKE_CXX_FLAGS "-std=c++1y ${CMAKE_CXX_FLAGS}")
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 SET(CMAKE_C_LINK_EXECUTABLE ${CMAKE_CXX_LINK_EXECUTABLE})
 set(CMAKE_CXX_COMPILER_ID "GCC")
@@ -88,4 +89,4 @@ add_executable(home_ompl ${EXEC_SOURCE})
 #target_include_directories(home_ompl ${PROJECT_NAME})
 target_link_libraries(home_ompl ${PROJECT_NAME} ${OMPLAPP_LIBRARIES} ${OMPL_LIBRARIES}  ${TORCH_LIBRARIES})
 
-set_property(TARGET home_ompl PROPERTY CXX_STANDARD 11)
+#set_property(TARGET home_ompl PROPERTY CXX_STANDARD 11)
