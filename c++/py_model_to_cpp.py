@@ -206,7 +206,7 @@ def main(args):
     MLP.cuda()
 
     # Create the python model with the new layer names
-    MLP_to_copy = MLP_home()
+    MLP_to_copy = MLP_home(78,7)
     MLP_to_copy.cuda()
 
     # Copy over the mlp_weights into the Python model with the new layer names
