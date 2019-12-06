@@ -3,6 +3,9 @@ convert from trained python module to C++ pytorch module.
 Since we can't use Pickle in C++ to load trained model.
 Adapted from work from Anthony Simeonov.
 """
+import sys
+sys.path.insert(0, "../")
+
 from utility import *
 from Model.GEM_end2end_model import End2EndMPNet
 import Model.model_home as model_home
