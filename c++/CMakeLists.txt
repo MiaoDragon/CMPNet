@@ -56,6 +56,7 @@ set(LIB_SOURCE
     src/home_ompl.cpp
 )
 set(EXEC_SOURCE
+    src/mpnet_planner.cpp
     src/home_ompl.cpp)
 
 add_library(${PROJECT_NAME} SHARED ${LIB_SOURCE})
