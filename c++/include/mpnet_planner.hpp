@@ -2,6 +2,7 @@
 #define OMPL_PLANNERS_MPNET_
 
 #include "ompl/geometric/planners/PlannerIncludes.h"
+#include "ompl/datastructures/NearestNeighbors.h"
 #include <torch/torch.h>
 #include <torch/script.h>
 
