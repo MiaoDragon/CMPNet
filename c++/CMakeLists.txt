@@ -74,19 +74,20 @@ set(LIB_SOURCE
 )
 set(EXEC_SOURCE
     src/home_ompl.cpp
+    src/mpnet_planner.cpp
     )
 
-add_library(${PROJECT_NAME} ${LIB_SOURCE})
+#add_library(${PROJECT_NAME} ${LIB_SOURCE})
 
 message("D_GLIBCXX_USE_CXX11_ABI" ${D_GLIBCXX_USE_CXX11_ABI})
 #add_library(sst_module SHARED
 #    ${PROJECT_SOURCE_DIR}/src/python_wrapper.cpp)
 #target_include_directories(${PROJECT_NAME} ${INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME} ${OMPLAPP_LIBRARIES} ${OMPL_LIBRARIES} ${TORCH_LIBRARIES})
+#target_link_libraries(${PROJECT_NAME} ${OMPLAPP_LIBRARIES} ${OMPL_LIBRARIES} ${TORCH_LIBRARIES})
 # Don't prepend wrapper library name with lib and add to Python libs.
 
 add_executable(home_ompl ${EXEC_SOURCE})
 #target_include_directories(home_ompl ${PROJECT_NAME})
-target_link_libraries(home_ompl ${PROJECT_NAME} ${OMPLAPP_LIBRARIES} ${OMPL_LIBRARIES}  ${TORCH_LIBRARIES})
+target_link_libraries(home_ompl ${OMPLAPP_LIBRARIES} ${OMPL_LIBRARIES}  ${TORCH_LIBRARIES})
 
 #set_property(TARGET home_ompl PROPERTY CXX_STANDARD 11)
