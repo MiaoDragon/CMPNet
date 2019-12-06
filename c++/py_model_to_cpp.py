@@ -227,7 +227,9 @@ def main(args):
     torch.save(MLP_to_copy.state_dict(), 'mlp_no_dropout.pkl')
 
     # Because the layer names now match, can immediately load this state_dict() into the annotated model and then save it
-    MLP.load_state_dict(torch.load('mlp_no_dropout.pkl', map_location=device))
+    #MLP.load_state_dict(torch.load('mlp_no_dropout.pkl', map_location=device))
+    MLP.load_state_dict(torch.load('mlp_no_dropout.pkl', map_location='cpu'))
+
     MLP.save("mlp_annotated_test_gpu_2.pt")
 
     # Everything from here below just tests both models to see if the outputs match
