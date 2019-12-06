@@ -20,7 +20,10 @@ IF(APPLE)
 ENDIF(APPLE)
 
 
-find_package(ompl)
+find_package(ompl PATHS /usr/local/lib)
+
+message("found ompl library path: " ${OMPL_LIBRARIES} ", " ${OMPLAPP_LIBRARIES})
+
 find_package(Torch REQUIRED)
 include_directories(
         ${PYTHON_INCLUDE_DIRS}
