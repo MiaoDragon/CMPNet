@@ -39,7 +39,8 @@ int main()
 
     // planner
     MPNetPlanner* planner = new MPNetPlanner(setup.getSpaceInformation());
-    setup.setPlanner(planner);
+    base::PlannerPtr planner_ptr(planner);
+    setup.setPlanner(planner_ptr);
     // we call setup just so print() can show more information
     setup.setup();
     setup.print();
