@@ -37,7 +37,7 @@ add_library(${PROJECT_NAME} STATIC
 #add_library(sst_module SHARED
 #    ${PROJECT_SOURCE_DIR}/src/python_wrapper.cpp)
 
-target_link_libraries(${PROJECT_NAME} ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${TORCH_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} "${TORCH_LIBRARIES}")
 
 # Don't prepend wrapper library name with lib and add to Python libs.
 #set_target_properties(sst_module PROPERTIES
@@ -46,4 +46,5 @@ target_link_libraries(${PROJECT_NAME} ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${T
 #        LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/sparse_rrt
 #        )
 
-add_executable(home_ompl ${SOURCE_FILES} ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} ${TORCH_LIBRARIES})
+add_executable(home_ompl ${SOURCE_FILES} ${OMPL_LIBRARIES} ${OMPLAPP_LIBRARIES} "${TORCH_LIBRARIES}")
+set_property(TARGET home_ompl PROPERTY CXX_STANDARD 11)
