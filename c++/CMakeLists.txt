@@ -89,4 +89,4 @@ add_executable(home_ompl ${EXEC_SOURCE})
 #target_include_directories(home_ompl ${PROJECT_NAME})
 target_link_libraries(home_ompl ${PROJECT_NAME} ${OMPLAPP_LIBRARIES} ${OMPL_LIBRARIES}  ${TORCH_LIBRARIES})
 
-#set_property(TARGET home_ompl PROPERTY CXX_STANDARD 11)
+set_property(TARGET home_ompl PROPERTY CXX_STANDARD 11)
