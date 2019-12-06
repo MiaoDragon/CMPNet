@@ -72,7 +72,6 @@ set(LIB_SOURCE
 )
 set(EXEC_SOURCE
     src/home_ompl.cpp
-    src/mpnet_planner.cpp
     )
 
 add_library(${PROJECT_NAME} STATIC ${LIB_SOURCE})
