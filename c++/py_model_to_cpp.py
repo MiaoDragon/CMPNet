@@ -244,7 +244,7 @@ def main(args):
     np.savetxt('obs_voxel.txt', obs_out, delimiter='\n', fmt='%f')
 
 
-    obs = torch.from_numpy(obs)
+    obs = torch.from_numpy(obs).type(torch.FloatTensor)
     obs = Variable(obs)
     # h = mpNet.encoder(obs)
     h = encoder(obs)
