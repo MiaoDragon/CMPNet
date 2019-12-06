@@ -58,8 +58,8 @@ MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermed
     //MLP.reset(new torch::jit::script::Module(torch::jit::load("../mlp_annotated_test_gpu_2.pt")));
     // -----
     // below works for CUDA 9.0
-    encoder.reset(torch::jit::load("../encoder_annotated_test_cpu_2.pt"));
-    MLP.reset(torch::jit::load("../mlp_annotated_test_gpu_2.pt"));
+    encoder = torch::jit::load("../encoder_annotated_test_cpu_2.pt");
+    MLP = torch::jit::load("../mlp_annotated_test_gpu_2.pt");
 
     MLP->to(at::kCUDA);
 
