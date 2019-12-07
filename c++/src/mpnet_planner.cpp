@@ -487,7 +487,7 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
 
 
     #ifdef DEBUG
-        std::cout << "before construcitng initial path..."" << std::endl;
+        std::cout << "before construcitng initial path..." << std::endl;
     #endif
 
     // initialize the path
