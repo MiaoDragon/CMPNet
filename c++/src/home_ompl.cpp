@@ -62,12 +62,18 @@ int main()
     setup.print();
 
     // try to solve the problem
-    if (setup.solve(10))
-    {
-        // simplify & print the solution
-        setup.simplifySolution();
-        setup.getSolutionPath().printAsMatrix(std::cout);
-    }
+    std::ifstream outfile;
+    std::string path_fname = "planned_path.txt";
+    infile.open(path_fname);
+    //if (setup.solve(10))
+    //{
+    //    // simplify & print the solution
+    //    setup.simplifySolution();
+    //    setup.getSolutionPath().printAsMatrix(infile);
+    //}
+    setup.solve(120);
+    setup.getSolutionPath().printAsMatrix(infile);
+    infile.close();
 
     return 0;
 }
