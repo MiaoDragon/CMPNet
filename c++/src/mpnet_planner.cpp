@@ -87,6 +87,7 @@ MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermed
         std::cout << "torch_tensor[0,1,0,1] = " << torch_tensor_test[0][1][0][1] << "\n";
         std::cout << "torch_tensor[0,1,1,0] = " << torch_tensor_test[0][1][1][0] << "\n";
         std::cout << "torch_tensor[0,1,1,1] = " << torch_tensor_test[0][1][1][1] << "\n";
+        infile.close();
     #endif
 
 
@@ -100,8 +101,16 @@ MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermed
         tt.push_back(std::atof(line.c_str()));
     }
     torch::Tensor torch_tensor = torch::from_blob(tt.data(), {1,1,32,32,32});
+    #ifdef DEBUG
+        std::cout << "after reading in obs and store in torch tensor" << std::endl;
+    #endif
     inputs.push_back(torch_tensor);
     obs_enc = encoder->forward(inputs).toTensor();
+    #ifdef DEBUG
+        std::cout << "after using encoder to forward on the obs" << std::endl;
+    #endif
+
+
 }
 
 MPNetPlanner::~MPNetPlanner()
@@ -153,6 +162,10 @@ StatePtrVec MPNetPlanner::neural_replan(StatePtrVec path, int max_length)
 * do local plan
 **/
 {
+    #ifdef DEBUG
+        std::cout << "starting neural replan..." << std::endl;
+    #endif
+
     StatePtrVec new_path;
     for (int i = 0; i < path.size()-1; i++){
         if (si_->isValid(path[i])){
@@ -182,6 +195,10 @@ StatePtrVec MPNetPlanner::neural_replan(StatePtrVec path, int max_length)
             res_path.push_back(new_path[i+1]);
         }
     }
+    #ifdef DEBUG
+        std::cout << "end nerual replan." << std::endl;
+    #endif
+
     return res_path;
 }
 
@@ -359,6 +376,10 @@ void MPNetPlanner::mpnet_predict(const base::State* start, const base::State* go
     // given the start and goal, and the internal obstacle representation
     // convert them to torch::Tensor, and feed into MPNet
     // return the next state to the "next" parameter
+    #ifdef DEBUG
+        std::cout << "starting mpnet_predict..." << std::endl;
+    #endif
+
     int dim = si_->getStateDimension();
     // get start, goal in tensor form
     torch::Tensor sg = getStartGoalTensor(start, goal, dim);
@@ -387,6 +408,10 @@ void MPNetPlanner::mpnet_predict(const base::State* start, const base::State* go
         //TODO: better assign by using angleAxis
         next->as<base::RealVectorStateSpace::StateType>()->values[i] = res_a[0][i];
     }
+    #ifdef DEBUG
+        std::cout << "finished mpnet_predict." << std::endl;
+    #endif
+
 }
 torch::Tensor MPNetPlanner::getStartGoalTensor(const base::State *start_state, const base::State *goal_state, int dim){
     //convert to torch tensor by getting data from states
@@ -487,6 +512,9 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
         {
             max_length = _max_length*3;
         }
+        #ifdef DEBUG
+            std::cout << "solving... iteration: " << iter << std::endl;
+        #endif
 
         // use neural replan to plan path
         path = neural_replan(path, max_length);
