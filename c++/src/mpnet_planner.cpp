@@ -381,7 +381,8 @@ void MPNetPlanner::mpnet_predict(const base::State* start, const base::State* go
         std::cout << "starting mpnet_predict..." << std::endl;
     #endif
 
-    int dim = si_->getStateDimension();
+    //int dim = si_->getStateDimension();
+    int dim = 7;
     // get start, goal in tensor form
     #ifdef DEBUG
         std::cout << "state dimension: "  << dim << std::endl;
