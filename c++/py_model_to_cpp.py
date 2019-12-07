@@ -198,14 +198,14 @@ def main(args):
 
     # Save a copy of the encoder's state_dict() for loading into the annotated encoder later on
     encoder_to_copy = mpNet.encoder
-    encoder_to_copy.cuda()
+    #encoder_to_copy.cuda()
     torch.save(encoder_to_copy.state_dict(), 'encoder2_save.pkl')
 
     # do everything for the MLP on the GPU
     device = torch.device('cuda:%d'%(args.device))
 
     encoder = Encoder_home_Annotated()
-    encoder.cuda()
+    #encoder.cuda()
     # Create the annotated model
     MLP = MLP_home_Annotated(78,7)
     MLP.cuda()
