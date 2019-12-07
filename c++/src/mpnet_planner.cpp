@@ -596,7 +596,7 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
 
         // use neural replan to plan path
         path = neural_replan(path, max_length);
-
+        path =lvc(path);
         // collision check for the entire path to see if it is feasible
         feasible = true;
 
