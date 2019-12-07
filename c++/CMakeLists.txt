@@ -5,7 +5,7 @@ project(CMPNet)
 #add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 list(APPEND CMAKE_PREFIX_PATH
     ${PROJECT_SOURCE_DIR}/../deps/libtorch
-    /usr/local/cuda-9.0)
+    /usr/local/cuda-10.1)
 #set(CMAKE_MODULE_PATH /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release ${CMAKE_MODULE_PATH})
 #message("CMAKE_MODULE_PATH" "${CMAKE_MODULE_PATH}")
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
@@ -19,7 +19,7 @@ SET(CMAKE_C_LINK_EXECUTABLE ${CMAKE_CXX_LINK_EXECUTABLE})
 #set(CUDNN_LIBRARY "/usr/local/cuda-9.0/lib64")
 
 set(INCLUDE_DIRECTORIES include)
-set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda-9.0")
+set(CUDA_TOOLKIT_ROOT_DIR "/usr/local/cuda-10.1")
 add_definitions(-O3 )
 
 find_package(ompl REQUIRED HINTS /home/arclabdl1/ompl/omplapp-1.4.2-Source/build/Release)
