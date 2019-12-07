@@ -114,11 +114,11 @@ class MLP_home_Annotated(torch.jit.ScriptModule):
 
         p = 1 - prob
         scale = 1.0/p
-        drop1 = (scale)*torch.bernoulli(torch.full((1, 2560), p)).to(device=self.device)
-        drop2 = (scale)*torch.bernoulli(torch.full((1, 1024), p)).to(device=self.device)
-        drop3 = (scale)*torch.bernoulli(torch.full((1, 512), p)).to(device=self.device)
-        drop4 = (scale)*torch.bernoulli(torch.full((1, 256), p)).to(device=self.device)
-        drop5 = (scale)*torch.bernoulli(torch.full((1, 128), p)).to(device=self.device)
+        drop1 = (scale)*torch.bernoulli(torch.full((1, 2560), p))#.to(device=self.device)
+        drop2 = (scale)*torch.bernoulli(torch.full((1, 1024), p))#.to(device=self.device)
+        drop3 = (scale)*torch.bernoulli(torch.full((1, 512), p))#.to(device=self.device)
+        drop4 = (scale)*torch.bernoulli(torch.full((1, 256), p))#.to(device=self.device)
+        drop5 = (scale)*torch.bernoulli(torch.full((1, 128), p))#.to(device=self.device)
 
         out1 = self.fc1(x)
         out1 = torch.mul(out1, drop1)
