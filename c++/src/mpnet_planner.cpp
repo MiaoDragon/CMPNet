@@ -25,10 +25,14 @@
 #include "mpnet_planner.hpp"
 #include <iostream>
 #include <cmath>
+#include <chrono>
 #include <iterator>
 using namespace ompl;
 using namespace std;
 //#define DEBUG
+typedef std::chrono::high_resolution_clock Time;
+typedef std::chrono::milliseconds ms;
+typedef std::chrono::duration<float> fsec;
 
 MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermediateStates, int max_replan, int max_length)
   : base::Planner(si, addIntermediateStates ? "MPNetPlannerintermediate" : "MPNetPlanner")
@@ -326,6 +330,34 @@ StatePtrVec MPNetPlanner::lvc(StatePtrVec path)
 }
 
 
+std::vector<float> MPNetPlanner::q_to_axis_angle(float q0, float q1, float q2, float q3)
+{
+  float norm = 0;
+  norm = q0*q0 + q1*q1 + q2*q2 + q3*q3;
+  norm = sqrt(norm);
+  std::vector<float> normalized_q({q0,q1,q2,q3});
+  for (int i=0; i < 4; i++)
+  {
+    normalized_q[i] = normalized_q[i] / norm;
+  }
+  float angle = 2 * acos(normalized_q[0]);
+  float x, y, z;
+  if (normalized_q[0]*normalized_q[0] == 1.0)
+  {
+    x = 1.0;
+    y = 0.;
+    z = 0;
+  }
+  else
+  {
+    x = normalized_q[1] / sqrt(1-normalized_q[0]*normalized_q[0]);
+    y = normalized_q[2] / sqrt(1-normalized_q[0]*normalized_q[0]);
+    z = normalized_q[3] / sqrt(1-normalized_q[0]*normalized_q[0]);
+  }
+  return {x, y, z, angle};
+
+}
+
 
 std::vector<float> MPNetPlanner::normalize(std::vector<float> state, int dim)
 {
@@ -424,12 +456,8 @@ void MPNetPlanner::mpnet_predict(const base::State* start, const base::State* go
     next->as<base::SE3StateSpace::StateType>()->setX(unnoramlzied_state_vec[0]);
     next->as<base::SE3StateSpace::StateType>()->setY(unnoramlzied_state_vec[1]);
     next->as<base::SE3StateSpace::StateType>()->setZ(unnoramlzied_state_vec[2]);
-    next->as<base::SE3StateSpace::StateType>()->rotation().x = unnoramlzied_state_vec[3];
-    next->as<base::SE3StateSpace::StateType>()->rotation().y = unnoramlzied_state_vec[4];
-    next->as<base::SE3StateSpace::StateType>()->rotation().z = unnoramlzied_state_vec[5];
-    next->as<base::SE3StateSpace::StateType>()->rotation().w = unnoramlzied_state_vec[6];
-
-
+    std::vector<float> angle = q_to_axis_angle(unnoramlzied_state_vec[6], unnoramlzied_state_vec[3], unnoramlzied_state_vec[4], unnoramlzied_state_vec[5]);
+    next->as<base::SE3StateSpace::StateType>()->rotation().setAxisAngle(angle[0], angle[1], angle[2], angle[3]);
 
     #ifdef DEBUG
         std::cout << "state..." << std::endl;
@@ -437,6 +465,7 @@ void MPNetPlanner::mpnet_predict(const base::State* start, const base::State* go
         std::cout << next->as<base::SE3StateSpace::StateType>()->getX() << std::endl;
         std::cout << next->as<base::SE3StateSpace::StateType>()->getY() << std::endl;
         std::cout << next->as<base::SE3StateSpace::StateType>()->getZ() << std::endl;
+
         std::cout << next->as<base::SE3StateSpace::StateType>()->rotation().x << std::endl;
         std::cout << next->as<base::SE3StateSpace::StateType>()->rotation().y << std::endl;
         std::cout << next->as<base::SE3StateSpace::StateType>()->rotation().z << std::endl;
@@ -577,8 +606,12 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
     #ifdef DEBUG
         std::cout << "before solving..." << std::endl;
     #endif
+
+    auto plan_t0 = Time::now();
+
     while (!ptc)
     {
+        auto t0 = Time::now();
         if (iter==0)
         {
             max_length = _max_length;
@@ -617,8 +650,13 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
         {
             break;
         }
+        auto t1 = Time::now();
+        fsec time_iter = t1 - t0;
+        std::cout << "this iteration takes time: " << time_iter.count() << "s" << std::endl;
     }
-
+    auto plan_t1 = Time::now();
+    fsec time_plan = plan_t1 - plan_t0;
+    std::cout << "plan takes total time: " << time_plan.count() << "s" << std::endl;
     bool solved = false;
     bool approximate = true;
     if (feasible)

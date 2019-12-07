@@ -128,19 +128,23 @@ int main()
     setup.setRobotMesh(robot_fname);
     setup.setEnvironmentMesh(env_fname);
 
+    MPNetPlanner* planner = new MPNetPlanner(setup.getSpaceInformation(), false, 1001, 3000);
+
     // define start state
     base::ScopedState<base::SE3StateSpace> start(setup.getSpaceInformation());
-    start->setX(262.95);
-    start->setY(75.05);
-    start->setZ(46.19);
-    start->rotation().setIdentity();
-
+    start->setX(51.6990);
+    start->setY(-79.0659);
+    start->setZ(65.0000);
+    std::vector<float> angle = planner->q_to_axis_angle(0.849243, 0., 0., 0.528002);
+    start->rotation().setAxisAngle(angle[0], angle[1], angle[2], angle[3]);
     // define goal state
     base::ScopedState<base::SE3StateSpace> goal(start);
-    goal->setX(200.49);
-    goal->setY(-40.62);
-    goal->setZ(46.19);
-    goal->rotation().setIdentity();
+    goal->setX(207.061);
+    goal->setY(-147.543);
+    goal->setZ(65.0);
+    angle = planner->q_to_axis_angle(0.472122, 0., 0., -0.881533);
+    goal->rotation().setAxisAngle(angle[0], angle[1], angle[2], angle[3]);
+
 
     // set the start & goal states
     setup.setStartAndGoalStates(start, goal);
@@ -149,7 +153,7 @@ int main()
     setup.getSpaceInformation()->setStateValidityCheckingResolution(0.01);
 
     // planner
-    MPNetPlanner* planner = new MPNetPlanner(setup.getSpaceInformation(), false, 1001, 3000);
+    //MPNetPlanner* planner = new MPNetPlanner(setup.getSpaceInformation(), false, 1001, 3000);
     base::PlannerPtr planner_ptr(planner);
     setup.setPlanner(planner_ptr);
     // we call setup just so print() can show more information

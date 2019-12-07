@@ -17,7 +17,7 @@ public:
     MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermediateStates = false, int max_replan = 1001, int max_length = 3000);
 
     ~MPNetPlanner() override;
-
+    std::vector<float> q_to_axis_angle(float q0, float q1, float q2, float q3);
     void getPlannerData(base::PlannerData &data) const override;
 
     base::PlannerStatus solve(const base::PlannerTerminationCondition &ptc) override;
