@@ -64,7 +64,7 @@ int main()
     }
     infile.close();
     std::ofstream outfile_test;
-    outfile_test.open("obs_enc_cpp.txt");
+    outfile_test.open("../obs_enc_cpp.txt");
     // write the mlpout to file
     for (int i=0; i < 64; i++)
     {
@@ -75,45 +75,48 @@ int main()
     outfile_test.close();
 
 
-
+    std::cout << "finished encoder testing." << std::endl;
 
 
     std::shared_ptr<torch::jit::script::Module> MLP(new torch::jit::script::Module(torch::jit::load("../mlp_annotated_test_gpu_2.pt")));
     MLP->to(at::kCUDA);
-    infile.open("test_sample.txt");
+    infile.open("../test_sample.txt");
     std::string input;
     tt.clear();
     while (getline(infile, input)){
         tt.push_back(std::atof(input.c_str()));
     }
+    std::cout << "after loading data." << std::endl;
     torch::Tensor mlp_input_tensor = torch::from_blob(tt.data(), {1,78}).to(at::kCUDA);
     std::vector<torch::jit::IValue> mlp_input;
     mlp_input.push_back(mlp_input_tensor);
 
-    outfile_test.open("test_sample_output_cpp.txt");
+    outfile_test.open("../test_sample_output_cpp.txt");
     std::vector<float> mlp_out;
-
-    for (int i=0; i < 10; i++)
+    std::cout << "before testing." << std::endl;
+    for (int i=0; i < 100; i++)
     {
         // generate 10 outputs
         auto mlp_output = MLP->forward(mlp_input);
         torch::Tensor res = mlp_output.toTensor().to(at::kCPU);
         auto res_a = res.accessor<float,2>(); // accesor for the tensor
-        for (int j=0; i < 7; j++)
+        for (int j=0; j < 7; j++)
         {
             mlp_out.push_back(res_a[0][j]);
         }
     }
     // write the mlpout to file
-    for (int i=0; i < 70; i++)
+    for (int i=0; i < 700; i++)
     {
         outfile_test << mlp_out[i] << "\n";
     }
 
     //std::ostream_iterator<std::string> mlp_iter(outfile, " ");
     //std::copy(mlp_out.begin(), mlp_out.end(), mlp_iter);
+    infile.close();
     outfile_test.close();
 
+    std::cout << "finished mlp testing." << std::endl;
 
 
     // plan in SE3

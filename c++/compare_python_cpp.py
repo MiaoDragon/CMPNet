@@ -201,23 +201,27 @@ def main(args):
     # read from the sample test
     mlp_input = np.loadtxt("test_sample.txt")
     mlp_input = mlp_input.reshape(1,78)
-    mlp_input = torch.from_numpy(mlp_input)
+    mlp_input = torch.from_numpy(mlp_input).type(torch.FloatTensor)
     mlp_input = Variable(mlp_input)
-    mlp_output = MLP(mlp_input)
-    mlp_output = mlp_output.data.numpy()
 
+    mlp_outputs = []
+    for i in range(100):
+        mlp_output = MLP(mlp_input)
+        mlp_output = mlp_output.data.numpy()
+        mlp_outputs.append(mlp_output)
+    mlp_outputs = np.array(mlp_outputs)
     cpp_output = np.loadtxt("test_sample_output_cpp.txt")
-    cpp_output = cpp_output.reshape(10,7)
+    cpp_output = cpp_output.reshape(100,7)
     print('mlp output:')
-    print(mlp_output)
+    print(mlp_outputs.mean(axis=0))
     print('cpp_output:')
-    print(cpp_output)
+    print(cpp_output.mean(axis=0))
 
     # compare encoder output
     cpp_output = np.loadtxt('obs_enc_cpp.txt')
     cpp_output = cpp_output.reshape(-1)
     enc_input = np.array(obs)
-    enc_input = torch.from_numpy(enc_input)
+    enc_input = torch.from_numpy(enc_input).type(torch.FloatTensor)
     enc_input = Variable(enc_input)
     enc_output = encoder(enc_input).data.numpy()
     print('encoder output:')
