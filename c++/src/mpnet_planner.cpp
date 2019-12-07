@@ -99,7 +99,7 @@ MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermed
     while (getline(infile, line)){
         tt.push_back(std::atof(line.c_str()));
     }
-    torch::Tensor torch_tensor = torch::from_blob(tt.data(), {1,32,32,32});
+    torch::Tensor torch_tensor = torch::from_blob(tt.data(), {1,1,32,32,32});
     inputs.push_back(torch_tensor);
     obs_enc = encoder->forward(inputs).toTensor();
 }
