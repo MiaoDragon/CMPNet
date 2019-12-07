@@ -591,9 +591,8 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
         {
             max_length = _max_length*3;
         }
-        #ifdef DEBUG
-            std::cout << "solving... iteration: " << iter << std::endl;
-        #endif
+        std::cout << "solving... iteration: " << iter << std::endl;
+
 
         // use neural replan to plan path
         path = neural_replan(path, max_length);

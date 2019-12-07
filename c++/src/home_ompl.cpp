@@ -57,7 +57,7 @@ int main()
     setup.getSpaceInformation()->setStateValidityCheckingResolution(0.01);
 
     // planner
-    MPNetPlanner* planner = new MPNetPlanner(setup.getSpaceInformation());
+    MPNetPlanner* planner = new MPNetPlanner(setup.getSpaceInformation(), false, 1001, 3000);
     base::PlannerPtr planner_ptr(planner);
     setup.setPlanner(planner_ptr);
     // we call setup just so print() can show more information
