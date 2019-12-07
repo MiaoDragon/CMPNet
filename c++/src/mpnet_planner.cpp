@@ -28,7 +28,7 @@
 #include <iterator>
 using namespace ompl;
 using namespace std;
-#define DEBUG
+//#define DEBUG
 
 MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermediateStates, int max_replan, int max_length)
   : base::Planner(si, addIntermediateStates ? "MPNetPlannerintermediate" : "MPNetPlanner")
