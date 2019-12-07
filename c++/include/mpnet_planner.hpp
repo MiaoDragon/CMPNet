@@ -17,7 +17,7 @@ public:
     MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermediateStates = false, int max_replan = 1001, int max_length = 3000);
 
     ~MPNetPlanner() override;
-    std::vector<float> q_to_axis_angle(float q0, float q1, float q2, float q3);
+    void q_to_axis_angle(float q0, float q1, float q2, float q3, std::vector<float>& res);
     void getPlannerData(base::PlannerData &data) const override;
 
     base::PlannerStatus solve(const base::PlannerTerminationCondition &ptc) override;
@@ -87,13 +87,13 @@ protected:
     std::vector<float> upper_bound = {325, 337.89, 142.33};
     std::vector<float> bound = {0., 0., 0.};
     // MPNet specific:
-    StatePtrVec neural_replan(StatePtrVec path, int max_length);
-    StatePtrVec neural_replanner(base::State* start, base::State* goal, int max_length);
-    virtual std::vector<float> normalize(std::vector<float> state, int dim);
-    virtual std::vector<float> unnormalize(std::vector<float> state, int dim);
+    void neural_replan(StatePtrVec& path, StatePtrVec& res, int max_length);
+    void neural_replanner(base::State* start, base::State* goal, StatePtrVec& res, int max_length);
+    virtual void normalize(std::vector<float>& state, std::vector<float>& res, int dim);
+    virtual void unnormalize(std::vector<float>& state, std::vector<float>& res, int dim);
     void mpnet_predict(const base::State* start, const base::State* goal, base::State* next);
     torch::Tensor getStartGoalTensor(const base::State *start_state, const base::State *goal_state, int dim);
-    StatePtrVec lvc(StatePtrVec path);
+    void lvc(StatePtrVec& path, StatePtrVec& res);
 
     class Motion
     {

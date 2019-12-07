@@ -119,6 +119,19 @@ int main()
     std::cout << "finished mlp testing." << std::endl;
 
 
+
+
+
+    int sp = 2196;
+    for (int env_idx=0; env_idx<1; env_idx++)
+    {
+      for (int path_idx=0; path_idx<500; path_idx++)
+      {
+        // load data
+        // plan
+        // obtain the evaluation for the path (accuracy, time, path length)
+      }
+    }
     // plan in SE3
     app::SE3RigidBodyPlanning setup;
 
@@ -132,17 +145,21 @@ int main()
 
     // define start state
     base::ScopedState<base::SE3StateSpace> start(setup.getSpaceInformation());
-    start->setX(51.6990);
-    start->setY(-79.0659);
-    start->setZ(65.0000);
-    std::vector<float> angle = planner->q_to_axis_angle(0.849243, 0., 0., 0.528002);
+
+    std::vector<float> start_vec = {209.8810, -84.3507,  49.0000,   0.0000,   0.0000,   0.5425,   0.8401};
+    std::vector<float> goal_vec = {262.9500,  75.0500,  46.1900,   0.0000,   0.0000,   0.0000,   1.0000};
+    start->setX(start_vec[0]);
+    start->setY(start_vec[1]);
+    start->setZ(start_vec[2]);
+    std::vector<float> angle;
+    planner->q_to_axis_angle(start_vec[6], start_vec[3], start_vec[4], start_vec[5], angle);
     start->rotation().setAxisAngle(angle[0], angle[1], angle[2], angle[3]);
     // define goal state
     base::ScopedState<base::SE3StateSpace> goal(start);
-    goal->setX(207.061);
-    goal->setY(-147.543);
-    goal->setZ(65.0);
-    angle = planner->q_to_axis_angle(0.472122, 0., 0., -0.881533);
+    goal->setX(goal_vec[0]);
+    goal->setY(goal_vec[1]);
+    goal->setZ(goal_vec[2]);
+    planner->q_to_axis_angle(goal_vec[6], goal_vec[3], goal_vec[4], goal_vec[5], angle);
     goal->rotation().setAxisAngle(angle[0], angle[1], angle[2], angle[3]);
 
 

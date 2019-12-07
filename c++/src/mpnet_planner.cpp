@@ -27,6 +27,8 @@
 #include <cmath>
 #include <chrono>
 #include <iterator>
+
+#define DEFAULT_STEP 0.01
 using namespace ompl;
 using namespace std;
 //#define DEBUG
@@ -161,7 +163,7 @@ void MPNetPlanner::freeMemory()
     }
 }
 
-StatePtrVec MPNetPlanner::neural_replan(StatePtrVec path, int max_length)
+void MPNetPlanner::neural_replan(StatePtrVec& path, StatePtrVec& res_path, int max_length)
 /**
 * replan the entire path by checking each segment, if not connectable
 * do local plan
@@ -179,7 +181,7 @@ StatePtrVec MPNetPlanner::neural_replan(StatePtrVec path, int max_length)
     }
     new_path.push_back(path.back());
 
-    StatePtrVec res_path;
+    //StatePtrVec res_path;
     res_path.push_back(path[0]);
     for (int i=0; i < new_path.size()-1; i++)
     {
@@ -188,7 +190,8 @@ StatePtrVec MPNetPlanner::neural_replan(StatePtrVec path, int max_length)
         if (!connected)
         {
             // if not, use MPNet to do local replanning
-            StatePtrVec minipath = neural_replanner(new_path[i], new_path[i+1], max_length);
+            StatePtrVec minipath;
+            neural_replanner(new_path[i], new_path[i+1], minipath, max_length);
             for (int j=1; j < minipath.size(); j++)
             {
                 res_path.push_back(minipath[j]);
@@ -204,10 +207,10 @@ StatePtrVec MPNetPlanner::neural_replan(StatePtrVec path, int max_length)
         std::cout << "end nerual replan." << std::endl;
     #endif
 
-    return res_path;
+    //return res_path;
 }
 
-StatePtrVec MPNetPlanner::neural_replanner(base::State* start, base::State* goal, int max_length)
+void MPNetPlanner::neural_replanner(base::State* start, base::State* goal, StatePtrVec& minipath, int max_length)
 /**
 * Given the start and goal of a segment that is not connectable,
 * use MPNet to bidirectionally generate a path connecting them, and append new nodes
@@ -220,7 +223,7 @@ StatePtrVec MPNetPlanner::neural_replanner(base::State* start, base::State* goal
     start_tree.push_back(start);
     StatePtrVec goal_tree;
     goal_tree.push_back(goal);
-    StatePtrVec minipath;  // store the result
+    //StatePtrVec minipath;  // store the result
     base::State* temp = si_->allocState(); // free by freeState(temp)
     bool connected = false;
     while (iter < max_length)
@@ -279,7 +282,7 @@ StatePtrVec MPNetPlanner::neural_replanner(base::State* start, base::State* goal
         minipath.push_back(start_tree[0]);
         minipath.push_back(goal_tree[0]);
 
-        return minipath;
+        //return minipath;
     }
     else
     {
@@ -291,11 +294,11 @@ StatePtrVec MPNetPlanner::neural_replanner(base::State* start, base::State* goal
         {
             minipath.push_back(goal_tree[i]);
         }
-        return minipath;
+        //return minipath;
     }
 }
 
-StatePtrVec MPNetPlanner::lvc(StatePtrVec path)
+void MPNetPlanner::lvc(StatePtrVec& path, StatePtrVec& res)
 {
     for (int i=0; i < path.size()-1; i++)
     {
@@ -322,15 +325,19 @@ StatePtrVec MPNetPlanner::lvc(StatePtrVec path)
                 for (size_t k = j; k < path.size(); k++){
                     pc.push_back(path[k]);
                 }
-                return lvc(pc);
+                lvc(pc, res);
+                return;
+                //return lvc(pc);
             }
         }
     }
-    return path;
+    res = path; // copy all the elements
+    return;
+    //return path;
 }
 
 
-std::vector<float> MPNetPlanner::q_to_axis_angle(float q0, float q1, float q2, float q3)
+void MPNetPlanner::q_to_axis_angle(float q0, float q1, float q2, float q3, std::vector<float>& res)
 {
   float norm = 0;
   norm = q0*q0 + q1*q1 + q2*q2 + q3*q3;
@@ -354,15 +361,14 @@ std::vector<float> MPNetPlanner::q_to_axis_angle(float q0, float q1, float q2, f
     y = normalized_q[2] / sqrt(1-normalized_q[0]*normalized_q[0]);
     z = normalized_q[3] / sqrt(1-normalized_q[0]*normalized_q[0]);
   }
-  return {x, y, z, angle};
-
+  res = {x, y, z, angle};
 }
 
 
-std::vector<float> MPNetPlanner::normalize(std::vector<float> state, int dim)
+void MPNetPlanner::normalize(std::vector<float> &state, std::vector<float>& res, int dim)
 {
     // normalize in the 3D state space first
-    std::vector<float> res;
+    //std::vector<float> res;
     for (int i=0; i<3; i++)
     {
         res.push_back((state[i]-lower_bound[i])/bound[i]-1.0);
@@ -378,13 +384,12 @@ std::vector<float> MPNetPlanner::normalize(std::vector<float> state, int dim)
     {
         res.push_back(state[i]/norm);
     }
-    return res;
 }
 
-std::vector<float> MPNetPlanner::unnormalize(std::vector<float> state, int dim)
+void MPNetPlanner::unnormalize(std::vector<float>& state, std::vector<float>& res, int dim)
 {
     // normalize in the 3D state space first
-    std::vector<float> res;
+    //std::vector<float> res;
     for (int i=0; i<3; i++)
     {
         res.push_back((state[i]+1.0)*bound[i]+lower_bound[i]);
@@ -400,7 +405,6 @@ std::vector<float> MPNetPlanner::unnormalize(std::vector<float> state, int dim)
     {
         res.push_back(state[i]/norm);
     }
-    return res;
 }
 
 
@@ -440,7 +444,8 @@ void MPNetPlanner::mpnet_predict(const base::State* start, const base::State* go
     {
         state_vec.push_back(res_a[0][i]);
     }
-    std::vector<float> unnoramlzied_state_vec = unnormalize(state_vec, dim);
+    std::vector<float> unnormalized_state_vec;
+    unnormalize(state_vec, unnormalized_state_vec, dim);
     #ifdef DEBUG
         std::cout << "after planning..." << std::endl;
         std::cout << "tensor..." << std::endl;
@@ -453,10 +458,11 @@ void MPNetPlanner::mpnet_predict(const base::State* start, const base::State* go
             std::cout << "res_a[0][" << i << "]: " << res_a[0][i] << std::endl;
         #endif
     }
-    next->as<base::SE3StateSpace::StateType>()->setX(unnoramlzied_state_vec[0]);
-    next->as<base::SE3StateSpace::StateType>()->setY(unnoramlzied_state_vec[1]);
-    next->as<base::SE3StateSpace::StateType>()->setZ(unnoramlzied_state_vec[2]);
-    std::vector<float> angle = q_to_axis_angle(unnoramlzied_state_vec[6], unnoramlzied_state_vec[3], unnoramlzied_state_vec[4], unnoramlzied_state_vec[5]);
+    next->as<base::SE3StateSpace::StateType>()->setX(unnormalized_state_vec[0]);
+    next->as<base::SE3StateSpace::StateType>()->setY(unnormalized_state_vec[1]);
+    next->as<base::SE3StateSpace::StateType>()->setZ(unnormalized_state_vec[2]);
+    std::vector<float> angle;
+    q_to_axis_angle(unnormalized_state_vec[6], unnormalized_state_vec[3], unnormalized_state_vec[4], unnormalized_state_vec[5], angle);
     next->as<base::SE3StateSpace::StateType>()->rotation().setAxisAngle(angle[0], angle[1], angle[2], angle[3]);
 
     #ifdef DEBUG
@@ -496,9 +502,10 @@ torch::Tensor MPNetPlanner::getStartGoalTensor(const base::State *start_state, c
     start_vec.push_back((float)start_state->as<base::SE3StateSpace::StateType>()->rotation().w);
 
 
-
-    std::vector<float> normalized_start_vec = normalize(start_vec, dim);
-    std::vector<float> normalized_goal_vec = normalize(goal_vec, dim);
+    std::vector<float> normalized_start_vec;
+    normalize(start_vec, normalized_start_vec, dim);
+    std::vector<float> normalized_goal_vec;
+    normalize(goal_vec, normalized_goal_vec, dim);
     torch::Tensor start_tensor = torch::from_blob(normalized_start_vec.data(), {1, dim});
     torch::Tensor goal_tensor = torch::from_blob(normalized_goal_vec.data(), {1, dim});
 
@@ -615,24 +622,30 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
         if (iter==0)
         {
             max_length = _max_length;
+            si_->setStateValidityCheckingResolution(4*DEFAULT_STEP);
         }
         else if (iter<0.30*_max_replan)
         {
             max_length = _max_length*2;
+            si_->setStateValidityCheckingResolution(2*DEFAULT_STEP);
         }
         else
         {
             max_length = _max_length*3;
+            si_->setStateValidityCheckingResolution(DEFAULT_STEP);
+
         }
         std::cout << "solving... iteration: " << iter << std::endl;
 
 
         // use neural replan to plan path
-        path = neural_replan(path, max_length);
-        path =lvc(path);
+        StatePtrVec replanned_path;
+        neural_replan(path, replanned_path, max_length);
+        lvc(replanned_path, path);
         // collision check for the entire path to see if it is feasible
         feasible = true;
-
+        // feasibility check for the path, set to the real resolution
+        si_->setStateValidityCheckingResolution(DEFAULT_STEP);
         for (int i=0; i<path.size()-1; i++)
         {
             if (!si_->checkMotion(path[i], path[i+1]))
