@@ -66,8 +66,12 @@ int main()
     std::ofstream outfile;
     outfile.open("obs_enc_cpp.txt");
     // write the mlpout to file
-    std::ostream_iterator<std::string> encoder_iter(outfile, " ");
-    std::copy(encoder_out.begin(), encoder_out.end(), encoder_iter);
+    for (int i=0; i < 64; i++)
+    {
+        outfile << encoder_out[i] << "\n";
+    }
+    //std::ostream_iterator<std::string> encoder_iter(outfile, " ");
+    //std::copy(encoder_out.begin(), encoder_out.end(), encoder_iter);
     outfile.close();
 
 
@@ -78,11 +82,11 @@ int main()
     MLP->to(at::kCUDA);
     infile.open("test_sample.txt");
     std::string input;
-    std::vector<float> tt;
+    tt.clear();
     while (getline(infile, input)){
         tt.push_back(std::atof(input.c_str()));
     }
-    torch::Tensor mlp_input_tensor = torch::from_blob(tt_test.data(), {1,78});
+    torch::Tensor mlp_input_tensor = torch::from_blob(tt.data(), {1,78});
     std::vector<torch::jit::IValue> mlp_input;
     mlp_input.push_back(mlp_input_tensor);
 
@@ -101,8 +105,13 @@ int main()
         }
     }
     // write the mlpout to file
-    std::ostream_iterator<std::string> mlp_iter(outfile, " ");
-    std::copy(mlp_out.begin(), mlp_out.end(), mlp_iter);
+    for (int i=0; i < 70; i++)
+    {
+        outfile << mlp_out[i] << "\n";
+    }
+
+    //std::ostream_iterator<std::string> mlp_iter(outfile, " ");
+    //std::copy(mlp_out.begin(), mlp_out.end(), mlp_iter);
     outfile.close();
 
 
@@ -147,7 +156,7 @@ int main()
     // try to solve the problem
     std::filebuf fb;
     fb.open("planned_path.txt", std::ios::out);
-    std::ostream outfile(&fb);
+    outfile = &fb;
     //std::string path_fname = "planned_path.txt";
     //outfile.open(path_fname);
     //if (setup.solve(10))
