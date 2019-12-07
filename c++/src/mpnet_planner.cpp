@@ -421,13 +421,13 @@ void MPNetPlanner::mpnet_predict(const base::State* start, const base::State* go
             std::cout << "res_a[0][" << i << "]: " << res_a[0][i] << std::endl;
         #endif
     }
-    next->as<base::SE3StateSpace::StateType>()->setX(res_a[0][0]);
-    next->as<base::SE3StateSpace::StateType>()->setY(res_a[0][1]);
-    next->as<base::SE3StateSpace::StateType>()->setZ(res_a[0][2]);
-    next->as<base::SE3StateSpace::StateType>()->rotation().x = res_a[0][3];
-    next->as<base::SE3StateSpace::StateType>()->rotation().y = res_a[0][4];
-    next->as<base::SE3StateSpace::StateType>()->rotation().z = res_a[0][5];
-    next->as<base::SE3StateSpace::StateType>()->rotation().w = res_a[0][6];
+    next->as<base::SE3StateSpace::StateType>()->setX(unnoramlzied_state_vec[0]);
+    next->as<base::SE3StateSpace::StateType>()->setY(unnoramlzied_state_vec[1]);
+    next->as<base::SE3StateSpace::StateType>()->setZ(unnoramlzied_state_vec[2]);
+    next->as<base::SE3StateSpace::StateType>()->rotation().x = unnoramlzied_state_vec[3];
+    next->as<base::SE3StateSpace::StateType>()->rotation().y = unnoramlzied_state_vec[4];
+    next->as<base::SE3StateSpace::StateType>()->rotation().z = unnoramlzied_state_vec[5];
+    next->as<base::SE3StateSpace::StateType>()->rotation().w = unnoramlzied_state_vec[6];
 
 
 
