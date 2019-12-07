@@ -156,7 +156,7 @@ int main()
     // try to solve the problem
     std::filebuf fb;
     fb.open("planned_path.txt", std::ios::out);
-    std::ofstream outfile(&fb);
+    std::ostream outfile(&fb);
     //std::string path_fname = "planned_path.txt";
     //outfile.open(path_fname);
     //if (setup.solve(10))
