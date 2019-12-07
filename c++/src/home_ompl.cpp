@@ -86,7 +86,7 @@ int main()
     while (getline(infile, input)){
         tt.push_back(std::atof(input.c_str()));
     }
-    torch::Tensor mlp_input_tensor = torch::from_blob(tt.data(), {1,78});
+    torch::Tensor mlp_input_tensor = torch::from_blob(tt.data(), {1,78}).to(at::kCUDA);
     std::vector<torch::jit::IValue> mlp_input;
     mlp_input.push_back(mlp_input_tensor);
 
