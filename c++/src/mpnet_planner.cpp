@@ -491,7 +491,12 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
     #endif
 
     // initialize the path
-    const base::State *const_goal_state = goal->as<base::GoalStates>()->getState(0);
+    auto temp_goal = goal->as<base::GoalState>();
+    #ifdef DEBUG
+        std::cout << "used temp" << std::endl;
+    #endif
+
+    const base::State *const_goal_state = goal->as<base::GoalState>()->getState();
     #ifdef DEBUG
         std::cout << "obtained goal state." << std::endl;
     #endif
