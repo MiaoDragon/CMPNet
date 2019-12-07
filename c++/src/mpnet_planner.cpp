@@ -439,10 +439,6 @@ torch::Tensor MPNetPlanner::getStartGoalTensor(const base::State *start_state, c
 
 
 
-
-    }
-
-
     std::vector<float> normalized_start_vec = normalize(start_vec, dim);
     std::vector<float> normalized_goal_vec = normalize(goal_vec, dim);
     torch::Tensor start_tensor = torch::from_blob(normalized_start_vec.data(), {1, dim});
