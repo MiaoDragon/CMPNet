@@ -114,11 +114,11 @@ class MLP_home_Annotated(torch.jit.ScriptModule):
 
         p = 1 - prob
         scale = 1.0/p
-        drop1 = (scale)*torch.bernoulli(torch.full((1, 2560), p))#.to(device=self.device)
-        drop2 = (scale)*torch.bernoulli(torch.full((1, 1024), p))#.to(device=self.device)
-        drop3 = (scale)*torch.bernoulli(torch.full((1, 512), p))#.to(device=self.device)
-        drop4 = (scale)*torch.bernoulli(torch.full((1, 256), p))#.to(device=self.device)
-        drop5 = (scale)*torch.bernoulli(torch.full((1, 128), p))#.to(device=self.device)
+        drop1 = (scale)*torch.bernoulli(torch.full((1, 2560), p)).to(device=self.device)
+        drop2 = (scale)*torch.bernoulli(torch.full((1, 1024), p)).to(device=self.device)
+        drop3 = (scale)*torch.bernoulli(torch.full((1, 512), p)).to(device=self.device)
+        drop4 = (scale)*torch.bernoulli(torch.full((1, 256), p)).to(device=self.device)
+        drop5 = (scale)*torch.bernoulli(torch.full((1, 128), p)).to(device=self.device)
 
         out1 = self.fc1(x)
         out1 = torch.mul(out1, drop1)
@@ -193,26 +193,26 @@ def main(args):
 
     # Get the weights from this model and create a copy of the weights in mlp_weights (to be copied over)
     MLP2 = mpNet.mlp
-    #MLP2.cuda()
+    MLP2.cuda()
     mlp_weights = MLP2.state_dict()
 
     # Save a copy of the encoder's state_dict() for loading into the annotated encoder later on
     encoder_to_copy = mpNet.encoder
-    #encoder_to_copy.cuda()
+    encoder_to_copy.cuda()
     torch.save(encoder_to_copy.state_dict(), 'encoder2_save.pkl')
 
     # do everything for the MLP on the GPU
     device = torch.device('cuda:%d'%(args.device))
 
     encoder = Encoder_home_Annotated()
-    #encoder.cuda()
+    encoder.cuda()
     # Create the annotated model
     MLP = MLP_home_Annotated(78,7)
-    #MLP.cuda()
+    MLP.cuda()
 
     # Create the python model with the new layer names
     MLP_to_copy = MLP_home(78,7)
-    #MLP_to_copy.cuda()
+    MLP_to_copy.cuda()
 
     # Copy over the mlp_weights into the Python model with the new layer names
     MLP_to_copy = copyMLP(MLP_to_copy, mlp_weights)
@@ -228,7 +228,7 @@ def main(args):
 
     # Because the layer names now match, can immediately load this state_dict() into the annotated model and then save it
     #MLP.load_state_dict(torch.load('mlp_no_dropout.pkl', map_location=device))
-    MLP.load_state_dict(torch.load('mlp_no_dropout.pkl', map_location='cpu'))
+    MLP.load_state_dict(torch.load('mlp_no_dropout.pkl', map_location=device))
 
     MLP.save("mlp_annotated_test_gpu_2.pt")
 
@@ -255,7 +255,7 @@ def main(args):
     path_data = np.array([path_data])
     path_data = torch.from_numpy(path_data).type(torch.FloatTensor)
 
-    test_input = torch.cat((path_data, h.data.cpu()), dim=1)#.cuda()  # for MPNet1.0
+    test_input = torch.cat((path_data, h.data.cpu()), dim=1).cuda()  # for MPNet1.0
     test_input = Variable(test_input)
     for i in range(5):
         test_output = mpNet.mlp(test_input)

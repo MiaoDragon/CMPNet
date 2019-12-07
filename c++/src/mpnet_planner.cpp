@@ -61,7 +61,7 @@ MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermed
     // below works for CUDA 9.0
     //encoder = torch::jit::load("../encoder_annotated_test_cpu_2.pt");
     //MLP = torch::jit::load("../mlp_annotated_test_gpu_2.pt");
-    //MLP->to(at::kCUDA);
+    MLP->to(at::kCUDA);
 
     // obtain obstacle representation
     std::vector<torch::jit::IValue> inputs;
@@ -393,8 +393,8 @@ void MPNetPlanner::mpnet_predict(const base::State* start, const base::State* go
 
     torch::Tensor mlp_input_tensor;
     // Note the order of the cat
-    //mlp_input_tensor = torch::cat({obs_enc,sg}, 1).to(at::kCUDA);
-    mlp_input_tensor = torch::cat({obs_enc,sg}, 1);
+    mlp_input_tensor = torch::cat({obs_enc,sg}, 1).to(at::kCUDA);
+    //mlp_input_tensor = torch::cat({obs_enc,sg}, 1);
 
     std::vector<torch::jit::IValue> mlp_input;
     mlp_input.push_back(mlp_input_tensor);
