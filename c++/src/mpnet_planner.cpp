@@ -18,6 +18,7 @@
 #include "ompl/util/GeometricEquations.h"
 #include "ompl/base/spaces/RealVectorStateSpace.h"
 #include <ompl/base/goals/GoalStates.h>
+#include <ompl/base/spaces/SE3StateSpace.h>
 
 #include <torch/torch.h>
 #include <torch/script.h>
