@@ -63,16 +63,16 @@ int main()
         encoder_out.push_back(res_enc[0][i]);
     }
     infile.close();
-    std::ofstream outfile;
-    outfile.open("obs_enc_cpp.txt");
+    std::ofstream outfile_test;
+    outfile_test.open("obs_enc_cpp.txt");
     // write the mlpout to file
     for (int i=0; i < 64; i++)
     {
-        outfile << encoder_out[i] << "\n";
+        outfile_test << encoder_out[i] << "\n";
     }
     //std::ostream_iterator<std::string> encoder_iter(outfile, " ");
     //std::copy(encoder_out.begin(), encoder_out.end(), encoder_iter);
-    outfile.close();
+    outfile_test.close();
 
 
 
@@ -90,7 +90,7 @@ int main()
     std::vector<torch::jit::IValue> mlp_input;
     mlp_input.push_back(mlp_input_tensor);
 
-    outfile.open("test_sample_output_cpp.txt");
+    outfile_test.open("test_sample_output_cpp.txt");
     std::vector<float> mlp_out;
 
     for (int i=0; i < 10; i++)
@@ -107,12 +107,12 @@ int main()
     // write the mlpout to file
     for (int i=0; i < 70; i++)
     {
-        outfile << mlp_out[i] << "\n";
+        outfile_test << mlp_out[i] << "\n";
     }
 
     //std::ostream_iterator<std::string> mlp_iter(outfile, " ");
     //std::copy(mlp_out.begin(), mlp_out.end(), mlp_iter);
-    outfile.close();
+    outfile_test.close();
 
 
 
@@ -156,7 +156,7 @@ int main()
     // try to solve the problem
     std::filebuf fb;
     fb.open("planned_path.txt", std::ios::out);
-    outfile = &fb;
+    std::ofstream outfile(&fb);
     //std::string path_fname = "planned_path.txt";
     //outfile.open(path_fname);
     //if (setup.solve(10))
