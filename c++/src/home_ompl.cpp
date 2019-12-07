@@ -20,6 +20,9 @@
 #include <omplapp/config.h>
 #include "mpnet_planner.hpp"
 #include <ompl/base/spaces/SE3StateSpace.h>
+
+#include <iostream>
+#include <fstream>
 using namespace ompl;
 
 int main()
@@ -62,9 +65,11 @@ int main()
     setup.print();
 
     // try to solve the problem
-    std::ifstream outfile;
-    std::string path_fname = "planned_path.txt";
-    outfile.open(path_fname);
+    std::filebuf fb;
+    fb.open("planned_path.txt", std::ios::out);
+    std::ostream outfile(&fb);
+    //std::string path_fname = "planned_path.txt";
+    //outfile.open(path_fname);
     //if (setup.solve(10))
     //{
     //    // simplify & print the solution
@@ -72,8 +77,7 @@ int main()
     //    setup.getSolutionPath().printAsMatrix(infile);
     //}
     setup.solve(120);
-    setup.getSolutionPath().print(outfile);
-    outfile.close();
-
+    setup.getSolutionPath().printAsMatrix(outfile);
+    fb.close();
     return 0;
 }
