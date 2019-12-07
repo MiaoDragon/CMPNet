@@ -492,11 +492,33 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
 
     // initialize the path
     const base::State *const_goal_state = goal->as<base::GoalStates>()->getState(0);
+    #ifdef DEBUG
+        std::cout << "obtained goal state." << std::endl;
+    #endif
+
     base::State *goal_state = si_->allocState();
+    #ifdef DEBUG
+        std::cout << "alocated goal state." << std::endl;
+    #endif
+
     si_->copyState(goal_state, const_goal_state);
+    #ifdef DEBUG
+        std::cout << "copied goal." << std::endl;
+    #endif
+
+    base::State *start_state = si_->allocState();
+    si_->copyState(start_state, pdef_->getStartState(0));
+    #ifdef DEBUG
+        std::cout << "copied start." << std::endl;
+    #endif
+
     StatePtrVec path;
-    path.push_back(pdef_->getStartState(0));
+    path.push_back(start_state);
     path.push_back(goal_state);
+    #ifdef DEBUG
+        std::cout << "pushed back path." << std::endl;
+    #endif
+
 
     // reference to python planning methods
     int iter = 0;
