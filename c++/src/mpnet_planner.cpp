@@ -504,7 +504,7 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
 
     bool feasible = true;
     #ifdef DEBUG
-        std::cout << "before solving..."" << std::endl;
+        std::cout << "before solving..." << std::endl;
     #endif
     while (!ptc)
     {
