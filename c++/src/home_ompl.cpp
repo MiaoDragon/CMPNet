@@ -64,7 +64,7 @@ int main()
     // try to solve the problem
     std::ifstream outfile;
     std::string path_fname = "planned_path.txt";
-    infile.open(path_fname);
+    outfile.open(path_fname);
     //if (setup.solve(10))
     //{
     //    // simplify & print the solution
@@ -72,8 +72,8 @@ int main()
     //    setup.getSolutionPath().printAsMatrix(infile);
     //}
     setup.solve(120);
-    setup.getSolutionPath().printAsMatrix(infile);
-    infile.close();
+    setup.getSolutionPath().printAsMatrix(outfile);
+    outfile.close();
 
     return 0;
 }
