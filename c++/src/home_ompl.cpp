@@ -27,6 +27,81 @@ using namespace ompl;
 
 int main()
 {
+
+
+    // debug if model output the same
+    std::shared_ptr<torch::jit::script::Module> encoder(new torch::jit::script::Module(torch::jit::load("../encoder_annotated_test_cpu_2.pt")));
+    // obtain obstacle representation
+    std::vector<torch::jit::IValue> inputs;
+    // variable for loading file
+    std::ifstream infile;
+    std::string pcd_fname = "../obs_voxel.txt";
+    std::cout << "PCD file: " << pcd_fname << "\n\n\n";
+    infile.open(pcd_fname);
+
+    std::string line;
+    std::vector<float> tt;
+    while (getline(infile, line)){
+        tt.push_back(std::atof(line.c_str()));
+    }
+    torch::Tensor torch_tensor = torch::from_blob(tt.data(), {1,1,32,32,32});
+    #ifdef DEBUG
+        std::cout << "after reading in obs and store in torch tensor" << std::endl;
+    #endif
+    inputs.push_back(torch_tensor);
+    at::Tensor obs_enc = encoder->forward(inputs).toTensor();
+    //torch::Tensor res = mlp_output.toTensor().to(at::kCPU);
+    auto res_enc = obs_enc.accessor<float,2>(); // accesor for the tensor
+    std::vector<float> encoder_out;
+    for (int i=0; i < 64; i++)
+    {
+        encoder_out.push_back(res_enc[0][i]);
+    }
+    infile.close();
+    std::ofstream outfile;
+    outfile.open("obs_enc_cpp.txt");
+    // write the mlpout to file
+    std::ostream_iterator<std::string> encoder_iter(outfile, " ");
+    std::copy(encoder_out.begin(), encoder_out.end(), encoder_iter);
+    outfile.close();
+
+
+
+
+
+    std::shared_ptr<torch::jit::script::Module> MLP(new torch::jit::script::Module(torch::jit::load("../mlp_annotated_test_gpu_2.pt")));
+    MLP->to(at::kCUDA);
+    infile.open("test_sample.txt");
+    std::string input;
+    std::vector<float> tt;
+    while (getline(infile, input)){
+        tt.push_back(std::atof(input.c_str()));
+    }
+    torch::Tensor mlp_input_tensor = torch::from_blob(tt_test.data(), {1,78});
+    std::vector<torch::jit::IValue> mlp_input;
+    mlp_input.push_back(mlp_input_tensor);
+
+    outfile.open("test_sample_output_cpp.txt");
+    std::vector<float> mlp_out;
+
+    for (int i=0; i < 10; i++)
+    {
+        // generate 10 outputs
+        auto mlp_output = MLP->forward(mlp_input);
+        torch::Tensor res = mlp_output.toTensor().to(at::kCPU);
+        auto res_a = res.accessor<float,2>(); // accesor for the tensor
+        for (int j=0; i < 7; j++)
+        {
+            mlp_out.push_back(res_a[0][j]);
+        }
+    }
+    // write the mlpout to file
+    std::ostream_iterator<std::string> mlp_iter(outfile, " ");
+    std::copy(mlp_out.begin(), mlp_out.end(), mlp_iter);
+    outfile.close();
+
+
+
     // plan in SE3
     app::SE3RigidBodyPlanning setup;
 
