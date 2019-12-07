@@ -416,11 +416,18 @@ void MPNetPlanner::mpnet_predict(const base::State* start, const base::State* go
     for (int i = 0; i < dim; i++)
     {
         //TODO: better assign by using angleAxis
-        next->as<base::RealVectorStateSpace::StateType>()->values[i] = res_a[0][i];
+        //next->as<base::RealVectorStateSpace::StateType>()->values[i] = res_a[0][i];
         #ifdef DEBUG
             std::cout << "res_a[0][" << i << "]: " << res_a[0][i] << std::endl;
         #endif
     }
+    goal_state->as<base::SE3StateSpace::StateType>()->setX(res_a[0][0]);
+    goal_state->as<base::SE3StateSpace::StateType>()->setY(res_a[0][1]);
+    goal_state->as<base::SE3StateSpace::StateType>()->setZ(res_a[0][2]);
+    goal_state->as<base::SE3StateSpace::StateType>()->rotation().x = res_a[0][3];
+    goal_state->as<base::SE3StateSpace::StateType>()->rotation().y = res_a[0][4];
+    goal_state->as<base::SE3StateSpace::StateType>()->rotation().z = res_a[0][5];
+    goal_state->as<base::SE3StateSpace::StateType>()->rotation().w = res_a[0][6];
 
 
 
