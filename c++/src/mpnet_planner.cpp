@@ -25,17 +25,19 @@
 #include "mpnet_planner.hpp"
 #include <iostream>
 #include <cmath>
-#include <chrono>
+
 #include <iterator>
 
 #define DEFAULT_STEP 0.01
 using namespace ompl;
 using namespace std;
 //#define DEBUG
-typedef std::chrono::high_resolution_clock Time;
-typedef std::chrono::milliseconds ms;
-typedef std::chrono::duration<float> fsec;
-
+#ifdef DEBUG
+  #include <chrono>
+  typedef std::chrono::high_resolution_clock Time;
+  typedef std::chrono::milliseconds ms;
+  typedef std::chrono::duration<float> fsec;
+#endif
 MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermediateStates, int max_replan, int max_length)
   : base::Planner(si, addIntermediateStates ? "MPNetPlannerintermediate" : "MPNetPlanner")
   , _max_replan(max_replan)  // in exp: we use 1001
@@ -96,7 +98,6 @@ MPNetPlanner::MPNetPlanner(const base::SpaceInformationPtr &si, bool addIntermed
         std::cout << "torch_tensor[0,1,1,1] = " << torch_tensor_test[0][1][1][1] << "\n";
         infile.close();
     #endif
-
 
     std::string pcd_fname = "../obs_voxel.txt";
     std::cout << "PCD file: " << pcd_fname << "\n\n\n";
@@ -614,11 +615,14 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
         std::cout << "before solving..." << std::endl;
     #endif
 
-    auto plan_t0 = Time::now();
-
+    #ifdef DEBUG
+      auto plan_t0 = Time::now();
+    #endif
     while (!ptc)
     {
-        auto t0 = Time::now();
+        #ifdef DEBUG
+          auto t0 = Time::now();
+        #endif
         if (iter==0)
         {
             max_length = _max_length;
@@ -635,8 +639,9 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
             si_->setStateValidityCheckingResolution(DEFAULT_STEP);
 
         }
-        std::cout << "solving... iteration: " << iter << std::endl;
-
+        #ifdef DEBUG
+          std::cout << "solving... iteration: " << iter << std::endl;
+        #endif
 
         // use neural replan to plan path
         StatePtrVec replanned_path;
@@ -663,13 +668,17 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
         {
             break;
         }
-        auto t1 = Time::now();
-        fsec time_iter = t1 - t0;
-        std::cout << "this iteration takes time: " << time_iter.count() << "s" << std::endl;
+        #ifdef DEBUG
+          auto t1 = Time::now();
+          fsec time_iter = t1 - t0;
+          std::cout << "this iteration takes time: " << time_iter.count() << "s" << std::endl;
+        #endif
     }
-    auto plan_t1 = Time::now();
-    fsec time_plan = plan_t1 - plan_t0;
-    std::cout << "plan takes total time: " << time_plan.count() << "s" << std::endl;
+    #ifdef DEBUG
+      auto plan_t1 = Time::now();
+      fsec time_plan = plan_t1 - plan_t0;
+      std::cout << "plan takes total time: " << time_plan.count() << "s" << std::endl;
+    #endif
     bool solved = false;
     bool approximate = true;
     if (feasible)
