@@ -422,20 +422,20 @@ torch::Tensor MPNetPlanner::getStartGoalTensor(const base::State *start_state, c
     std::vector<float> goal_vec;
     std::vector<float> start_vec;
 
-    goal_vec.push_back((float)goal_state->as<base::base::SE3StateSpace::StateType>()->getX());
-    goal_vec.push_back((float)goal_state->as<base::base::SE3StateSpace::StateType>()->getY());
-    goal_vec.push_back((float)goal_state->as<base::base::SE3StateSpace::StateType>()->getZ());
-    goal_vec.push_back((float)goal_state->as<base::base::SE3StateSpace::StateType>()->rotation().x);
-    goal_vec.push_back((float)goal_state->as<base::base::SE3StateSpace::StateType>()->rotation().y);
-    goal_vec.push_back((float)goal_state->as<base::base::SE3StateSpace::StateType>()->rotation().z);
-    goal_vec.push_back((float)goal_state->as<base::base::SE3StateSpace::StateType>()->rotation().w);
-    start_vec.push_back((float)start_state->as<base::base::SE3StateSpace::StateType>()->getX());
-    start_vec.push_back((float)start_state->as<base::base::SE3StateSpace::StateType>()->getY());
-    start_vec.push_back((float)start_state->as<base::base::SE3StateSpace::StateType>()->getZ());
-    start_vec.push_back((float)start_state->as<base::base::SE3StateSpace::StateType>()->rotation().x);
-    start_vec.push_back((float)start_state->as<base::base::SE3StateSpace::StateType>()->rotation().y);
-    start_vec.push_back((float)start_state->as<base::base::SE3StateSpace::StateType>()->rotation().z);
-    start_vec.push_back((float)start_state->as<base::base::SE3StateSpace::StateType>()->rotation().w);
+    goal_vec.push_back((float)goal_state->as<base::SE3StateSpace::StateType>()->getX());
+    goal_vec.push_back((float)goal_state->as<base::SE3StateSpace::StateType>()->getY());
+    goal_vec.push_back((float)goal_state->as<base::SE3StateSpace::StateType>()->getZ());
+    goal_vec.push_back((float)goal_state->as<base::SE3StateSpace::StateType>()->rotation().x);
+    goal_vec.push_back((float)goal_state->as<base::SE3StateSpace::StateType>()->rotation().y);
+    goal_vec.push_back((float)goal_state->as<base::SE3StateSpace::StateType>()->rotation().z);
+    goal_vec.push_back((float)goal_state->as<base::SE3StateSpace::StateType>()->rotation().w);
+    start_vec.push_back((float)start_state->as<base::SE3StateSpace::StateType>()->getX());
+    start_vec.push_back((float)start_state->as<base::SE3StateSpace::StateType>()->getY());
+    start_vec.push_back((float)start_state->as<base::SE3StateSpace::StateType>()->getZ());
+    start_vec.push_back((float)start_state->as<base::SE3StateSpace::StateType>()->rotation().x);
+    start_vec.push_back((float)start_state->as<base::SE3StateSpace::StateType>()->rotation().y);
+    start_vec.push_back((float)start_state->as<base::SE3StateSpace::StateType>()->rotation().z);
+    start_vec.push_back((float)start_state->as<base::SE3StateSpace::StateType>()->rotation().w);
 
 
 
