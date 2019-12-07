@@ -72,7 +72,7 @@ int main()
     //    setup.getSolutionPath().printAsMatrix(infile);
     //}
     setup.solve(120);
-    setup.getSolutionPath().printAsMatrix(outfile);
+    setup.getSolutionPath().print(outfile);
     outfile.close();
 
     return 0;
