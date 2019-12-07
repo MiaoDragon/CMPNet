@@ -409,12 +409,32 @@ void MPNetPlanner::mpnet_predict(const base::State* start, const base::State* go
         state_vec.push_back(res_a[0][i]);
     }
     std::vector<float> unnoramlzied_state_vec = unnormalize(state_vec, dim);
+    #ifdef DEBUG
+        std::cout << "after planning..." << std::endl;
+        std::cout << "tensor..." << std::endl;
+    #endif
     for (int i = 0; i < dim; i++)
     {
         //TODO: better assign by using angleAxis
         next->as<base::RealVectorStateSpace::StateType>()->values[i] = res_a[0][i];
+        #ifdef DEBUG
+            std::cout << "res_a[0][" << i << "]: " << res_a[0][i] << std::endl;
+        #endif
     }
+
+
+
     #ifdef DEBUG
+        std::cout << "state..." << std::endl;
+
+        std::cout << next->as<base::SE3StateSpace::StateType>()->getX() << std::endl;
+        std::cout << next->as<base::SE3StateSpace::StateType>()->getY() << std::endl;
+        std::cout << next->as<base::SE3StateSpace::StateType>()->getZ() << std::endl;
+        std::cout << next->as<base::SE3StateSpace::StateType>()->rotation().x << std::endl;
+        std::cout << next->as<base::SE3StateSpace::StateType>()->rotation().y << std::endl;
+        std::cout << next->as<base::SE3StateSpace::StateType>()->rotation().z << std::endl;
+        std::cout << next->as<base::SE3StateSpace::StateType>()->rotation().w << std::endl;
+
         std::cout << "finished mpnet_predict." << std::endl;
     #endif
 
