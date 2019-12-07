@@ -485,6 +485,11 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
     base::State *xstate = si_->allocState();
 
 
+
+    #ifdef DEBUG
+        std::cout << "before construcitng initial path..."" << std::endl;
+    #endif
+
     // initialize the path
     const base::State *const_goal_state = goal->as<base::GoalStates>()->getState(0);
     base::State *goal_state = si_->allocState();
@@ -498,6 +503,9 @@ base::PlannerStatus MPNetPlanner::solve(const base::PlannerTerminationCondition 
     int max_length = _max_length;
 
     bool feasible = true;
+    #ifdef DEBUG
+        std::cout << "before solving..."" << std::endl;
+    #endif
     while (!ptc)
     {
         if (iter==0)
