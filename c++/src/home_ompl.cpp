@@ -21,7 +21,12 @@
 #include "mpnet_planner.hpp"
 #include <ompl/base/spaces/SE3StateSpace.h>
 
+#include <torch/torch.h>
+#include <torch/script.h>
+#include "mpnet_planner.hpp"
 #include <iostream>
+#include <cmath>
+#include <iterator>
 #include <fstream>
 using namespace ompl;
 
