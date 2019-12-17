@@ -169,7 +169,9 @@ int main()
     std::vector<float> plan_lens;
     std::vector<float> data_lens;
 
-    std::string model_path = "/media/arclabdl1/HD1/YLmiao/results/CMPnet_res/home_mlp2_lr025_SGD_c++/";
+    //std::string model_path = "/media/arclabdl1/HD1/YLmiao/results/CMPnet_res/home_mlp2_lr025_SGD_c++/";
+    std::string model_path = "/media/arclabdl1/HD1/YLmiao/results/MPnet_res/home_mlp2_lr01_SGD_c++/";
+
     float accuracy = 0.;
     float num_suc = 0.;
     float num_total = 0.;

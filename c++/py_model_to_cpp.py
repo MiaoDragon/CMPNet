@@ -266,10 +266,10 @@ def main(args):
 
 parser = argparse.ArgumentParser()
 # for training
-parser.add_argument('--model_path', type=str, default='/media/arclabdl1/HD1/YLmiao/results/CMPnet_res/home_mlp2_lr025_SGD/',help='path for saving trained models')
+parser.add_argument('--model_path', type=str, default='/media/arclabdl1/HD1/YLmiao/results/MPnet_res/home_mlp2_lr01_SGD/',help='path for saving trained models')
 parser.add_argument('--device', type=int, default=0, help='cuda device')
 parser.add_argument('--data_path', type=str, default='/media/arclabdl1/HD1/YLmiao/data/home/')
-parser.add_argument('--model_name' ,type=str, default='cmpnet_epoch_100.pkl')
+parser.add_argument('--model_name' ,type=str, default='mpnet_epoch_500.pkl')
 args = parser.parse_args()
 print(args)
 main(args)
