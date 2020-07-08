@@ -1,4 +1,5 @@
-# for Active Continual Learning: https://github.com/MiaoDragon/Hybrid-MPNet
+# Model and Link to Other Repository
+* for Active Continual Learning: https://github.com/MiaoDragon/Hybrid-MPNet
 * as Active Continual Learning achieves better results than CMPNet, we release models for S2D and R3D environment here: https://drive.google.com/file/d/1p9l4-GayV4_YASXDSgPtqRtDNMIeff5p/view?usp=sharing
 
 # dataset
