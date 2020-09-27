@@ -1,3 +1,11 @@
+# Model and Link to Other Repository
+* for Active Continual Learning: https://github.com/MiaoDragon/Hybrid-MPNet
+* as Active Continual Learning achieves better results than CMPNet, we release models for S2D and R3D environment here: https://drive.google.com/file/d/1p9l4-GayV4_YASXDSgPtqRtDNMIeff5p/view?usp=sharing
+
+# dataset
+* For C2D dataset: 
+* For other dataset: please refer to the original MPNet repository at https://github.com/ahq1993/MPNet
+
 # Code Explaination:
 * cmpnet_train.py, cmpnet_test.py: general training and testing pipeline
 * data_loader_*.py: data loader for different env settings
